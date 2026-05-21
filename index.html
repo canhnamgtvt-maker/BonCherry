@@ -297,7 +297,7 @@
                                     <th class="p-3">Phí Rác</th>
                                     <th class="p-3">Phí Khác</th>
                                     <th class="p-3 text-right font-bold text-indigo-900">Tổng Hoá Đơn</th>
-                                    <th class="p-3 text-center">Trạng Thái</th>
+                                    <th class="p-3 text-center w-36">Trạng Thái</th>
                                     <th class="p-3 text-center">Thao Tác</th>
                                 </tr>
                             </thead>
@@ -393,7 +393,7 @@
                     </div>
                 </div>
                 <div class="border-t pt-2 mt-2">
-                    <span class="block font-bold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">Chỉ số bàn giao ban đầu (Số gốc)</span>
+                    <span class="block font-bold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">Chỉ số bàn giao ban đầu</span>
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block text-slate-600 mb-1">Điện gốc</label>
@@ -590,13 +590,16 @@
             renderRankingLists();
         }
 
+        // TÍNH TOÁN VÀ ĐỒNG BỘ SỐ LIỆU CHO DASHBOARD METRICS
         function renderDashboardMetrics() {
             const currentBillings = window.systemData.billings.filter(b => b && b.month === currentMonth);
             const currentExpenses = window.systemData.expenses.filter(e => e && e.month === currentMonth);
             const totalRev = currentBillings.reduce((sum, b) => sum + (b.total || 0), 0);
             const totalExp = currentExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
             const netVariance = totalRev - totalExp;
-            const pendingRev = window.systemData.billings.filter(b => b && !b.paid).reduce((sum, b) => sum + (b.total || 0), 0);
+            
+            // Chỉ tính những hóa đơn thực sự có trường paid == false hoặc không tồn tại paid
+            const pendingRev = window.systemData.billings.filter(b => b && b.month === currentMonth && !b.paid).reduce((sum, b) => sum + (b.total || 0), 0);
 
             document.getElementById('metric-total-rev').innerText = totalRev.toLocaleString() + " ₫";
             document.getElementById('metric-total-exp').innerText = totalExp.toLocaleString() + " ₫";
@@ -615,12 +618,12 @@
                 }
             }
 
-            const unpaidBills = window.systemData.billings.filter(b => b && !b.paid);
+            const unpaidBills = window.systemData.billings.filter(b => b && b.month === currentMonth && !b.paid);
             document.getElementById('unpaid-debt-count').innerText = `${unpaidBills.length} phòng chưa đóng`;
             const debtTbody = document.getElementById('unpaid-debts-list');
             if(debtTbody) {
                 if(unpaidBills.length === 0) {
-                    debtTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Không có công nợ tồn đọng. Xuất sắc!</td></tr>`;
+                    debtTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 font-medium">Không có công nợ tồn đọng trong tháng này. Xuất sắc!</td></tr>`;
                 } else {
                     debtTbody.innerHTML = unpaidBills.map(b => {
                         const r = window.systemData.rooms.find(rm => rm && rm.id === b.roomId) || { renter: "Nơi trống" };
@@ -631,7 +634,7 @@
                                 <td class="p-2">${r.renter}</td>
                                 <td class="p-2 text-right font-bold text-rose-600">${(b.total || 0).toLocaleString()} ₫</td>
                                 <td class="p-2 text-center">
-                                    <button onclick="window.quickPayBill('${b.roomId}', '${b.month}')" class="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded text-[10px] shadow-sm transition-all">Thu Tiền</button>
+                                    <button onclick="window.changeInvoiceStatus('${b.roomId}', '${b.month}', true)" class="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded text-[10px] shadow-sm transition-all">Thu Tiền</button>
                                 </td>
                             </tr>
                         `;
@@ -639,6 +642,16 @@
                 }
             }
         }
+
+        // HÀM ĐỔI TRẠNG THÁI CHUNG (ĐỒNG BỘ CẢ HAI TAB)
+        window.changeInvoiceStatus = async function(roomId, month, isPaid) {
+            const bill = window.systemData.billings.find(b => b && b.roomId === roomId && b.month === month);
+            if(bill) {
+                bill.paid = isPaid;
+                await syncToCloud();
+                renderAll(); // Vẽ lại giao diện ngay lập tức để đồng bộ số liệu và các bảng
+            }
+        };
 
         window.switchRankScope = function(scope) {
             rankScope = scope;
@@ -807,16 +820,6 @@
             }
         }
 
-        window.quickPayBill = async function(roomId, month) {
-            const bill = window.systemData.billings.find(b => b && b.roomId === roomId && b.month === month);
-            if(bill) {
-                bill.paid = true;
-                await syncToCloud();
-                renderAll();
-            }
-        };
-
-        // KHÔI PHỤC VÀ RENDER Ô "CHI PHÍ KHÁC" TẠI TAB NHẬP LIỆU CHỈ SỐ
         function renderBatchInputTable() {
             const tbody = document.getElementById('batch-input-tbody');
             if(!tbody) return;
@@ -859,7 +862,6 @@
             }).join('');
         }
 
-        // TÍNH TOÁN LẠI CHI PHÍ: CỘNG THÊM CHI PHÍ KHÁC VÀO TỔNG BILL
         window.saveBatchInput = async function() {
             const settings = window.systemData.settings;
             window.systemData.rooms.forEach(r => {
@@ -896,7 +898,7 @@
                     b.waterEnd = !isNaN(wEnd) ? wEnd : prevWater;
                     b.evStart = prevEv;
                     b.evEnd = !isNaN(evEnd) ? evEnd : prevEv;
-                    b.otherCost = otherCost; // Lưu vào dữ liệu phòng trên Cloud
+                    b.otherCost = otherCost;
 
                     const uElec = b.elecEnd - b.elecStart;
                     const uWater = b.waterEnd - b.waterStart;
@@ -908,7 +910,6 @@
                     const costEv = (uEv > 0 ? uEv : 0) * (settings.evFlat || 4000);
                     const costGarbage = (r.members || 1) * (settings.garbageFlat || 10000);
 
-                    // TỔNG HOÁ ĐƠN = Tiền phòng + Điện + Nước + Xe EV + Rác + CHI PHÍ KHÁC PHÁT SINH
                     b.total = costRoom + costElec + costWater + costEv + costGarbage + b.otherCost;
                 }
             });
@@ -968,7 +969,7 @@
             }
         };
 
-        // RENDER TAB BÁO CÁO DOANH THU - ĐÃ THÊM CỘT PHÍ KHÁC VÀ ĐƯỢC TÍNH CHUẨN XÁC VÀO TỔNG HOÁ ĐƠN
+        // RENDER TAB BÁO CÁO DOANH THU VỚI TÍNH NĂNG SELECT BOX THAY ĐỔI TRẠNG THÁI TRỰC TIẾP
         function renderSummaryReport() {
             const tbody = document.getElementById('summary-table-tbody');
             if(!tbody) return;
@@ -984,7 +985,7 @@
                 const uElec = (b.elecEnd || 0) - (b.elecStart || 0);
                 const uWater = (b.waterEnd || 0) - (b.waterStart || 0);
                 const uEv = (b.evEnd || 0) - (b.evStart || 0);
-                const oCost = b.otherCost || 0; // Chi phí khác lấy từ database
+                const oCost = b.otherCost || 0;
 
                 const settings = window.systemData.settings;
                 const costElec = (uElec > 0 ? uElec : 0) * (settings.elecFlat || 3500);
@@ -1004,11 +1005,16 @@
                         <td class="p-3 text-slate-600 font-medium">${costGarbage.toLocaleString()} ₫</td>
                         <td class="p-3 text-purple-700 font-bold">${oCost.toLocaleString()} ₫</td>
                         <td class="p-3 text-right font-bold text-indigo-900">${(b.total || 0).toLocaleString()} ₫</td>
+                        
                         <td class="p-3 text-center">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${b.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
-                                ${b.paid ? 'Đã thu tiền' : 'Chưa thu tiền'}
-                            </span>
+                            <select onchange="window.changeInvoiceStatus('${b.roomId}', '${b.month}', this.value === 'true')" 
+                                    class="w-full text-center font-bold text-[11px] px-2 py-1 rounded-md cursor-pointer outline-none transition-all border 
+                                    ${b.paid ? 'bg-emerald-50 text-emerald-700 border-emerald-200 focus:border-emerald-500' : 'bg-rose-50 text-rose-700 border-rose-200 focus:border-rose-500'}">
+                                <option value="false" ${!b.paid ? 'selected' : ''}>Chưa thu tiền</option>
+                                <option value="true" ${b.paid ? 'selected' : ''}>Đã thu tiền</option>
+                            </select>
                         </td>
+
                         <td class="p-3 text-center flex items-center justify-center gap-2">
                             <button onclick="window.printInvoice('${b.roomId}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium text-[11px]"><i class="fa-solid fa-print"></i> In Bill</button>
                             ${isLocked ? `
@@ -1216,7 +1222,6 @@
             renderAll();
         };
 
-        // IN ẤN HÓA ĐƠN TIỀN NHÀ - CẬP NHẬT CỘT CHI PHÍ KHÁC VÀO BILL ĐỂ IN RA GIẤY
         window.printInvoice = function(roomId) {
             const b = window.systemData.billings.find(bill => bill && bill.roomId === roomId && bill.month === currentMonth);
             if(!b) { alert("Không tìm thấy dữ liệu hóa đơn!"); return; }
