@@ -192,13 +192,14 @@
                 <div id="tab-input" class="tab-content hidden flex flex-col gap-4">
                     <div>
                         <h2 class="text-lg font-bold text-slate-900">Ghi Chỉ Số Tiêu Thụ Định Kỳ</h2>
-                        <p class="text-xs text-slate-500">Áp dụng cho tháng làm việc hiện tại: <span class="working-month-txt font-semibold text-indigo-600"></span> (Số đầu tự động đồng bộ từ số cuối tháng trước hoặc chỉ số gốc cấu hình ở danh mục phòng)</p>
+                        <p class="text-xs text-slate-500">Áp dụng cho tháng làm việc hiện tại: <span class="working-month-txt font-semibold text-indigo-600"></span> (Hệ thống đối soát trực quan số lượng nhân khẩu để tính phí dịch vụ môi trường rác thải)</p>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl">
-                        <table class="w-full text-left text-xs border-collapse min-w-[900px]">
+                        <table class="w-full text-left text-xs border-collapse min-w-[1000px]">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase text-[11px]">
                                     <th class="p-3 w-20">Phòng</th>
+                                    <th class="p-3 bg-slate-100 text-center w-20">Nhân Khẩu</th>
                                     <th class="p-3 bg-amber-50/30 w-24">Điện (Đầu)</th>
                                     <th class="p-3 bg-amber-50/60 w-28">Điện (Cuối)</th>
                                     <th class="p-3 bg-sky-50/30 w-24">Nước (Đầu)</th>
@@ -244,7 +245,7 @@
                 <div id="tab-summary" class="tab-content hidden flex flex-col gap-4">
                     <h2 class="text-lg font-bold text-slate-900">Báo Cáo Doanh Thu Thu Phòng</h2>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl">
-                        <table class="w-full text-left text-xs border-collapse min-w-[800px]">
+                        <table class="w-full text-left text-xs border-collapse min-w-[950px]">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-700">
                                     <th class="p-3">Mã Phòng</th>
@@ -252,6 +253,7 @@
                                     <th class="p-3">Tiền Điện</th>
                                     <th class="p-3">Tiền Nước</th>
                                     <th class="p-3">Điện Xe</th>
+                                    <th class="p-3 bg-emerald-50/50">Phí Rác ĐN</th>
                                     <th class="p-3 text-right font-bold text-indigo-900">Tổng Hoá Đơn</th>
                                     <th class="p-3 text-center">Trạng Thái</th>
                                     <th class="p-3 text-center">Thao Tác</th>
@@ -277,18 +279,22 @@
 
                 <div id="tab-settings" class="tab-content hidden flex flex-col gap-4">
                     <h2 class="text-lg font-bold text-slate-900 border-b pb-2">Đơn Giá Tham Chiếu Chung</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-5xl">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Đơn Giá Điện Sinh Hoạt (VND/kWh)</label>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Đơn Giá Điện (VND/kWh)</label>
                             <input type="number" id="setting-elec-flat" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:border-indigo-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Đơn Giá Nước Sinh Hoạt (VND/m³)</label>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Đơn Giá Nước (VND/m³)</label>
                             <input type="number" id="setting-water-flat" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:border-indigo-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Đơn Giá Điện Sạc Xe EV (VND/kWh)</label>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Đơn Giá Điện Sạc Xe EV</label>
                             <input type="number" id="setting-ev-flat" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giá Đổ Rác (VND/Người/Tháng)</label>
+                            <input type="number" id="setting-garbage-flat" class="w-full px-3 py-2 border border-emerald-300 rounded-xl text-sm outline-none focus:border-emerald-500 font-semibold text-emerald-800 bg-emerald-50/20">
                         </div>
                     </div>
                     <div class="pt-2">
@@ -435,7 +441,7 @@
             rooms: [],
             billings: [],
             expenses: [],
-            settings: { elecFlat: 3500, waterFlat: 15000, evFlat: 4000 }
+            settings: { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 }
         };
 
         let chartElecInstance = null;
@@ -482,13 +488,13 @@
                 if (!Array.isArray(systemData.rooms)) systemData.rooms = [];
                 if (!Array.isArray(systemData.billings)) systemData.billings = [];
                 if (!Array.isArray(systemData.expenses)) systemData.expenses = [];
-                if (!systemData.settings) systemData.settings = { elecFlat: 3500, waterFlat: 15000, evFlat: 4000 };
-                if (!systemData.settings.evFlat) systemData.settings.evFlat = 4000;
+                if (!systemData.settings) systemData.settings = { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
+                if (!systemData.settings.garbageFlat) systemData.settings.garbageFlat = 10000;
 
                 initAppLifecycle();
             } catch (err) {
                 console.error("Lỗi tải dữ liệu Cloud:", err);
-                systemData = { rooms: [], billings: [], expenses: [], settings: { elecFlat: 3500, waterFlat: 15000, evFlat: 4000 } };
+                systemData = { rooms: [], billings: [], expenses: [], settings: { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 } };
                 initAppLifecycle();
             }
         }
@@ -700,7 +706,7 @@
             const tbody = document.getElementById('batch-input-tbody');
             if(!tbody) return;
             if (!systemData || !Array.isArray(systemData.rooms) || systemData.rooms.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Vui lòng khởi tạo danh sách phòng trước</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400 text-xs">Vui lòng khởi tạo danh sách phòng trước</td></tr>`;
                 return;
             }
 
@@ -718,6 +724,7 @@
                 return `
                     <tr class="hover:bg-slate-50 text-slate-700">
                         <td class="p-3 font-bold text-slate-900">${r.id}</td>
+                        <td class="p-3 bg-slate-50 text-center font-semibold text-indigo-600 border-x">${r.members || 1} người</td>
                         <td class="p-2 bg-amber-50/10"><input type="number" id="input-estart-${r.id}" value="${b.elecStart}" class="w-full px-2 py-1 border rounded bg-slate-50 text-slate-500 text-center" readonly></td>
                         <td class="p-2 bg-amber-50/20"><input type="number" id="input-eend-${r.id}" value="${b.elecEnd || ''}" placeholder="Số cuối" class="w-full px-2 py-1 border border-amber-300 rounded font-bold text-center outline-none focus:ring-1 focus:ring-amber-500"></td>
                         <td class="p-2 bg-sky-50/10"><input type="number" id="input-wstart-${r.id}" value="${b.waterStart}" class="w-full px-2 py-1 border rounded bg-slate-50 text-slate-500 text-center" readonly></td>
@@ -768,7 +775,11 @@
                 const elecCost = elecUsed * (systemData.settings.elecFlat || 3500);
                 const waterCost = waterUsed * (systemData.settings.waterFlat || 15000);
                 const evCost = evUsed * (systemData.settings.evFlat || 4000);
-                const totalInvoice = (r.price || 0) + elecCost + waterCost + evCost;
+                
+                // Thuật toán tính phí đổ rác theo đầu người
+                const garbageCost = (r.members || 1) * (systemData.settings.garbageFlat || 10000);
+                
+                const totalInvoice = (r.price || 0) + elecCost + waterCost + evCost + garbageCost;
 
                 let bIdx = systemData.billings.findIndex(bl => bl && bl.roomId === r.id && bl.month === currentMonth);
                 const billObject = {
@@ -785,7 +796,7 @@
 
             await syncToCloud();
             renderAll();
-            alert("Đã tính toán toàn diện (Bao gồm xe điện) và đồng bộ Cloud thành công!");
+            alert("Đã ghi nhận chỉ số, tự động phân tách phí đổ rác theo nhân khẩu và đồng bộ Cloud!");
         };
 
         function renderExpenseTable() {
@@ -855,15 +866,18 @@
             const currentBillings = systemData.billings.filter(b => b && b.month === currentMonth);
 
             if(currentBillings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-3 text-center text-slate-400 text-xs">Chưa có báo cáo hoá đơn tháng này.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-3 text-center text-slate-400 text-xs">Chưa có báo cáo hoá đơn tháng này.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = currentBillings.map(b => {
-                const r = systemData.rooms.find(rm => rm && rm.id === b.roomId) || { price: 0 };
+                const r = systemData.rooms.find(rm => rm && rm.id === b.roomId) || { price: 0, members: 1 };
                 const eCost = ((b.elecEnd || 0) - (b.elecStart || 0)) * (systemData.settings.elecFlat || 3500);
                 const wCost = ((b.waterEnd || 0) - (b.waterStart || 0)) * (systemData.settings.waterFlat || 15000);
                 const evCost = ((b.evEnd || 0) - (b.evStart || 0)) * (systemData.settings.evFlat || 4000);
+                
+                // Tiền rác tính toán theo đầu người của phòng
+                const gCost = (r.members || 1) * (systemData.settings.garbageFlat || 10000);
 
                 return `
                     <tr class="hover:bg-slate-50 text-xs text-slate-700">
@@ -872,6 +886,7 @@
                         <td class="p-3">${Math.max(0, eCost).toLocaleString()} ₫</td>
                         <td class="p-3">${Math.max(0, wCost).toLocaleString()} ₫</td>
                         <td class="p-3">${Math.max(0, evCost).toLocaleString()} ₫</td>
+                        <td class="p-3 bg-emerald-50/40 text-emerald-800 font-medium">${gCost.toLocaleString()} ₫ <span class="text-[10px] text-slate-400">(${r.members}ng)</span></td>
                         <td class="p-3 text-right font-bold text-indigo-700">${(b.total || 0).toLocaleString()} ₫</td>
                         <td class="p-3 text-center">
                             <span onclick="togglePayStatus('${b.roomId}', '${b.month}')" class="px-2 py-0.5 rounded-full text-[10px] font-bold cursor-pointer transition-all ${b.paid ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
@@ -919,7 +934,7 @@
                         <div>
                             <div class="flex justify-between items-start">
                                 <span class="text-sm font-bold text-slate-900">Phòng ${r.id}</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-600">Nhân khẩu: ${r.members || 1} người</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-600"><i class="fa-solid fa-users text-[10px] mr-1"></i>Nhân khẩu: ${r.members || 1} người</span>
                             </div>
                             <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-user mr-1"></i>Chủ hộ: ${r.renter}</p>
                             <p class="text-xs font-bold text-slate-800 mt-0.5"><i class="fa-solid fa-money-bill text-slate-400 mr-1"></i>${(r.price || 0).toLocaleString()} ₫/tháng</p>
@@ -1040,20 +1055,24 @@
             const eFlat = document.getElementById('setting-elec-flat');
             const wFlat = document.getElementById('setting-water-flat');
             const evFlat = document.getElementById('setting-ev-flat');
+            const gFlat = document.getElementById('setting-garbage-flat');
             if(eFlat) eFlat.value = systemData.settings.elecFlat || 3500;
             if(wFlat) wFlat.value = systemData.settings.waterFlat || 15000;
             if(evFlat) evFlat.value = systemData.settings.evFlat || 4000;
+            if(gFlat) gFlat.value = systemData.settings.garbageFlat || 10000;
         }
 
         window.saveSystemSettings = async function() {
             const eFlat = document.getElementById('setting-elec-flat');
             const wFlat = document.getElementById('setting-water-flat');
             const evFlat = document.getElementById('setting-ev-flat');
-            if(!eFlat || !wFlat || !evFlat) return;
+            const gFlat = document.getElementById('setting-garbage-flat');
+            if(!eFlat || !wFlat || !evFlat || !gFlat) return;
 
             systemData.settings.elecFlat = parseFloat(eFlat.value) || 3500;
             systemData.settings.waterFlat = parseFloat(wFlat.value) || 15000;
             systemData.settings.evFlat = parseFloat(evFlat.value) || 4000;
+            systemData.settings.garbageFlat = parseFloat(gFlat.value) || 10000;
             await syncToCloud();
             alert("Đã cập nhật đơn giá cấu hình hệ thống toàn cục!");
             renderAll();
@@ -1061,7 +1080,7 @@
 
         window.viewInvoiceInvoice = function(roomId, month) {
             const b = systemData.billings.find(bl => bl && bl.roomId === roomId && bl.month === month);
-            const r = systemData.rooms.find(rm => rm && rm.id === roomId) || { renter: "Không rõ", price: 0 };
+            const r = systemData.rooms.find(rm => rm && rm.id === roomId) || { renter: "Không rõ", price: 0, members: 1 };
             if(!b) return;
 
             const elecUsed = (b.elecEnd || 0) - (b.elecStart || 0);
@@ -1071,6 +1090,9 @@
             const elecCost = elecUsed * (systemData.settings.elecFlat || 3500);
             const waterCost = waterUsed * (systemData.settings.waterFlat || 15000);
             const evCost = evUsed * (systemData.settings.evFlat || 4000);
+            
+            // Tính tiền rác cho hóa đơn chi tiết
+            const garbageCost = (r.members || 1) * (systemData.settings.garbageFlat || 10000);
 
             const printArea = document.getElementById('invoice-print-area');
             if(!printArea) return;
@@ -1081,13 +1103,13 @@
                     <hr class="my-3">
                     <div class="space-y-1 text-xs">
                         <p><strong>Mã phòng:</strong> ${roomId}</p>
-                        <p><strong>Khách hàng:</strong> ${r.renter}</p>
+                        <p><strong>Khách hàng:</strong> ${r.renter} (${r.members} nhân khẩu)</p>
                     </div>
                     <table class="w-full text-left text-xs border-collapse mt-4">
                         <thead>
                             <tr class="border-b font-bold bg-slate-50">
                                 <th class="py-1">Hạng mục</th>
-                                <th class="py-1 text-center">Chỉ số</th>
+                                <th class="py-1 text-center">Chỉ số / Số lượng</th>
                                 <th class="py-1 text-right">Thành tiền</th>
                             </tr>
                         </thead>
@@ -1111,6 +1133,11 @@
                                 <td class="py-1.5">Điện sạc xe EV (${evUsed} kWh)</td>
                                 <td class="py-1.5 text-center text-slate-400">${b.evStart} → ${b.evEnd}</td>
                                 <td class="py-1.5 text-right">${evCost.toLocaleString()} ₫</td>
+                            </tr>
+                            <tr class="bg-emerald-50/20">
+                                <td class="py-1.5 font-medium text-emerald-900">Phí dịch vụ rác thải</td>
+                                <td class="py-1.5 text-center text-emerald-800">${r.members} người</td>
+                                <td class="py-1.5 text-right font-semibold text-emerald-800">${garbageCost.toLocaleString()} ₫</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1136,9 +1163,9 @@
                 { id: "201", renter: "Lê Hoàng Đạt", price: 3600000, members: 1, initElec: 500, initWater: 90, initEv: 0 }
             ];
             systemData.billings = [
-                { roomId: "101", month: "2026-05", elecStart: 1000, elecEnd: 1150, waterStart: 150, waterEnd: 165, evStart: 50, evEnd: 70, total: 4330000, paid: true },
-                { roomId: "102", month: "2026-05", elecStart: 2000, elecEnd: 2270, waterStart: 250, waterEnd: 272, evStart: 100, evEnd: 150, total: 5275000, paid: false },
-                { roomId: "201", month: "2026-05", elecStart: 500, elecEnd: 560, waterStart: 90, waterEnd: 98, evStart: 0, evEnd: 0, total: 3930000, paid: false }
+                { roomId: "101", month: "2026-05", elecStart: 1000, elecEnd: 1150, waterStart: 150, waterEnd: 165, evStart: 50, evEnd: 70, total: 4350000, paid: true },
+                { roomId: "102", month: "2026-05", elecStart: 2000, elecEnd: 2270, waterStart: 250, waterEnd: 272, evStart: 100, evEnd: 150, total: 5305000, paid: false },
+                { roomId: "201", month: "2026-05", elecStart: 500, elecEnd: 560, waterStart: 90, waterEnd: 98, evStart: 0, evEnd: 0, total: 3940000, paid: false }
             ];
             systemData.expenses = [
                 { id: "exp_1", month: "2026-05", name: "Hóa đơn Điện tổng EVN", amount: 2500000 },
@@ -1147,7 +1174,7 @@
             ];
             await syncToCloud();
             renderAll();
-            alert("Đã nạp bộ dữ liệu mẫu cấu trúc sạch (Bao gồm xe điện và nhân khẩu) thành công!");
+            alert("Đã nạp bộ dữ liệu mẫu cấu trúc sạch (Bao gồm xe điện, phí rác theo người và nhân khẩu) thành công!");
         };
     </script>
 </body>
