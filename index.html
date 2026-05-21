@@ -398,38 +398,31 @@
         // ĐỒNG BỘ FIREBASE CLOUD (FIRESTORE) - ĐÃ ĐƯỢC VÁ LỖI ÉP MẢNG PHÒNG VỆ
         async function loadDataFromFirebase() {
             try {
-                const docRef = doc(db, "rental_data", "system_state");
-                const docSnap = await getDoc(docRef);
-                
-                if (docSnap.exists()) {
-                    systemData = docSnap.data();
-                } else {
-                    const localData = localStorage.getItem('room_manager_data');
-                    if (localData) systemData = JSON.parse(localData);
-                }
-
-                // KHẮC PHỤC LỖI GỐC: Ép kiểu dữ liệu phòng vệ ngay khi đọc dữ liệu về, trước khi chạy giao diện
-                if (!systemData) systemData = {};
-                
-                if (!systemData.billings || !Array.isArray(systemData.billings)) {
-                    systemData.billings = systemData.billings ? Object.values(systemData.billings) : [];
-                }
-                if (!systemData.rooms || !Array.isArray(systemData.rooms)) {
-                    systemData.rooms = systemData.rooms ? Object.values(systemData.rooms) : [];
-                }
-                if (!systemData.expenses || !Array.isArray(systemData.expenses)) {
-                    systemData.expenses = systemData.expenses ? Object.values(systemData.expenses) : [];
-                }
-                if (!systemData.settings) {
-                    systemData.settings = { elecFlat: 3500, waterFlat: 15000 };
-                }
-
-                initAppLifecycle();
-            } catch (err) {
-                console.error("Lỗi tải dữ liệu Cloud:", err);
-            }
+        const docRef = doc(db, "rental_data", "system_state");
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            systemData = docSnap.data();
+        } else {
+            const localData = localStorage.getItem('room_manager_data');
+            if (localData) systemData = JSON.parse(localData);
         }
 
+        // BIỆN PHÁP PHÒNG VỆ NGHIÊM NGẶT: Ép kiểu dữ liệu về Array nếu Cloud trả về sai cấu trúc
+        if (!systemData) systemData = {};
+        if (!systemData.rooms || !Array.isArray(systemData.rooms)) systemData.rooms = [];
+        if (!systemData.billings || !Array.isArray(systemData.billings)) systemData.billings = [];
+        if (!systemData.expenses || !Array.isArray(systemData.expenses)) systemData.expenses = [];
+        if (!systemData.settings) systemData.settings = { elecFlat: 3500, waterFlat: 15000 };
+
+        initAppLifecycle();
+    } catch (err) {
+        console.error("Lỗi tải dữ liệu Cloud:", err);
+        // Đảm bảo ứng dụng vẫn chạy tiếp bằng dữ liệu dự phòng nếu Cloud sập
+        if (!systemData.billings) systemData.billings = [];
+        initAppLifecycle();
+    }
+}
         async function syncToCloud() {
             localStorage.setItem('room_manager_data', JSON.stringify(systemData));
             try {
@@ -600,52 +593,60 @@
         };
 
         function renderCharts() {
-            if (!systemData.billings) systemData.billings = [];
-            const currentBillings = systemData.billings.filter(b => b && b.month === currentMonth);
-            const labels = currentBillings.map(b => "Phòng " + b.roomId);
-            const elecData = currentBillings.map(b => Math.max(0, (b.elecEnd || 0) - (b.elecStart || 0)));
-            const waterData = currentBillings.map(b => Math.max(0, (b.waterEnd || 0) - (b.waterStart || 0)));
+           // Đảm bảo biến billings luôn là mảng để tránh lỗi .filter
+    if (!systemData || !Array.isArray(systemData.billings)) systemData.billings = [];
+    
+    const currentBillings = systemData.billings.filter(b => b && b.month === currentMonth);
+    const labels = currentBillings.map(b => "Phòng " + b.roomId);
+    const elecData = currentBillings.map(b => (parseFloat(b.elecEnd) || 0) - (parseFloat(b.elecStart) || 0));
+    const waterData = currentBillings.map(b => (parseFloat(b.waterEnd) || 0) - (parseFloat(b.waterStart) || 0));
 
-            const ctxElec = document.getElementById('chart-elec-consumption');
-            if(ctxElec) {
-                if(chartElecInstance) chartElecInstance.destroy();
-                chartElecInstance = new Chart(ctxElec, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Điện năng (kWh)',
-                            data: elecData,
-                            backgroundColor: 'rgba(245, 158, 11, 0.75)',
-                            borderColor: 'rgb(245, 158, 11)',
-                            borderWidth: 1.5,
-                            borderRadius: 6
-                        }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-                });
-            }
-
-            const ctxWater = document.getElementById('chart-water-consumption');
-            if(ctxWater) {
-                if(chartWaterInstance) chartWaterInstance.destroy();
-                chartWaterInstance = new Chart(ctxWater, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Sản lượng nước (m³)',
-                            data: waterData,
-                            backgroundColor: 'rgba(14, 165, 233, 0.75)',
-                            borderColor: 'rgb(14, 165, 233)',
-                            borderWidth: 1.5,
-                            borderRadius: 6
-                        }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-                });
-            }
+    // --- XỬ LÝ BIỂU ĐỒ ĐIỆN ---
+    const ctxElec = document.getElementById('chart-elec-consumption');
+    if (ctxElec) {
+        // HỦY INSTANCE CŨ TRƯỚC KHI TẠO MỚI (GIẢI QUYẾT LỖI CANVAS IN USE)
+        if (chartElecInstance instanceof Chart) {
+            chartElecInstance.destroy();
         }
+        
+        chartElecInstance = new Chart(ctxElec, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Điện tiêu thụ (kWh)',
+                    data: elecData,
+                    backgroundColor: '#f59e0b',
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // --- XỬ LÝ BIỂU ĐỒ NƯỚC ---
+    const ctxWater = document.getElementById('chart-water-consumption');
+    if (ctxWater) {
+        // HỦY INSTANCE CŨ TRƯỚC KHI TẠO MỚI
+        if (chartWaterInstance instanceof Chart) {
+            chartWaterInstance.destroy();
+        }
+        
+        chartWaterInstance = new Chart(ctxWater, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nước tiêu thụ (m³)',
+                    data: waterData,
+                    backgroundColor: '#0ea5e9',
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+}
 
         function renderBatchInputTable() {
             const tbody = document.getElementById('batch-input-tbody');
