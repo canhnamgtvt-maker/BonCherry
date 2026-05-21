@@ -860,3 +860,109 @@
         window.deleteRoom = async function(id) {
             if(confirm(`Xác nhận xóa hoàn toàn Phòng ${id}?`)) {
                 systemData.rooms = systemData.rooms.filter(rm => rm.id !== id);
+                systemData.billings = systemData.billings.filter(bl => bl.roomId !== id);
+                await syncToCloud();
+                renderAll();
+            }
+        };
+
+        // 7. CẤU HÌNH ĐƠN GIÁ
+        function renderSettings() {
+            document.getElementById('setting-elec-flat').value = systemData.settings.elecFlat;
+            document.getElementById('setting-water-flat').value = systemData.settings.waterFlat;
+        }
+
+        window.saveSystemSettings = async function() {
+            systemData.settings.elecFlat = parseFloat(document.getElementById('setting-elec-flat').value) || 0;
+            systemData.settings.waterFlat = parseFloat(document.getElementById('setting-water-flat').value) || 0;
+            await syncToCloud();
+            alert("Đã cập nhật đơn giá hệ thống!");
+            renderAll();
+        };
+
+        // XEM & IN PHIẾU THU HOÁ ĐƠN CHI TIẾT
+        window.viewInvoiceInvoice = function(roomId, month) {
+            const b = systemData.billings.find(bl => bl.roomId === roomId && bl.month === month);
+            const r = systemData.rooms.find(rm => rm.id === roomId) || { renter: "Không rõ", price: 0 };
+            if(!b) return;
+
+            const elecUsed = b.elecEnd - b.elecStart;
+            const waterUsed = b.waterEnd - b.waterStart;
+            const elecCost = elecUsed * systemData.settings.elecFlat;
+            const waterCost = waterUsed * systemData.settings.waterFlat;
+
+            const printArea = document.getElementById('invoice-print-area');
+            printArea.innerHTML = `
+                <div class="max-w-md mx-auto border p-5 rounded-xl bg-white text-sm">
+                    <h2 class="text-center text-lg font-bold uppercase tracking-wide text-slate-950">Hoá Đơn Thanh Toán Tiền Nhà</h2>
+                    <p class="text-center text-xs text-slate-500 mt-0.5">Tháng chu kỳ: ${month}</p>
+                    <hr class="my-3">
+                    <div class="space-y-1 text-xs">
+                        <p><strong>Mã phòng:</strong> ${roomId}</p>
+                        <p><strong>Khách hàng:</strong> ${r.renter}</p>
+                    </div>
+                    <table class="w-full text-left text-xs border-collapse mt-4">
+                        <thead>
+                            <tr class="border-b font-bold bg-slate-50">
+                                <th class="py-1">Hạng mục</th>
+                                <th class="py-1 text-center">Chỉ số</th>
+                                <th class="py-1 text-right">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr>
+                                <td class="py-1.5">Tiền phòng gốc</td>
+                                <td class="py-1.5 text-center">-</td>
+                                <td class="py-1.5 text-right">${r.price.toLocaleString()} ₫</td>
+                            </tr>
+                            <tr>
+                                <td class="py-1.5">Tiền Điện (${elecUsed} kWh)</td>
+                                <td class="py-1.5 text-center text-slate-400">${b.elecStart} → ${b.elecEnd}</td>
+                                <td class="py-1.5 text-right">${elecCost.toLocaleString()} ₫</td>
+                            </tr>
+                            <tr>
+                                <td class="py-1.5">Tiền Nước (${waterUsed} m³)</td>
+                                <td class="py-1.5 text-center text-slate-400">${b.waterStart} → ${b.waterEnd}</td>
+                                <td class="py-1.5 text-right">${waterCost.toLocaleString()} ₫</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr class="my-3">
+                    <div class="flex justify-between items-center font-bold text-base text-indigo-700">
+                        <span>TỔNG THU:</span>
+                        <span>${b.total.toLocaleString()} ₫</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1 text-center">Trạng thái: ${b.paid ? 'Đã đóng tiền' : 'Chưa thu tiền'}</p>
+                    <div class="mt-6 flex justify-end gap-2 no-print">
+                        <button onclick="window.print()" class="px-3 py-1 bg-slate-900 text-white rounded text-xs">In phiếu</button>
+                        <button onclick="document.getElementById('invoice-print-area').classList.add('hidden')" class="px-3 py-1 bg-slate-200 text-slate-700 rounded text-xs">Đóng</button>
+                    </div>
+                </div>
+            `;
+            printArea.classList.remove('hidden');
+        };
+
+        // KHỞI TẠO BỘ DỮ LIỆU MẪU ĐỂ TEST NGAY KHÔNG CẦN CHỜ
+        window.quickGenerateMockData = async function() {
+            systemData.rooms = [
+                { id: "101", renter: "Nguyễn Văn An", price: 3500000 },
+                { id: "102", renter: "Trần Thị Bình", price: 3800000 },
+                { id: "201", renter: "Lê Hoàng Đạt", price: 3600000 }
+            ];
+            systemData.billings = [
+                { roomId: "101", month: "2026-05", elecStart: 1200, elecEnd: 1350, waterStart: 210, waterEnd: 225, total: 4250000, paid: true },
+                { roomId: "102", month: "2026-05", elecStart: 3450, elecEnd: 3720, waterStart: 450, waterEnd: 472, total: 5075000, paid: false },
+                { roomId: "201", month: "2026-05", elecStart: 850, elecEnd: 910, waterStart: 112, waterEnd: 120, total: 3930000, paid: false }
+            ];
+            systemData.expenses = [
+                { id: "exp_1", month: "2026-05", name: "Hóa đơn Điện tổng EVN", amount: 2500000 },
+                { id: "exp_2", month: "2026-05", name: "Hóa đơn Nước tổng", amount: 450000 },
+                { id: "exp_3", month: "2026-05", name: "Tiền thuê dọn vệ sinh chung", amount: 300000 }
+            ];
+            await syncToCloud();
+            renderAll();
+            alert("Đã nạp bộ dữ liệu mẫu khoa học thành công để kiểm thử!");
+        };
+    </script>
+</body>
+</html>
