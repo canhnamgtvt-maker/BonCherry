@@ -1,24 +1,3 @@
-
-Trò chuyện với Gemini
-Dựa theo file này, hãy viết giúp tôi phần mềm quản lý nhà trọ thật khoa học, quản lý hiệu quả chi phí hàng tháng, chênh lệch thu chi giữa chi phí phải trả và chi phí thu được từ các phòng, có đầy đủ biểu đồ thể hiện mức độ tiêu thụ điện nước của các phòng, danh sách các phòng dùng nhiều nhất và ít nhất, danh sách công nợ chi tiết các phòng. QUan trọng là kết nối được firebase. Việc vận hành tiếp theo chúng ta sẽ tiếp tục làm sau
-
-Chào bạn, tôi đã nghiên cứu kỹ tệp mã nguồn index (4).html của bạn. Trong tệp tin cũ, hệ thống đang gặp lỗi xung đột thư viện: Import các hàm của Cloud Firestore nhưng bên dưới lại viết cú pháp của Realtime Database (set, ref, getDatabase).
-
-Tôi đã tối ưu hóa toàn diện cấu trúc phần mềm, chuyển đổi đồng bộ sang Cloud Firestore để lưu trữ dữ liệu an toàn (tránh lỗi dấu chấm . trong Key của Realtime DB), đồng thời thiết lập hệ thống tính toán khoa học đáp ứng trọn vẹn các yêu cầu quản lý nâng cao của bạn:
-
-Quản lý Chi phí vận hành của Chủ nhà (Tiền điện/nước tổng, bảo trì, vệ sinh...).
-
-Báo cáo Chênh lệch Thu - Chi thực tế (Tổng số tiền thu từ các phòng đối chiếu với chi phí vận hành gốc để tính biên lợi nhuận ròng).
-
-Hệ thống Biểu đồ Động (Chart.js): Trực quan hóa sản lượng điện và nước tiêu thụ của từng phòng.
-
-Bảng Xếp hạng thông minh: Tự động lọc danh sách các phòng tiêu thụ nhiều nhất và ít nhất.
-
-Sổ theo dõi Công nợ chi tiết: Liệt kê rõ ràng trạng thái công nợ chưa đóng của từng phòng qua các tháng.
-
-Dưới đây là toàn bộ mã nguồn ứng dụng quản lý nhà trọ hoàn chỉnh, khoa học và sẵn sàng kết nối Firebase. Bạn chỉ cần sao chép nội dung này, lưu thành tệp .html và chạy trực tiếp trên trình duyệt.
-
-HTML
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -435,6 +414,27 @@ HTML
             } catch (err) {
                 console.error("Lỗi tải dữ liệu Cloud:", err);
             }
+           // Sau khi lấy dữ liệu từ Firebase về:
+// Ví dụ: systemData = docSnap.data(); hoặc snapshot.val();
+
+if (!systemData) systemData = {};
+
+// ÉP KIỂU PHÒNG VỆ: Nếu có dữ liệu nhưng không phải Array (hoặc trống), chuyển thành Array ngay
+if (!systemData.billings || !Array.isArray(systemData.billings)) {
+    systemData.billings = systemData.billings ? Object.values(systemData.billings) : [];
+}
+if (!systemData.rooms || !Array.isArray(systemData.rooms)) {
+    systemData.rooms = systemData.rooms ? Object.values(systemData.rooms) : [];
+}
+if (!systemData.expenses || !Array.isArray(systemData.expenses)) {
+    systemData.expenses = systemData.expenses ? Object.values(systemData.expenses) : [];
+}
+if (!systemData.savedInvoices || !Array.isArray(systemData.savedInvoices)) {
+    systemData.savedInvoices = systemData.savedInvoices ? Object.values(systemData.savedInvoices) : [];
+}
+if (!systemData.snapshots || !Array.isArray(systemData.snapshots)) {
+    systemData.snapshots = systemData.snapshots ? Object.values(systemData.snapshots) : [];
+} 
         }
 
         async function syncToCloud() {
