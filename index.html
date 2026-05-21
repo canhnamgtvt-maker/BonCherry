@@ -980,12 +980,16 @@ HTML
 
         // 2. BIỂU ĐỒ ĐIỆN NƯỚC (CHART.JS CHUYÊN NGHIỆP)
         function renderCharts() {
-            const currentBillings = systemData.billings.filter(b => b.month === currentMonth);
+            // Phòng vệ dữ liệu: Nếu chưa phải là mảng, gán tạm thành mảng rỗng để không bị sập code
+            if (!systemData || !Array.isArray(systemData.billings)) {
+                systemData.billings = [];
+            }
+
+            const currentBillings = systemData.billings.filter(b => b && b.month === currentMonth);
             const labels = currentBillings.map(b => "Phòng " + b.roomId);
             const elecData = currentBillings.map(b => Math.max(0, b.elecEnd - b.elecStart));
             const waterData = currentBillings.map(b => Math.max(0, b.waterEnd - b.waterStart));
 
-            // Biểu đồ Điện
             const ctxElec = document.getElementById('chart-elec-consumption');
             if(ctxElec) {
                 if(chartElecInstance) chartElecInstance.destroy();
@@ -1006,7 +1010,6 @@ HTML
                 });
             }
 
-            // Biểu đồ Nước
             const ctxWater = document.getElementById('chart-water-consumption');
             if(ctxWater) {
                 if(chartWaterInstance) chartWaterInstance.destroy();
@@ -1027,17 +1030,18 @@ HTML
                 });
             }
         }
-
         // 3. NHẬP SỐ LIỆU ĐỒNG LOẠT HÀNG THÁNG
         function renderBatchInputTable() {
             const tbody = document.getElementById('batch-input-tbody');
-            if(systemData.rooms.length === 0) {
+            if (!systemData || !Array.isArray(systemData.rooms) || systemData.rooms.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Vui lòng khởi tạo danh sách phòng trước</td></tr>`;
                 return;
             }
 
+            if (!Array.isArray(systemData.billings)) systemData.billings = [];
+
             tbody.innerHTML = systemData.rooms.map(r => {
-                const b = systemData.billings.find(bl => bl.roomId === r.id && bl.month === currentMonth) || {
+                const b = systemData.billings.find(bl => bl && bl.roomId === r.id && bl.month === currentMonth) || {
                     elecStart: getPreviousMonthEndIndex(r.id, 'elec'), elecEnd: 0,
                     waterStart: getPreviousMonthEndIndex(r.id, 'water'), waterEnd: 0
                 };
