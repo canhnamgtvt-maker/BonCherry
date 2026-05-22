@@ -1515,37 +1515,37 @@ function renderBatchInputTable() {
             }
         }
         window.recalculateAllBillings = function() {
-    if (!confirm("Bạn có chắc chắn muốn tính toán lại toàn bộ hóa đơn với đơn giá hiện tại không? Hành động này sẽ thay đổi số tiền đã lưu!")) return;
+    if (!confirm("Xác nhận tính toán lại toàn bộ hóa đơn tháng này với đơn giá mới?")) return;
 
     const settings = window.systemData.settings;
-    
-    // Duyệt qua tất cả hóa đơn đã lưu trong hệ thống
+    if (!settings) { alert("Chưa có thiết lập đơn giá!"); return; }
+
     window.systemData.billings.forEach(inv => {
-        const room = window.systemData.rooms.find(r => r.roomId === inv.roomId);
-        if (room) {
-            const elecCost = Math.max(0, inv.elecEnd - inv.elecStart) * settings.elecFlat;
-            const waterCost = Math.max(0, inv.waterEnd - inv.waterStart) * settings.waterFlat;
-            const evCost = Math.max(0, inv.evEnd - inv.evStart) * settings.evFlat;
-            const garbageCost = (room.members || 1) * (settings.garbageFlat || 0);
-            
-            // Cập nhật tổng tiền mới
-            inv.total = Number(room.price) + elecCost + waterCost + evCost + garbageCost + Number(inv.otherCost);
+        // Chỉ tính lại cho tháng đang chọn trên giao diện
+        if (inv.month === document.getElementById('global-month').value) {
+            const room = window.systemData.rooms.find(r => r.roomId === inv.roomId);
+            if (room) {
+                const eCost = Math.max(0, inv.elecEnd - inv.elecStart) * settings.elecFlat;
+                const wCost = Math.max(0, inv.waterEnd - inv.waterStart) * settings.waterFlat;
+                const evCost = Math.max(0, inv.evEnd - inv.evStart) * settings.evFlat;
+                const rCost = (room.members || 1) * settings.garbageFlat;
+                inv.total = Number(room.price) + eCost + wCost + evCost + rCost + Number(inv.otherCost);
+            }
         }
     });
 
-    // Nếu anh có dùng Firebase hoặc LocalStorage để lưu, hãy đảm bảo gọi hàm lưu tại đây
-    // Ví dụ: saveToFirebase(); hoặc localStorage.setItem('systemData', JSON.stringify(window.systemData));
+    // Gọi hàm lưu dữ liệu (Tự động tìm hàm Firebase hoặc LocalStorage của anh)
+    if (typeof saveToFirebase === 'function') saveToFirebase();
+    else if (typeof localStorage !== 'undefined') localStorage.setItem('systemData', JSON.stringify(window.systemData));
     
-    renderSummaryReport(); // Cập nhật lại giao diện bảng doanh thu
-    alert("Đã cập nhật lại toàn bộ hóa đơn theo đơn giá mới!");
+    // Cập nhật lại giao diện
+    if (typeof renderSummaryReport === 'function') renderSummaryReport();
     
-    // Đóng modal nếu nút nằm trong modal
-    const modal = document.getElementById('roomModal');
-    if(modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-};
+    alert("Đã cập nhật lại toàn bộ hóa đơn!");
+    
+    // Đóng Modal sau khi xong
+    document.getElementById('roomModal').classList.add('hidden');
+    document.getElementById('roomModal').classList.remove('flex');
     </script>
 </body>
 </html>
