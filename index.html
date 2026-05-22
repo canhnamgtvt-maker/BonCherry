@@ -126,10 +126,10 @@
                                 <span id="metric-total-exp" class="text-lg font-bold text-slate-900">0 ₫</span>
                             </div>
                         </div>
-                        <div id="metric-variance-box" class="p-4 rounded-xl flex items-center gap-3 border transition-all">
-                            <div id="metric-variance-icon" class="p-3 text-white rounded-lg"><i class="fa-solid fa-scale-balanced text-xl"></i></div>
+                        <div id="metric-variance-box" class="p-4 rounded-xl flex items-center gap-3 border transition-all bg-emerald-50 border-emerald-100">
+                            <div id="metric-variance-icon" class="p-3 text-white rounded-lg bg-emerald-500"><i class="fa-solid fa-scale-balanced text-xl"></i></div>
                             <div>
-                                <span class="text-[10px] uppercase tracking-wider font-bold block">Lợi Nhuận Ròng</span>
+                                <span class="text-[10px] uppercase tracking-wider font-bold block text-emerald-700">Lợi Nhuận Ròng</span>
                                 <span id="metric-total-variance" class="text-lg font-bold text-slate-900">0 ₫</span>
                             </div>
                         </div>
@@ -234,7 +234,7 @@
                     </div>
                     <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-lg text-xs text-indigo-800 font-medium flex items-center gap-2">
                         <i class="fa-solid fa-circle-info text-base"></i> 
-                        <span><b>Quy tắc nhập liệu:</b> Số đầu kỳ được kế thừa tự động. Ô số cuối kỳ nhập sai <b>(nhỏ hơn số đầu kỳ)</b> sẽ báo đỏ và hệ thống chặn không cho phép cập nhật lên đám mây.</span>
+                        <span><b>Quy tắc nhập liệu:</b> Số đầu kỳ được kế thừa tự động. Ô số cuối kỳ nhập sai <b>(nhỏ hơn số đầu kỳ)</b> sẽ báo đỏ và hệ thống chặn không cho phép cập nhật.</span>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl">
                         <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
@@ -658,7 +658,6 @@
             if(tabId === 'dashboard') renderCharts();
         };
 
-        // REALTIME LIVE INPUT CHECK
         window.validateLiveInput = function(roomId, type) {
             const startVal = parseFloat(document.getElementById(`input-${type}Start-${roomId}`).value) || 0;
             const endEl = document.getElementById(`input-${type}End-${roomId}`);
@@ -671,7 +670,6 @@
             }
         };
 
-        // METRICS
         function renderDashboardMetrics() {
             const currentBillings = window.systemData.billings.filter(b => b && b.month === currentMonth);
             const currentExpenses = window.systemData.expenses.filter(e => e && e.month === currentMonth);
@@ -801,7 +799,6 @@
             window.renderAll();
         };
 
-        // EXPENSES
         function renderExpenseTable() {
             const tbody = document.getElementById('expense-table-tbody');
             if(!tbody) return;
@@ -836,7 +833,6 @@
             }
         };
 
-        // DOANH THU & PHIẾU THU CHÍNH
         function renderSummaryReport() {
             const tbody = document.getElementById('summary-table-tbody');
             if(!tbody) return;
@@ -911,7 +907,6 @@
             }
         };
 
-        // VIEW INVOICE DETAIL
         window.viewInvoiceDetail = function(roomId, month, savedInvoiceStr = null) {
             let billing = null;
             let renterName = "";
@@ -1056,7 +1051,6 @@
 
         window.triggerPrintInvoice = function() { window.print(); };
 
-        // HISTORICAL RECORD
         function renderSavedInvoicesTable() {
             const tbody = document.getElementById('saved-invoices-tbody');
             if(!tbody) return;
@@ -1082,7 +1076,6 @@
             }
         };
 
-        // ROOMS GRID
         function renderRoomsGrid() {
             const grid = document.getElementById('rooms-grid');
             if(!grid) return;
@@ -1161,7 +1154,6 @@
             }
         };
 
-        // SETTINGS
         function renderSettings() {
             const s = window.systemData.settings;
             if(document.getElementById('setting-elec-flat')) document.getElementById('setting-elec-flat').value = s.elecFlat || 3500;
@@ -1182,7 +1174,7 @@
             window.renderAll();
         };
 
-        // ADVANCED STYLED EXCEL ENGINE (KẺ BẢNG, TÔ MÀU TIÊU ĐỀ, TOTALS, CĂN BIÊN)
+        // HÀM XUẤT EXCEL THẨM MỸ - SỬA LỖI ĐỔ DỮ LIỆU SANG CELL ĐỐI TƯỢNG (FIXED)
         window.exportToExcel = function(type) {
             try {
                 const wb = XLSX.utils.book_new();
@@ -1206,9 +1198,9 @@
                     fileNameSuffix = "ToanBoHeThong";
                 }
 
-                // Định nghĩa Palette phong cách hành chính/doanh nghiệp: Xanh lục đậm, viền mờ mảnh
+                // Cấu hình bảng màu chuẩn doanh nghiệp/hành chính
                 const styleHeader = {
-                    fill: { fgColor: { rgb: "1F4E78" } }, // Xanh Navy đậm sang trọng
+                    fill: { fgColor: { rgb: "1F4E78" } }, 
                     font: { name: "Segoe UI", size: 11, bold: true, color: { rgb: "FFFFFF" } },
                     alignment: { horizontal: "center", vertical: "center", wrapText: true },
                     border: {
@@ -1231,7 +1223,7 @@
                 const styleCellRightNum = {
                     font: { name: "Segoe UI", size: 10 },
                     alignment: { horizontal: "right", vertical: "center" },
-                    numFmt: "#,##0", // Định dạng dấu phẩy phân tách nghìn Việt Nam Đồng
+                    numFmt: "#,##0",
                     border: {
                         top: { style: "thin", color: { rgb: "E0E0E0" } }, bottom: { style: "thin", color: { rgb: "E0E0E0" } },
                         left: { style: "thin", color: { rgb: "E0E0E0" } }, right: { style: "thin", color: { rgb: "E0E0E0" } }
@@ -1248,7 +1240,7 @@
                 };
 
                 const styleTotalRow = {
-                    fill: { fgColor: { rgb: "F2F2F2" } }, // Nền xám nhạt cho dòng tổng kết
+                    fill: { fgColor: { rgb: "F2F2F2" } }, 
                     font: { name: "Segoe UI", size: 10, bold: true, color: { rgb: "1F4E78" } },
                     alignment: { vertical: "center" },
                     numFmt: "#,##0",
@@ -1258,83 +1250,79 @@
                     }
                 };
 
-                // HÀM TIỆN ÍCH CHUYỂN ĐỔI MẢNG THÀNH WORKSHEET CÓ ĐỊNH DẠNG MÀU SẮC
+                // HÀM TIỆN ÍCH KHỞI TẠO TỪNG CELL VÀ GÁN KIỂU DỮ LIỆU ĐỂ THƯ VIỆN ĐỌC ĐƯỢC
                 function buildStyledSheet(headers, dataRows, typeMapping, totalColumnIndices = []) {
-                    const ws = XLSX.utils.aoa_to_sheet([headers]);
+                    const ws = {};
                     
-                    // Thiết lập chiều cao hàng tiêu đề
-                    ws['!rows'] = [{ hpt: 26 }];
-
-                    // 1. Định dạng hàng tiêu đề (Row 0)
+                    // 1. Tạo ô tiêu đề
                     headers.forEach((h, colIdx) => {
                         const cellRef = XLSX.utils.encode_cell({ r: 0, c: colIdx });
-                        if (ws[cellRef]) ws[cellRef].s = styleHeader;
+                        ws[cellRef] = { v: h, t: 's', s: styleHeader };
                     });
 
-                    // 2. Điền dữ liệu và định dạng biên
                     let totalSums = new Array(headers.length).fill(0);
                     
+                    // 2. Điền mảng dòng dữ liệu
                     dataRows.forEach((row, rowIdx) => {
                         const rIdx = rowIdx + 1;
-                        ws['!rows'].push({ hpt: 20 }); // Chiều cao hàng dữ liệu vừa vặn
-
                         row.forEach((val, cIdx) => {
                             const cellRef = XLSX.utils.encode_cell({ r: rIdx, c: cIdx });
-                            ws[cellRef] = { v: val };
-
-                            // Áp dụng kiểu căn lề biên dựa trên sơ đồ phân loại cột
                             const alignType = typeMapping[cIdx];
-                            if (alignType === "right") {
-                                ws[cellRef].s = styleCellRightNum;
-                                if (totalColumnIndices.includes(cIdx) && typeof val === "number") {
-                                    totalSums[cIdx] += val;
+                            
+                            // Phân tách rõ ràng kiểu dữ liệu để tránh file trống
+                            if (typeof val === "number") {
+                                ws[cellRef] = { v: val, t: 'n' };
+                                if (alignType === "right") {
+                                    ws[cellRef].s = styleCellRightNum;
+                                    if (totalColumnIndices.includes(cIdx)) {
+                                        totalSums[cIdx] += val;
+                                    }
+                                } else {
+                                    ws[cellRef].s = styleCellCenter;
                                 }
-                            } else if (alignType === "center") {
-                                ws[cellRef].s = styleCellCenter;
                             } else {
-                                ws[cellRef].s = styleCellLeft;
+                                ws[cellRef] = { v: val != null ? String(val) : "", t: 's' };
+                                ws[cellRef].s = (alignType === "center") ? styleCellCenter : styleCellLeft;
                             }
                         });
                     });
 
-                    // 3. Nếu bảng có cột cần tính tổng, tạo thêm hàng "TỔNG CỘNG"
-                    if (totalColumnIndices.length > 0) {
-                        const tRowIdx = dataRows.length + 1;
-                        ws['!rows'].push({ hpt: 22 });
-
+                    // 3. Tạo dòng tính tổng cuối bảng
+                    const lastRowIndex = dataRows.length + 1;
+                    if (totalColumnIndices.length > 0 && dataRows.length > 0) {
                         for (let cIdx = 0; cIdx < headers.length; cIdx++) {
-                            const cellRef = XLSX.utils.encode_cell({ r: tRowIdx, c: cIdx });
+                            const cellRef = XLSX.utils.encode_cell({ r: lastRowIndex, c: cIdx });
                             if (cIdx === 0) {
-                                ws[cellRef] = { v: "TỔNG CỘNG HỆ THỐNG", t: 's' };
-                                ws[cellRef].s = { ...styleTotalRow, alignment: { horizontal: "left" } };
+                                ws[cellRef] = { v: "TỔNG CỘNG HỆ THỐNG", t: 's', s: { ...styleTotalRow, alignment: { horizontal: "left" } } };
                             } else if (totalColumnIndices.includes(cIdx)) {
-                                ws[cellRef] = { v: totalSums[cIdx], t: 'n' };
-                                ws[cellRef].s = { ...styleTotalRow, alignment: { horizontal: "right" } };
+                                ws[cellRef] = { v: totalSums[cIdx], t: 'n', s: { ...styleTotalRow, alignment: { horizontal: "right" } } };
                             } else {
-                                ws[cellRef] = { v: "" };
-                                ws[cellRef].s = styleTotalRow;
+                                ws[cellRef] = { v: "", t: 's', s: styleTotalRow };
                             }
                         }
                     }
 
-                    // 4. Cơ chế tự động tính toán độ rộng cột (Autofit Column Width)
-                    const colsWidth = headers.map((h, cIdx) => {
+                    // 4. Định biên dải ô hợp lệ cho Excel đọc
+                    const maxRow = totalColumnIndices.length > 0 && dataRows.length > 0 ? lastRowIndex : dataRows.length;
+                    ws['!ref'] = XLSX.utils.encode_range({ r: 0, c: 0 }, { r: maxRow, c: headers.length - 1 });
+
+                    // 5. Tính độ rộng cột tự động
+                    ws['!cols'] = headers.map((h, cIdx) => {
                         let maxLen = h.toString().length + 4;
                         dataRows.forEach(row => {
                             if (row[cIdx] != null) {
                                 let cellLen = row[cIdx].toString().length;
-                                if (typeMapping[cIdx] === "right") cellLen += 4; // Bù khoảng trống dấu phẩy VNĐ
+                                if (typeMapping[cIdx] === "right") cellLen += 3;
                                 if (cellLen > maxLen) maxLen = cellLen;
                             }
                         });
-                        return { wch: Math.min(Math.max(maxLen, 11), 30) }; // Giới hạn tối thiểu 11, tối đa 30 ký tự
+                        return { wch: Math.min(Math.max(maxLen, 12), 30) };
                     });
-                    ws['!cols'] = colsWidth;
 
                     return ws;
                 }
 
-                // TAB 1: DANH SÁCH PHÒNG TRỌ BAN ĐẦU
+                // TAB 1: DANH SÁCH PHÒNG
                 const hRooms = ["Mã Phòng", "Tên Khách Thuê", "Giá Thuê Gốc (₫)", "Số Nhân Khẩu (Người)", "Điện Bàn Giao", "Nước Bàn Giao", "Xe EV Bàn Giao"];
                 const mapRooms = ["center", "left", "right", "center", "right", "right", "right"];
                 const rRooms = window.systemData.rooms.map(r => [
@@ -1343,7 +1331,7 @@
                 const wsRooms = buildStyledSheet(hRooms, rRooms, mapRooms, [2]);
                 XLSX.utils.book_append_sheet(wb, wsRooms, "DanhSachPhong");
 
-                // TAB 2: DOANH THU & CHỈ SỐ TIÊU THỤ CHI TIẾT (Trọng tâm kế toán)
+                // TAB 2: DOANH THU & CHỈ SỐ CHI TIẾT
                 const hBillings = [
                     "Kỳ Hoá Đơn", "Mã Phòng", "Tên Khách Thuê", "Giá Gốc (₫)", 
                     "Điện Đầu", "Điện Cuối", "Sản Lượng (kWh)", 
@@ -1368,18 +1356,17 @@
                         b.otherCost || 0, b.total || 0, b.paid ? "Đã Thu Tất Cả" : "Chưa Thu Công Nợ"
                     ];
                 });
-                // Tính tổng tự động cho cột Giá gốc, Sản lượng điện/nước/EV, Phí Khác và Tổng Tiền Hoá Đơn
                 const wsBillings = buildStyledSheet(hBillings, rBillings, mapBillings, [3, 6, 9, 12, 13, 14]);
                 XLSX.utils.book_append_sheet(wb, wsBillings, "DoanhThuChiTiet");
 
-                // TAB 3: CHI PHÍ VẬN HÀNH TÒA NHÀ ĐẦU VÀO
+                // TAB 3: CHI PHÍ VẬN HÀNH ĐẦU VÀO
                 const hExpenses = ["Tháng Chi Trả", "Nội Dung Khoản Chi Phí Vận Hành", "Số Tiền Xuất Quỹ (₫)"];
                 const mapExpenses = ["center", "left", "right"];
                 const rExpenses = filteredExpenses.map(e => [e.month, e.name, e.amount || 0]);
                 const wsExpenses = buildStyledSheet(hExpenses, rExpenses, mapExpenses, [2]);
                 XLSX.utils.book_append_sheet(wb, wsExpenses, "ChiPhiVanHanh");
 
-                // TAB 4: LỊCH SỬ KHÓA LƯU HÓA ĐƠN ĐỐI SOÁT
+                // TAB 4: LỊCH SỬ KHÓA LƯU HÓA ĐƠN
                 let filteredSaved = [];
                 if (type === 'month') filteredSaved = window.systemData.savedInvoices.filter(s => s.month === currentMonth);
                 else if (type === 'year') filteredSaved = window.systemData.savedInvoices.filter(s => s.month.startsWith(currentYear));
@@ -1391,7 +1378,6 @@
                 const wsSaved = buildStyledSheet(hSaved, rSaved, mapSaved, [3]);
                 XLSX.utils.book_append_sheet(wb, wsSaved, "LichSuKhoaLuu");
 
-                // Thực hiện đóng gói và tải xuống file Excel Pro dạng nhị phân có màu sắc
                 XLSX.writeFile(wb, `BaoCao_TaiChinh_NhaTro_${fileNameSuffix}.xlsx`);
             } catch (err) {
                 alert("Lỗi khi xây dựng file cấu trúc Excel: " + err.message);
@@ -1426,7 +1412,6 @@
             reader.readAsText(file);
         };
 
-        // MOCK DATA TESTING PRO
         window.quickGenerateMockData = async function() {
             window.systemData.rooms = [
                 { roomId: "101", renter: "Nguyễn Văn A", price: 3500000, members: 2, initElec: 800, initWater: 120, initEv: 20 },
@@ -1450,7 +1435,6 @@
             alert("Đã khởi tạo xong bộ dữ liệu mẫu Pro!");
         };
 
-        // ANALYTICS & CHARTS
         window.switchRankScope = function(scope) {
             rankScope = scope;
             document.getElementById('btn-rank-month').className = scope === 'month' ? 'px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all' : 'px-3 py-1 text-slate-600 hover:text-slate-900 transition-all';
