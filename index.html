@@ -1190,6 +1190,33 @@ function renderBatchInputTable() {
             alert("Đã cập nhật hệ thống định giá biểu phí dịch vụ mới.");
             window.renderAll();
         };
+        window.recalculateAllBillings = function() {
+    if (!confirm("Bạn có chắc chắn muốn tính toán lại toàn bộ hóa đơn với đơn giá hiện tại không? Hành động này sẽ thay đổi số tiền đã lưu!")) return;
+
+    const settings = window.systemData.settings;
+    
+    // Duyệt qua tất cả hóa đơn đã lưu
+    window.systemData.billings.forEach(inv => {
+        const room = window.systemData.rooms.find(r => r.roomId === inv.roomId);
+        if (room) {
+            // Công thức tính toán chuẩn
+            const elecCost = Math.max(0, inv.elecEnd - inv.elecStart) * settings.elecFlat;
+            const waterCost = Math.max(0, inv.waterEnd - inv.waterStart) * settings.waterFlat;
+            const evCost = Math.max(0, inv.evEnd - inv.evStart) * settings.evFlat;
+            const garbageCost = (room.members || 1) * (settings.garbageFlat || 0);
+            
+            // Cập nhật lại tổng tiền
+            inv.total = Number(room.price) + elecCost + waterCost + evCost + garbageCost + Number(inv.otherCost);
+        }
+    });
+
+    // Lưu lại vào localStorage (nếu phần mềm của anh dùng localStorage)
+    localStorage.setItem('systemData', JSON.stringify(window.systemData));
+    
+    // Refresh lại giao diện
+    renderSummaryReport();
+    alert("Đã tính toán lại toàn bộ hóa đơn thành công!");
+};
 
         window.exportToExcel = function(type) {
             try {
