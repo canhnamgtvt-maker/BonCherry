@@ -443,6 +443,16 @@
                 <div class="grid grid-cols-2 gap-3">
                   // Tính lại hóa đơn 
                     <div class="mt-6 pt-4 border-t border-slate-100">
+// Bổ sung nút
+<div class="mt-6 pt-4 border-t border-slate-100">
+    <button type="button" 
+            onclick="window.recalculateAllBillings()" 
+            class="w-full flex items-center justify-center gap-2 bg-amber-500 text-white hover:bg-amber-600 py-3 rounded-xl font-bold text-sm transition-all shadow-sm">
+        <i class="fa-solid fa-calculator mr-2"></i>
+        TÍNH TOÁN LẠI TOÀN BỘ HÓA ĐƠN
+    </button>
+</div>
+                        
     <button type="button" 
             onclick="window.recalculateAllBillings()" 
             class="w-full flex items-center justify-center gap-2 bg-amber-50 text-amber-700 hover:bg-amber-100 py-3 rounded-xl font-bold text-xs transition-all border border-amber-200">
@@ -1504,6 +1514,38 @@ function renderBatchInputTable() {
                 });
             }
         }
+        window.recalculateAllBillings = function() {
+    if (!confirm("Bạn có chắc chắn muốn tính toán lại toàn bộ hóa đơn với đơn giá hiện tại không? Hành động này sẽ thay đổi số tiền đã lưu!")) return;
+
+    const settings = window.systemData.settings;
+    
+    // Duyệt qua tất cả hóa đơn đã lưu trong hệ thống
+    window.systemData.billings.forEach(inv => {
+        const room = window.systemData.rooms.find(r => r.roomId === inv.roomId);
+        if (room) {
+            const elecCost = Math.max(0, inv.elecEnd - inv.elecStart) * settings.elecFlat;
+            const waterCost = Math.max(0, inv.waterEnd - inv.waterStart) * settings.waterFlat;
+            const evCost = Math.max(0, inv.evEnd - inv.evStart) * settings.evFlat;
+            const garbageCost = (room.members || 1) * (settings.garbageFlat || 0);
+            
+            // Cập nhật tổng tiền mới
+            inv.total = Number(room.price) + elecCost + waterCost + evCost + garbageCost + Number(inv.otherCost);
+        }
+    });
+
+    // Nếu anh có dùng Firebase hoặc LocalStorage để lưu, hãy đảm bảo gọi hàm lưu tại đây
+    // Ví dụ: saveToFirebase(); hoặc localStorage.setItem('systemData', JSON.stringify(window.systemData));
+    
+    renderSummaryReport(); // Cập nhật lại giao diện bảng doanh thu
+    alert("Đã cập nhật lại toàn bộ hóa đơn theo đơn giá mới!");
+    
+    // Đóng modal nếu nút nằm trong modal
+    const modal = document.getElementById('roomModal');
+    if(modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+};
     </script>
 </body>
 </html>
