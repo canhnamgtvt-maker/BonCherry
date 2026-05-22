@@ -18,14 +18,11 @@
         
         /* --- DÁN ĐOẠN CODE MEDIA PRINT VÀO DƯỚI ĐÂY --- */
         @media print {
-            body * { visibility: hidden; }
-            #invoice-modal-overlay, #invoice-print-area, #invoice-print-area * { visibility: visible; }
-            #invoice-print-area { 
-                position: absolute; left: 0; top: 0; width: 100%; padding: 20px; 
-                font-family: 'Inter', sans-serif;
-            }
-            .no-print { display: none !important; }
-        }
+    body * { visibility: hidden; }
+    #invoice-modal-overlay, #invoice-modal-overlay * { visibility: visible; }
+    #invoice-modal-overlay { position: absolute; left: 0; top: 0; width: 100%; }
+    .no-print { display: none !important; }
+}
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
@@ -1432,5 +1429,14 @@
             window.renderAll();
         };
     </script>
+    <div id="invoice-modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded shadow-xl w-full max-w-lg">
+        <div id="invoice-print-area"></div>
+        <div class="mt-4 flex justify-end gap-2 no-print">
+            <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded">In hóa đơn</button>
+            <button onclick="document.getElementById('invoice-modal-overlay').classList.add('hidden')" class="bg-gray-400 text-white px-4 py-2 rounded">Đóng</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
