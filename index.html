@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
@@ -169,7 +170,7 @@
                             <div class="relative h-60 flex justify-center items-center"><canvas id="chart-elec-consumption"></canvas></div>
                         </div>
                         <div class="p-4 border border-slate-100 bg-slate-50/50 rounded-xl">
-                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 text-center text-sky-700"><i class="fa-solid fa-droplet mr-1"></i>Sản Lượng Nước Tiêu Thụ (m³)}</h3>
+                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 text-center text-sky-700"><i class="fa-solid fa-droplet mr-1"></i>Sản Lượng Nước Tiêu Thụ (m³)</h3>
                             <div class="relative h-60 flex justify-center items-center"><canvas id="chart-water-consumption"></canvas></div>
                         </div>
                     </div>
@@ -342,6 +343,24 @@
                 </div>
 
                 <div id="tab-settings" class="tab-content hidden flex flex-col gap-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 border-b pb-2 text-emerald-700"><i class="fa-solid fa-file-excel mr-1"></i>Xuất Báo Cáo Tài Chính Tài Sản (Excel Export)</h2>
+                        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl mt-4">
+                            <p class="text-xs text-emerald-800 font-medium mb-3">Hệ thống hỗ trợ kết xuất báo cáo nhanh ra bảng tính Excel (.xlsx) với đầy đủ dữ liệu phân tích chỉ số, doanh thu, công nợ và chi phí vận hành.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <button onclick="window.exportToExcel('month')" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-calendar-day text-sm"></i> Xuất Excel Tháng (<span class="working-month-txt"></span>)
+                                </button>
+                                <button onclick="window.exportToExcel('year')" class="px-4 py-3 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-calendar-days text-sm"></i> Xuất Excel Cả Năm Hiện Tại
+                                </button>
+                                <button onclick="window.exportToExcel('all')" class="px-4 py-3 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-database text-sm"></i> Xuất Toàn Bộ Dữ Liệu Hệ Thống
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <h2 class="text-lg font-bold text-slate-900 border-b pb-2">Đơn Giá Cấu Hình Dịch Vụ</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mt-4">
@@ -639,7 +658,7 @@
             if(tabId === 'dashboard') renderCharts();
         };
 
-        // NEW: HÀM KIỂM TRA THỜI GIAN THỰC ĐỂ CẢNH BÁO MÀU ĐỎ TRÊN INPUT
+        // REALTIME LIVE VALIDATION
         window.validateLiveInput = function(roomId, type) {
             const startVal = parseFloat(document.getElementById(`input-${type}Start-${roomId}`).value) || 0;
             const endEl = document.getElementById(`input-${type}End-${roomId}`);
@@ -718,7 +737,6 @@
             let hasError = false;
             let errorMessages = [];
 
-            // Vòng lặp thứ nhất: Xác thực dữ liệu trước khi thực hiện ghi đè
             window.systemData.rooms.forEach(room => {
                 const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
                 const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
@@ -741,13 +759,11 @@
                 }
             });
 
-            // Nếu phát hiện bất kỳ lỗi nào, đưa ra thông báo cảnh báo và lập tức CHẶN thực thi tiếp
             if (hasError) {
                 alert("KHÔNG THỂ CẬP NHẬT!\nPhát hiện lỗi nhập ngược chỉ số cuối kỳ nhỏ hơn đầu kỳ:\n\n" + errorMessages.join("\n") + "\n\nVui lòng kiểm tra và sửa lại các ô báo đỏ.");
-                return; // Dừng hàm tại đây, không lưu gì vào hệ thống.
+                return;
             }
 
-            // Vòng lặp thứ hai: Chỉ chạy khi dữ liệu của tất cả các phòng hoàn toàn hợp lệ
             window.systemData.rooms.forEach(room => {
                 const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
                 const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
@@ -785,7 +801,7 @@
             window.renderAll();
         };
 
-        // MANAGEMENT TAB FUNCTIONS
+        // EXPENDITURE MANAGEMENT
         function renderExpenseTable() {
             const tbody = document.getElementById('expense-table-tbody');
             if(!tbody) return;
@@ -820,7 +836,7 @@
             }
         };
 
-        // RENDER DOANH THU & PHIẾU THU CHÍNH
+        // FINANCIAL REPORT TAB
         function renderSummaryReport() {
             const tbody = document.getElementById('summary-table-tbody');
             if(!tbody) return;
@@ -895,7 +911,7 @@
             }
         };
 
-        // HIỂN THỊ CHI TIẾT HÓA ĐƠN
+        // INVOICE DETAIL MODAL BUILD
         window.viewInvoiceDetail = function(roomId, month, savedInvoiceStr = null) {
             let billing = null;
             let renterName = "";
@@ -1040,7 +1056,7 @@
 
         window.triggerPrintInvoice = function() { window.print(); };
 
-        // LỊCH SỬ KHÓA LƯU TABLE RENDER
+        // HISTORICAL INVOICES
         function renderSavedInvoicesTable() {
             const tbody = document.getElementById('saved-invoices-tbody');
             if(!tbody) return;
@@ -1066,7 +1082,7 @@
             }
         };
 
-        // CO SO PHONG TRO
+        // ROOM INFRASTRUCTURE
         function renderRoomsGrid() {
             const grid = document.getElementById('rooms-grid');
             if(!grid) return;
@@ -1145,7 +1161,7 @@
             }
         };
 
-        // SETTINGS & JSON BACKUP
+        // SETTINGS SYSTEM
         function renderSettings() {
             const s = window.systemData.settings;
             if(document.getElementById('setting-elec-flat')) document.getElementById('setting-elec-flat').value = s.elecFlat || 3500;
@@ -1164,6 +1180,103 @@
             await window.syncToCloud();
             alert("Đã cập nhật cấu hình đơn giá mới.");
             window.renderAll();
+        };
+
+        // NEW: ENGINE XUẤT EXCEL CHUYÊN NGHIỆP THEO 3 PHÂN LOẠI
+        window.exportToExcel = function(type) {
+            try {
+                const wb = XLSX.utils.book_new();
+                let currentYear = currentMonth.slice(0, 4);
+
+                // Lọc dữ liệu theo phạm vi yêu cầu
+                let filteredBillings = [];
+                let filteredExpenses = [];
+                let fileNameSuffix = "";
+
+                if (type === 'month') {
+                    filteredBillings = window.systemData.billings.filter(b => b.month === currentMonth);
+                    filteredExpenses = window.systemData.expenses.filter(e => e.month === currentMonth);
+                    fileNameSuffix = `Thang_${currentMonth}`;
+                } else if (type === 'year') {
+                    filteredBillings = window.systemData.billings.filter(b => b.month.startsWith(currentYear));
+                    filteredExpenses = window.systemData.expenses.filter(e => e.month.startsWith(currentYear));
+                    fileNameSuffix = `Nam_${currentYear}`;
+                } else {
+                    filteredBillings = window.systemData.billings;
+                    filteredExpenses = window.systemData.expenses;
+                    fileNameSuffix = "ToanBoHeThong";
+                }
+
+                // TAB 1: DANH SÁCH CƠ SỞ PHÒNG TRỌ
+                const roomDataSheet = window.systemData.rooms.map(r => ({
+                    "Mã Phòng": r.roomId,
+                    "Tên Khách Thuê": r.renter || "Trống",
+                    "Giá Thuê Gốc (₫)": r.price || 0,
+                    "Số Nhân Khẩu": r.members || 1,
+                    "Chỉ Số Điện Bàn Giao": r.initElec || 0,
+                    "Chỉ Số Nước Bàn Giao": r.initWater || 0,
+                    "Chỉ Số Xe EV Bàn Giao": r.initEv || 0
+                }));
+                const wsRooms = XLSX.utils.json_to_sheet(roomDataSheet);
+                XLSX.utils.book_append_sheet(wb, wsRooms, "DanhSachPhong");
+
+                // TAB 2: DOANH THU & CHỈ SỐ CHI TIẾT
+                const billingDataSheet = filteredBillings.map(b => {
+                    const roomInfo = window.systemData.rooms.find(r => r.roomId === b.roomId) || {};
+                    const eUsage = Math.max(0, b.elecEnd - b.elecStart);
+                    const wUsage = Math.max(0, b.waterEnd - b.waterStart);
+                    const evUsage = Math.max(0, b.evEnd - b.evStart);
+                    return {
+                        "Kỳ Hoá Đơn": b.month,
+                        "Mã Phòng": b.roomId,
+                        "Tên Khách Thuê": roomInfo.renter || "N/A",
+                        "Giá Phòng Gốc (₫)": roomInfo.price || 0,
+                        "Điện Đầu Kỳ": b.elecStart,
+                        "Điện Cuối Kỳ": b.elecEnd,
+                        "Điện Tiêu Thụ (kWh)": eUsage,
+                        "Nước Đầu Kỳ": b.waterStart,
+                        "Nước Cuối Kỳ": b.waterEnd,
+                        "Nước Tiêu Thụ (m³)": wUsage,
+                        "Xe EV Đầu Kỳ": b.evStart,
+                        "Xe EV Cuối Kỳ": b.evEnd,
+                        "Xe EV Tiêu Thụ (kWh)": evUsage,
+                        "Chi Phí Khác (₫)": b.otherCost || 0,
+                        "TỔNG THU HOÁ ĐƠN (₫)": b.total || 0,
+                        "Trạng Thái": b.paid ? "Đã Thu Tiền" : "Chưa Thu Tiền"
+                    };
+                });
+                const wsBillings = XLSX.utils.json_to_sheet(billingDataSheet);
+                XLSX.utils.book_append_sheet(wb, wsBillings, "DoanhThuChiTiet");
+
+                // TAB 3: CHI PHÍ VẬN HÀNH TÒA NHÀ
+                const expenseDataSheet = filteredExpenses.map(e => ({
+                    "Tháng Ghi Nhận": e.month,
+                    "Tên Khoản Chi Phí Vận Hành": e.name,
+                    "Số Tiền Chi Ra (₫)": e.amount || 0
+                }));
+                const wsExpenses = XLSX.utils.json_to_sheet(expenseDataSheet);
+                XLSX.utils.book_append_sheet(wb, wsExpenses, "ChiPhiVanHanh");
+
+                // TAB 4: LỊCH SỬ KHÓA LƯU HÓA ĐƠN
+                let filteredSaved = [];
+                if (type === 'month') filteredSaved = window.systemData.savedInvoices.filter(s => s.month === currentMonth);
+                else if (type === 'year') filteredSaved = window.systemData.savedInvoices.filter(s => s.month.startsWith(currentYear));
+                else filteredSaved = window.systemData.savedInvoices;
+
+                const savedDataSheet = filteredSaved.map(s => ({
+                    "Chu Kỳ Chốt": s.month,
+                    "Mã Phòng": s.roomId,
+                    "Tên Khách Hàng Lúc Chốt": s.renter,
+                    "Tổng Số Tiền Chốt (₫)": s.total
+                }));
+                const wsSaved = XLSX.utils.json_to_sheet(savedDataSheet);
+                XLSX.utils.book_append_sheet(wb, wsSaved, "LichSuKhoaLuu");
+
+                // Thực hiện ghi file xuất xưởng
+                XLSX.writeFile(wb, `BaoCao_TaiChinh_NhaTro_${fileNameSuffix}.xlsx`);
+            } catch (err) {
+                alert("Lỗi khi kết xuất file Excel: " + err.message);
+            }
         };
 
         window.exportSystemDataJSON = function() {
@@ -1217,7 +1330,7 @@
             alert("Đã khởi tạo xong bộ dữ liệu mẫu Pro!");
         };
 
-        // ANALYTICS & CHARTS
+        // ANALYTICS & CHARTS DATA DISPATCH
         window.switchRankScope = function(scope) {
             rankScope = scope;
             document.getElementById('btn-rank-month').className = scope === 'month' ? 'px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all' : 'px-3 py-1 text-slate-600 hover:text-slate-900 transition-all';
