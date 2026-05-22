@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
@@ -344,9 +344,9 @@
 
                 <div id="tab-settings" class="tab-content hidden flex flex-col gap-6">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-900 border-b pb-2 text-emerald-700"><i class="fa-solid fa-file-excel mr-1"></i>Xuất Báo Cáo Tài Chính Tài Sản (Excel Export)</h2>
+                        <h2 class="text-lg font-bold text-slate-900 border-b pb-2 text-emerald-700"><i class="fa-solid fa-file-excel mr-1"></i>Xuất Báo Cáo Tài Chính Thẩm Mỹ (Excel Export Pro)</h2>
                         <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl mt-4">
-                            <p class="text-xs text-emerald-800 font-medium mb-3">Hệ thống hỗ trợ kết xuất báo cáo nhanh ra bảng tính Excel (.xlsx) với đầy đủ dữ liệu phân tích chỉ số, doanh thu, công nợ và chi phí vận hành.</p>
+                            <p class="text-xs text-emerald-800 font-medium mb-3">Hệ thống hỗ trợ kết xuất báo cáo nhanh ra bảng tính Excel (.xlsx) được **thiết kế mẫu, tô màu tiêu đề, căn biên kẻ bảng và chốt dòng tổng cộng** đồng bộ khoa học.</p>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <button onclick="window.exportToExcel('month')" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-calendar-day text-sm"></i> Xuất Excel Tháng (<span class="working-month-txt"></span>)
@@ -355,7 +355,7 @@
                                     <i class="fa-solid fa-calendar-days text-sm"></i> Xuất Excel Cả Năm Hiện Tại
                                 </button>
                                 <button onclick="window.exportToExcel('all')" class="px-4 py-3 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-database text-sm"></i> Xuất Toàn Bộ Dữ Liệu Hệ Thống
+                                    <i class="fa-solid fa-database text-sm"></i> Xuất Toàn Bộ Hệ Thống
                                 </button>
                             </div>
                         </div>
@@ -658,7 +658,7 @@
             if(tabId === 'dashboard') renderCharts();
         };
 
-        // REALTIME LIVE VALIDATION
+        // REALTIME LIVE INPUT CHECK
         window.validateLiveInput = function(roomId, type) {
             const startVal = parseFloat(document.getElementById(`input-${type}Start-${roomId}`).value) || 0;
             const endEl = document.getElementById(`input-${type}End-${roomId}`);
@@ -671,7 +671,7 @@
             }
         };
 
-        // RENDER METRICS & BATCH INPUT
+        // METRICS
         function renderDashboardMetrics() {
             const currentBillings = window.systemData.billings.filter(b => b && b.month === currentMonth);
             const currentExpenses = window.systemData.expenses.filter(e => e && e.month === currentMonth);
@@ -801,7 +801,7 @@
             window.renderAll();
         };
 
-        // EXPENDITURE MANAGEMENT
+        // EXPENSES
         function renderExpenseTable() {
             const tbody = document.getElementById('expense-table-tbody');
             if(!tbody) return;
@@ -836,7 +836,7 @@
             }
         };
 
-        // FINANCIAL REPORT TAB
+        // DOANH THU & PHIẾU THU CHÍNH
         function renderSummaryReport() {
             const tbody = document.getElementById('summary-table-tbody');
             if(!tbody) return;
@@ -911,7 +911,7 @@
             }
         };
 
-        // INVOICE DETAIL MODAL BUILD
+        // VIEW INVOICE DETAIL
         window.viewInvoiceDetail = function(roomId, month, savedInvoiceStr = null) {
             let billing = null;
             let renterName = "";
@@ -1056,7 +1056,7 @@
 
         window.triggerPrintInvoice = function() { window.print(); };
 
-        // HISTORICAL INVOICES
+        // HISTORICAL RECORD
         function renderSavedInvoicesTable() {
             const tbody = document.getElementById('saved-invoices-tbody');
             if(!tbody) return;
@@ -1082,7 +1082,7 @@
             }
         };
 
-        // ROOM INFRASTRUCTURE
+        // ROOMS GRID
         function renderRoomsGrid() {
             const grid = document.getElementById('rooms-grid');
             if(!grid) return;
@@ -1161,7 +1161,7 @@
             }
         };
 
-        // SETTINGS SYSTEM
+        // SETTINGS
         function renderSettings() {
             const s = window.systemData.settings;
             if(document.getElementById('setting-elec-flat')) document.getElementById('setting-elec-flat').value = s.elecFlat || 3500;
@@ -1182,13 +1182,12 @@
             window.renderAll();
         };
 
-        // NEW: ENGINE XUẤT EXCEL CHUYÊN NGHIỆP THEO 3 PHÂN LOẠI
+        // ADVANCED STYLED EXCEL ENGINE (KẺ BẢNG, TÔ MÀU TIÊU ĐỀ, TOTALS, CĂN BIÊN)
         window.exportToExcel = function(type) {
             try {
                 const wb = XLSX.utils.book_new();
                 let currentYear = currentMonth.slice(0, 4);
 
-                // Lọc dữ liệu theo phạm vi yêu cầu
                 let filteredBillings = [];
                 let filteredExpenses = [];
                 let fileNameSuffix = "";
@@ -1207,75 +1206,196 @@
                     fileNameSuffix = "ToanBoHeThong";
                 }
 
-                // TAB 1: DANH SÁCH CƠ SỞ PHÒNG TRỌ
-                const roomDataSheet = window.systemData.rooms.map(r => ({
-                    "Mã Phòng": r.roomId,
-                    "Tên Khách Thuê": r.renter || "Trống",
-                    "Giá Thuê Gốc (₫)": r.price || 0,
-                    "Số Nhân Khẩu": r.members || 1,
-                    "Chỉ Số Điện Bàn Giao": r.initElec || 0,
-                    "Chỉ Số Nước Bàn Giao": r.initWater || 0,
-                    "Chỉ Số Xe EV Bàn Giao": r.initEv || 0
-                }));
-                const wsRooms = XLSX.utils.json_to_sheet(roomDataSheet);
+                // Định nghĩa Palette phong cách hành chính/doanh nghiệp: Xanh lục đậm, viền mờ mảnh
+                const styleHeader = {
+                    fill: { fgColor: { rgb: "1F4E78" } }, // Xanh Navy đậm sang trọng
+                    font: { name: "Segoe UI", size: 11, bold: true, color: { rgb: "FFFFFF" } },
+                    alignment: { horizontal: "center", vertical: "center", wrapText: true },
+                    border: {
+                        top: { style: "thin", color: { rgb: "D9D9D9" } },
+                        bottom: { style: "medium", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "D9D9D9" } },
+                        right: { style: "thin", color: { rgb: "D9D9D9" } }
+                    }
+                };
+
+                const styleCellLeft = {
+                    font: { name: "Segoe UI", size: 10 },
+                    alignment: { horizontal: "left", vertical: "center" },
+                    border: {
+                        top: { style: "thin", color: { rgb: "E0E0E0" } }, bottom: { style: "thin", color: { rgb: "E0E0E0" } },
+                        left: { style: "thin", color: { rgb: "E0E0E0" } }, right: { style: "thin", color: { rgb: "E0E0E0" } }
+                    }
+                };
+
+                const styleCellRightNum = {
+                    font: { name: "Segoe UI", size: 10 },
+                    alignment: { horizontal: "right", vertical: "center" },
+                    numFmt: "#,##0", // Định dạng dấu phẩy phân tách nghìn Việt Nam Đồng
+                    border: {
+                        top: { style: "thin", color: { rgb: "E0E0E0" } }, bottom: { style: "thin", color: { rgb: "E0E0E0" } },
+                        left: { style: "thin", color: { rgb: "E0E0E0" } }, right: { style: "thin", color: { rgb: "E0E0E0" } }
+                    }
+                };
+
+                const styleCellCenter = {
+                    font: { name: "Segoe UI", size: 10 },
+                    alignment: { horizontal: "center", vertical: "center" },
+                    border: {
+                        top: { style: "thin", color: { rgb: "E0E0E0" } }, bottom: { style: "thin", color: { rgb: "E0E0E0" } },
+                        left: { style: "thin", color: { rgb: "E0E0E0" } }, right: { style: "thin", color: { rgb: "E0E0E0" } }
+                    }
+                };
+
+                const styleTotalRow = {
+                    fill: { fgColor: { rgb: "F2F2F2" } }, // Nền xám nhạt cho dòng tổng kết
+                    font: { name: "Segoe UI", size: 10, bold: true, color: { rgb: "1F4E78" } },
+                    alignment: { vertical: "center" },
+                    numFmt: "#,##0",
+                    border: {
+                        top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "double", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "D9D9D9" } }, right: { style: "thin", color: { rgb: "D9D9D9" } }
+                    }
+                };
+
+                // HÀM TIỆN ÍCH CHUYỂN ĐỔI MẢNG THÀNH WORKSHEET CÓ ĐỊNH DẠNG MÀU SẮC
+                function buildStyledSheet(headers, dataRows, typeMapping, totalColumnIndices = []) {
+                    const ws = XLSX.utils.aoa_to_sheet([headers]);
+                    
+                    // Thiết lập chiều cao hàng tiêu đề
+                    ws['!rows'] = [{ hpt: 26 }];
+
+                    // 1. Định dạng hàng tiêu đề (Row 0)
+                    headers.forEach((h, colIdx) => {
+                        const cellRef = XLSX.utils.encode_cell({ r: 0, c: colIdx });
+                        if (ws[cellRef]) ws[cellRef].s = styleHeader;
+                    });
+
+                    // 2. Điền dữ liệu và định dạng biên
+                    let totalSums = new Array(headers.length).fill(0);
+                    
+                    dataRows.forEach((row, rowIdx) => {
+                        const rIdx = rowIdx + 1;
+                        ws['!rows'].push({ hpt: 20 }); // Chiều cao hàng dữ liệu vừa vặn
+
+                        row.forEach((val, cIdx) => {
+                            const cellRef = XLSX.utils.encode_cell({ r: rIdx, c: cIdx });
+                            ws[cellRef] = { v: val };
+
+                            // Áp dụng kiểu căn lề biên dựa trên sơ đồ phân loại cột
+                            const alignType = typeMapping[cIdx];
+                            if (alignType === "right") {
+                                ws[cellRef].s = styleCellRightNum;
+                                if (totalColumnIndices.includes(cIdx) && typeof val === "number") {
+                                    totalSums[cIdx] += val;
+                                }
+                            } else if (alignType === "center") {
+                                ws[cellRef].s = styleCellCenter;
+                            } else {
+                                ws[cellRef].s = styleCellLeft;
+                            }
+                        });
+                    });
+
+                    // 3. Nếu bảng có cột cần tính tổng, tạo thêm hàng "TỔNG CỘNG"
+                    if (totalColumnIndices.length > 0) {
+                        const tRowIdx = dataRows.length + 1;
+                        ws['!rows'].push({ hpt: 22 });
+
+                        for (let cIdx = 0; cIdx < headers.length; cIdx++) {
+                            const cellRef = XLSX.utils.encode_cell({ r: tRowIdx, c: cIdx });
+                            if (cIdx === 0) {
+                                ws[cellRef] = { v: "TỔNG CỘNG HỆ THỐNG", t: 's' };
+                                ws[cellRef].s = { ...styleTotalRow, alignment: { horizontal: "left" } };
+                            } else if (totalColumnIndices.includes(cIdx)) {
+                                ws[cellRef] = { v: totalSums[cIdx], t: 'n' };
+                                ws[cellRef].s = { ...styleTotalRow, alignment: { horizontal: "right" } };
+                            } else {
+                                ws[cellRef] = { v: "" };
+                                ws[cellRef].s = styleTotalRow;
+                            }
+                        }
+                    }
+
+                    // 4. Cơ chế tự động tính toán độ rộng cột (Autofit Column Width)
+                    const colsWidth = headers.map((h, cIdx) => {
+                        let maxLen = h.toString().length + 4;
+                        dataRows.forEach(row => {
+                            if (row[cIdx] != null) {
+                                let cellLen = row[cIdx].toString().length;
+                                if (typeMapping[cIdx] === "right") cellLen += 4; // Bù khoảng trống dấu phẩy VNĐ
+                                if (cellLen > maxLen) maxLen = cellLen;
+                            }
+                        });
+                        return { wch: Math.min(Math.max(maxLen, 11), 30) }; // Giới hạn tối thiểu 11, tối đa 30 ký tự
+                    });
+                    ws['!cols'] = colsWidth;
+
+                    return ws;
+                }
+
+                // TAB 1: DANH SÁCH PHÒNG TRỌ BAN ĐẦU
+                const hRooms = ["Mã Phòng", "Tên Khách Thuê", "Giá Thuê Gốc (₫)", "Số Nhân Khẩu (Người)", "Điện Bàn Giao", "Nước Bàn Giao", "Xe EV Bàn Giao"];
+                const mapRooms = ["center", "left", "right", "center", "right", "right", "right"];
+                const rRooms = window.systemData.rooms.map(r => [
+                    r.roomId, r.renter || "Trống", r.price || 0, r.members || 1, r.initElec || 0, r.initWater || 0, r.initEv || 0
+                ]);
+                const wsRooms = buildStyledSheet(hRooms, rRooms, mapRooms, [2]);
                 XLSX.utils.book_append_sheet(wb, wsRooms, "DanhSachPhong");
 
-                // TAB 2: DOANH THU & CHỈ SỐ CHI TIẾT
-                const billingDataSheet = filteredBillings.map(b => {
-                    const roomInfo = window.systemData.rooms.find(r => r.roomId === b.roomId) || {};
-                    const eUsage = Math.max(0, b.elecEnd - b.elecStart);
-                    const wUsage = Math.max(0, b.waterEnd - b.waterStart);
-                    const evUsage = Math.max(0, b.evEnd - b.evStart);
-                    return {
-                        "Kỳ Hoá Đơn": b.month,
-                        "Mã Phòng": b.roomId,
-                        "Tên Khách Thuê": roomInfo.renter || "N/A",
-                        "Giá Phòng Gốc (₫)": roomInfo.price || 0,
-                        "Điện Đầu Kỳ": b.elecStart,
-                        "Điện Cuối Kỳ": b.elecEnd,
-                        "Điện Tiêu Thụ (kWh)": eUsage,
-                        "Nước Đầu Kỳ": b.waterStart,
-                        "Nước Cuối Kỳ": b.waterEnd,
-                        "Nước Tiêu Thụ (m³)": wUsage,
-                        "Xe EV Đầu Kỳ": b.evStart,
-                        "Xe EV Cuối Kỳ": b.evEnd,
-                        "Xe EV Tiêu Thụ (kWh)": evUsage,
-                        "Chi Phí Khác (₫)": b.otherCost || 0,
-                        "TỔNG THU HOÁ ĐƠN (₫)": b.total || 0,
-                        "Trạng Thái": b.paid ? "Đã Thu Tiền" : "Chưa Thu Tiền"
-                    };
+                // TAB 2: DOANH THU & CHỈ SỐ TIÊU THỤ CHI TIẾT (Trọng tâm kế toán)
+                const hBillings = [
+                    "Kỳ Hoá Đơn", "Mã Phòng", "Tên Khách Thuê", "Giá Gốc (₫)", 
+                    "Điện Đầu", "Điện Cuối", "Sản Lượng (kWh)", 
+                    "Nước Đầu", "Nước Cuối", "Sản Lượng (m³)", 
+                    "Xe EV Đầu", "Xe EV Cuối", "Sản Lượng (kWh)", 
+                    "Phí Khác (₫)", "TỔNG TIỀN PHẢI THU (₫)", "Trạng Thái Thu"
+                ];
+                const mapBillings = [
+                    "center", "center", "left", "right", 
+                    "right", "right", "right", 
+                    "right", "right", "right", 
+                    "right", "right", "right", 
+                    "right", "right", "center"
+                ];
+                const rBillings = filteredBillings.map(b => {
+                    const rInfo = window.systemData.rooms.find(r => r.roomId === b.roomId) || {};
+                    return [
+                        b.month, b.roomId, rInfo.renter || "N/A", rInfo.price || 0,
+                        b.elecStart, b.elecEnd, Math.max(0, b.elecEnd - b.elecStart),
+                        b.waterStart, b.waterEnd, Math.max(0, b.waterEnd - b.waterStart),
+                        b.evStart, b.evEnd, Math.max(0, b.evEnd - b.evStart),
+                        b.otherCost || 0, b.total || 0, b.paid ? "Đã Thu Tất Cả" : "Chưa Thu Công Nợ"
+                    ];
                 });
-                const wsBillings = XLSX.utils.json_to_sheet(billingDataSheet);
+                // Tính tổng tự động cho cột Giá gốc, Sản lượng điện/nước/EV, Phí Khác và Tổng Tiền Hoá Đơn
+                const wsBillings = buildStyledSheet(hBillings, rBillings, mapBillings, [3, 6, 9, 12, 13, 14]);
                 XLSX.utils.book_append_sheet(wb, wsBillings, "DoanhThuChiTiet");
 
-                // TAB 3: CHI PHÍ VẬN HÀNH TÒA NHÀ
-                const expenseDataSheet = filteredExpenses.map(e => ({
-                    "Tháng Ghi Nhận": e.month,
-                    "Tên Khoản Chi Phí Vận Hành": e.name,
-                    "Số Tiền Chi Ra (₫)": e.amount || 0
-                }));
-                const wsExpenses = XLSX.utils.json_to_sheet(expenseDataSheet);
+                // TAB 3: CHI PHÍ VẬN HÀNH TÒA NHÀ ĐẦU VÀO
+                const hExpenses = ["Tháng Chi Trả", "Nội Dung Khoản Chi Phí Vận Hành", "Số Tiền Xuất Quỹ (₫)"];
+                const mapExpenses = ["center", "left", "right"];
+                const rExpenses = filteredExpenses.map(e => [e.month, e.name, e.amount || 0]);
+                const wsExpenses = buildStyledSheet(hExpenses, rExpenses, mapExpenses, [2]);
                 XLSX.utils.book_append_sheet(wb, wsExpenses, "ChiPhiVanHanh");
 
-                // TAB 4: LỊCH SỬ KHÓA LƯU HÓA ĐƠN
+                // TAB 4: LỊCH SỬ KHÓA LƯU HÓA ĐƠN ĐỐI SOÁT
                 let filteredSaved = [];
                 if (type === 'month') filteredSaved = window.systemData.savedInvoices.filter(s => s.month === currentMonth);
                 else if (type === 'year') filteredSaved = window.systemData.savedInvoices.filter(s => s.month.startsWith(currentYear));
                 else filteredSaved = window.systemData.savedInvoices;
 
-                const savedDataSheet = filteredSaved.map(s => ({
-                    "Chu Kỳ Chốt": s.month,
-                    "Mã Phòng": s.roomId,
-                    "Tên Khách Hàng Lúc Chốt": s.renter,
-                    "Tổng Số Tiền Chốt (₫)": s.total
-                }));
-                const wsSaved = XLSX.utils.json_to_sheet(savedDataSheet);
+                const hSaved = ["Chu Kỳ Đối Soát Chốt", "Mã Phòng", "Tên Khách Hàng Tại Thời Điểm Chốt", "Tổng Doanh Thu Đã Khóa (₫)"];
+                const mapSaved = ["center", "center", "left", "right"];
+                const rSaved = filteredSaved.map(s => [s.month, s.roomId, s.renter, s.total]);
+                const wsSaved = buildStyledSheet(hSaved, rSaved, mapSaved, [3]);
                 XLSX.utils.book_append_sheet(wb, wsSaved, "LichSuKhoaLuu");
 
-                // Thực hiện ghi file xuất xưởng
+                // Thực hiện đóng gói và tải xuống file Excel Pro dạng nhị phân có màu sắc
                 XLSX.writeFile(wb, `BaoCao_TaiChinh_NhaTro_${fileNameSuffix}.xlsx`);
             } catch (err) {
-                alert("Lỗi khi kết xuất file Excel: " + err.message);
+                alert("Lỗi khi xây dựng file cấu trúc Excel: " + err.message);
+                console.error(err);
             }
         };
 
@@ -1330,7 +1450,7 @@
             alert("Đã khởi tạo xong bộ dữ liệu mẫu Pro!");
         };
 
-        // ANALYTICS & CHARTS DATA DISPATCH
+        // ANALYTICS & CHARTS
         window.switchRankScope = function(scope) {
             rankScope = scope;
             document.getElementById('btn-rank-month').className = scope === 'month' ? 'px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all' : 'px-3 py-1 text-slate-600 hover:text-slate-900 transition-all';
