@@ -169,7 +169,7 @@
                             <div class="relative h-60 flex justify-center items-center"><canvas id="chart-elec-consumption"></canvas></div>
                         </div>
                         <div class="p-4 border border-slate-100 bg-slate-50/50 rounded-xl">
-                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 text-center text-sky-700"><i class="fa-solid fa-droplet mr-1"></i>Sản Lượng Nước Tiêu Thụ (m³)</h3>
+                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 text-center text-sky-700"><i class="fa-solid fa-droplet mr-1"></i>Sản Lượng Nước Tiêu Thụ (m³)}</h3>
                             <div class="relative h-60 flex justify-center items-center"><canvas id="chart-water-consumption"></canvas></div>
                         </div>
                     </div>
@@ -231,8 +231,9 @@
                         <h2 class="text-lg font-bold text-slate-900">Ghi Chỉ Số Định Kỳ & Tính Toán</h2>
                         <p class="text-xs text-slate-500">Chu kỳ áp dụng: <span class="working-month-txt font-semibold text-indigo-600"></span></p>
                     </div>
-                    <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-lg text-xs text-indigo-800 font-medium">
-                        <i class="fa-solid fa-circle-info mr-1"></i> <b>Số Đầu Kỳ</b> sẽ tự động kế thừa từ số cuối tháng trước, tuy nhiên anh hoàn toàn có thể <b>chỉnh sửa thủ công</b> nếu có sai sót. 
+                    <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-lg text-xs text-indigo-800 font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-base"></i> 
+                        <span><b>Quy tắc nhập liệu:</b> Số đầu kỳ được kế thừa tự động. Ô số cuối kỳ nhập sai <b>(nhỏ hơn số đầu kỳ)</b> sẽ báo đỏ và hệ thống chặn không cho phép cập nhật lên đám mây.</span>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl">
                         <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
@@ -638,6 +639,19 @@
             if(tabId === 'dashboard') renderCharts();
         };
 
+        // NEW: HÀM KIỂM TRA THỜI GIAN THỰC ĐỂ CẢNH BÁO MÀU ĐỎ TRÊN INPUT
+        window.validateLiveInput = function(roomId, type) {
+            const startVal = parseFloat(document.getElementById(`input-${type}Start-${roomId}`).value) || 0;
+            const endEl = document.getElementById(`input-${type}End-${roomId}`);
+            const endVal = parseFloat(endEl.value) || 0;
+
+            if (endVal < startVal) {
+                endEl.classList.add('bg-rose-100', 'text-rose-700', 'focus:ring-2', 'focus:ring-rose-500', 'rounded', 'px-1');
+            } else {
+                endEl.classList.remove('bg-rose-100', 'text-rose-700', 'focus:ring-2', 'focus:ring-rose-500', 'rounded', 'px-1');
+            }
+        };
+
         // RENDER METRICS & BATCH INPUT
         function renderDashboardMetrics() {
             const currentBillings = window.systemData.billings.filter(b => b && b.month === currentMonth);
@@ -651,7 +665,6 @@
             if(document.getElementById('metric-total-variance')) document.getElementById('metric-total-variance').innerText = (totalRev - totalExp).toLocaleString() + " ₫";
             if(document.getElementById('metric-pending-rev')) document.getElementById('metric-pending-rev').innerText = pendingRev.toLocaleString() + " ₫";
             
-            // Render unpaid debts fast list
             const unpaidList = window.systemData.billings.filter(b => b && b.month === currentMonth && !b.paid);
             if(document.getElementById('unpaid-debt-count')) document.getElementById('unpaid-debt-count').innerText = unpaidList.length + " phòng nợ";
             const tbody = document.getElementById('unpaid-debts-list');
@@ -674,15 +687,27 @@
             if(!tbody) return;
             tbody.innerHTML = window.systemData.rooms.map(room => {
                 const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
+                
+                const eStart = billing.elecStart !== undefined ? billing.elecStart : (room.initElec || 0);
+                const eEnd = billing.elecEnd || 0;
+                const wStart = billing.waterStart !== undefined ? billing.waterStart : (room.initWater || 0);
+                const wEnd = billing.waterEnd || 0;
+                const evStart = billing.evStart !== undefined ? billing.evStart : (room.initEv || 0);
+                const evEnd = billing.evEnd || 0;
+
                 return `<tr>
                     <td class="p-3 font-bold text-slate-900">${room.roomId}</td>
                     <td class="p-3 bg-slate-50 text-center font-medium">${room.members || 1}</td>
-                    <td class="p-2 bg-amber-50/50 border-l border-amber-100"><input type="number" id="input-elecStart-${room.roomId}" value="${billing.elecStart !== undefined ? billing.elecStart : (room.initElec || 0)}" class="w-full bg-transparent outline-none font-medium"></td>
-                    <td class="p-2 bg-amber-50"><input type="number" id="input-elecEnd-${room.roomId}" value="${billing.elecEnd || 0}" class="w-full bg-transparent outline-none font-bold text-amber-900"></td>
-                    <td class="p-2 bg-sky-50/50 border-l border-sky-100"><input type="number" id="input-waterStart-${room.roomId}" value="${billing.waterStart !== undefined ? billing.waterStart : (room.initWater || 0)}" class="w-full bg-transparent outline-none font-medium"></td>
-                    <td class="p-2 bg-sky-50"><input type="number" id="input-waterEnd-${room.roomId}" value="${billing.waterEnd || 0}" class="w-full bg-transparent outline-none font-bold text-sky-900"></td>
-                    <td class="p-2 bg-teal-50/50 border-l border-teal-100"><input type="number" id="input-evStart-${room.roomId}" value="${billing.evStart !== undefined ? billing.evStart : (room.initEv || 0)}" class="w-full bg-transparent outline-none font-medium"></td>
-                    <td class="p-2 bg-teal-50"><input type="number" id="input-evEnd-${room.roomId}" value="${billing.evEnd || 0}" class="w-full bg-transparent outline-none font-bold text-teal-900"></td>
+                    
+                    <td class="p-2 bg-amber-50/50 border-l border-amber-100"><input type="number" id="input-elecStart-${room.roomId}" value="${eStart}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-medium"></td>
+                    <td class="p-2 bg-amber-50"><input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-900 ${eEnd < eStart ? 'bg-rose-100 text-rose-700 rounded px-1' : ''}"></td>
+                    
+                    <td class="p-2 bg-sky-50/50 border-l border-sky-100"><input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium"></td>
+                    <td class="p-2 bg-sky-50"><input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-900 ${wEnd < wStart ? 'bg-rose-100 text-rose-700 rounded px-1' : ''}"></td>
+                    
+                    <td class="p-2 bg-teal-50/50 border-l border-teal-100"><input type="number" id="input-evStart-${room.roomId}" value="${evStart}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-medium"></td>
+                    <td class="p-2 bg-teal-50"><input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-900 ${evEnd < evStart ? 'bg-rose-100 text-rose-700 rounded px-1' : ''}"></td>
+                    
                     <td class="p-2 bg-rose-50 border-l border-rose-100"><input type="number" id="input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" class="w-full bg-transparent outline-none text-right font-semibold text-rose-700"></td>
                 </tr>`;
             }).join('');
@@ -690,6 +715,39 @@
 
         window.saveBatchInput = async function() {
             const settings = window.systemData.settings;
+            let hasError = false;
+            let errorMessages = [];
+
+            // Vòng lặp thứ nhất: Xác thực dữ liệu trước khi thực hiện ghi đè
+            window.systemData.rooms.forEach(room => {
+                const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
+                const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
+                const waterStart = parseFloat(document.getElementById(`input-waterStart-${room.roomId}`).value) || 0;
+                const waterEnd = parseFloat(document.getElementById(`input-waterEnd-${room.roomId}`).value) || 0;
+                const evStart = parseFloat(document.getElementById(`input-evStart-${room.roomId}`).value) || 0;
+                const evEnd = parseFloat(document.getElementById(`input-evEnd-${room.roomId}`).value) || 0;
+
+                if (elecEnd < elecStart) {
+                    hasError = true;
+                    errorMessages.push(`- Phòng ${room.roomId}: Số ĐIỆN cuối kỳ (${elecEnd}) đang nhỏ hơn số đầu kỳ (${elecStart})`);
+                }
+                if (waterEnd < waterStart) {
+                    hasError = true;
+                    errorMessages.push(`- Phòng ${room.roomId}: Số NƯỚC cuối kỳ (${waterEnd}) đang nhỏ hơn số đầu kỳ (${waterStart})`);
+                }
+                if (evEnd < evStart) {
+                    hasError = true;
+                    errorMessages.push(`- Phòng ${room.roomId}: Số xe EV cuối kỳ (${evEnd}) đang nhỏ hơn số đầu kỳ (${evStart})`);
+                }
+            });
+
+            // Nếu phát hiện bất kỳ lỗi nào, đưa ra thông báo cảnh báo và lập tức CHẶN thực thi tiếp
+            if (hasError) {
+                alert("KHÔNG THỂ CẬP NHẬT!\nPhát hiện lỗi nhập ngược chỉ số cuối kỳ nhỏ hơn đầu kỳ:\n\n" + errorMessages.join("\n") + "\n\nVui lòng kiểm tra và sửa lại các ô báo đỏ.");
+                return; // Dừng hàm tại đây, không lưu gì vào hệ thống.
+            }
+
+            // Vòng lặp thứ hai: Chỉ chạy khi dữ liệu của tất cả các phòng hoàn toàn hợp lệ
             window.systemData.rooms.forEach(room => {
                 const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
                 const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
@@ -699,9 +757,9 @@
                 const evEnd = parseFloat(document.getElementById(`input-evEnd-${room.roomId}`).value) || 0;
                 const otherCost = parseFloat(document.getElementById(`input-otherCost-${room.roomId}`).value) || 0;
 
-                const elecUsage = Math.max(0, elecEnd - elecStart);
-                const waterUsage = Math.max(0, waterEnd - waterStart);
-                const evUsage = Math.max(0, evEnd - evStart);
+                const elecUsage = elecEnd - elecStart;
+                const waterUsage = waterEnd - waterStart;
+                const evUsage = evEnd - evStart;
 
                 const basePrice = room.price || 0;
                 const elecCost = elecUsage * (settings.elecFlat || 3500);
@@ -721,6 +779,7 @@
                 if (billingIndex >= 0) window.systemData.billings[billingIndex] = billingData;
                 else window.systemData.billings.push(billingData);
             });
+
             await window.syncToCloud();
             alert("Đã tính toán chi phí và đồng bộ đám mây thành công!");
             window.renderAll();
@@ -828,7 +887,7 @@
                     roomId: roomId,
                     renter: room.renter || 'Khách cũ',
                     total: b.total,
-                    details: JSON.parse(JSON.stringify(b)) // Deep clone object hóa đơn
+                    details: JSON.parse(JSON.stringify(b))
                 });
                 await window.syncToCloud();
                 alert("Đã khóa và chuyển hóa đơn vào kho lịch sử!");
@@ -836,7 +895,7 @@
             }
         };
 
-        // NEW: TÍNH NĂNG XEM VÀ IN CHI TIẾT HÓA ĐƠN ĐỘNG (DÙNG CHUNG CẢ HIỆN TẠI VÀ KHÓA LƯU)
+        // HIỂN THỊ CHI TIẾT HÓA ĐƠN
         window.viewInvoiceDetail = function(roomId, month, savedInvoiceStr = null) {
             let billing = null;
             let renterName = "";
@@ -844,16 +903,13 @@
             let roomPrice = 0;
 
             if (savedInvoiceStr) {
-                // Nếu gọi từ Kho lưu trữ lịch sử
                 const savedData = JSON.parse(decodeURIComponent(savedInvoiceStr));
                 billing = savedData.details || savedData;
                 renterName = savedData.renter || "Khách thuê lịch sử";
-                // Tìm thông tin phòng tương thích trong lịch sử hoặc hiện tại
                 const roomObj = window.systemData.rooms.find(r => r.roomId === roomId) || {};
-                roomPrice = billing.total - ((billing.elecEnd - billing.elecStart) * 3500) - ((billing.waterEnd - billing.waterStart) * 15000); // Tính tương đối nếu đổi giá
+                roomPrice = billing.total - ((billing.elecEnd - billing.elecStart) * 3500) - ((billing.waterEnd - billing.waterStart) * 15000);
                 members = roomObj.members || 1;
             } else {
-                // Xem hóa đơn hiện hành
                 billing = window.systemData.billings.find(b => b.roomId === roomId && b.month === month);
                 const roomObj = window.systemData.rooms.find(r => r.roomId === roomId);
                 if (roomObj) {
@@ -878,7 +934,6 @@
             const evCost = evUsage * (settings.evFlat || 4000);
             const garbageCost = (members || 1) * (settings.garbageFlat || 10000);
 
-            // Khung HTML hiển thị hóa đơn mẫu chuyên nghiệp
             const invoiceHTML = `
                 <div class="border-2 border-slate-200 p-6 rounded-xl bg-white text-slate-800 text-sm shadow-sm" id="invoice-printable-node">
                     <div class="flex justify-between items-start border-b border-slate-300 pb-4 mb-4">
@@ -975,7 +1030,6 @@
             `;
 
             document.getElementById('invoice-modal-content').innerHTML = invoiceHTML;
-            // Gán dữ liệu sang thẻ in ẩn
             document.getElementById('invoice-print-area').innerHTML = invoiceHTML;
             document.getElementById('invoiceDetailModal').classList.replace('hidden', 'flex');
         };
@@ -984,16 +1038,13 @@
             document.getElementById('invoiceDetailModal').classList.replace('flex', 'hidden');
         };
 
-        window.triggerPrintInvoice = function() {
-            window.print();
-        };
+        window.triggerPrintInvoice = function() { window.print(); };
 
         // LỊCH SỬ KHÓA LƯU TABLE RENDER
         function renderSavedInvoicesTable() {
             const tbody = document.getElementById('saved-invoices-tbody');
             if(!tbody) return;
             tbody.innerHTML = window.systemData.savedInvoices.map((inv, index) => {
-                // Mã hóa chuỗi object để truyền vào hàm an toàn không bị lỗi ký tự trống
                 const safeJsonStr = encodeURIComponent(JSON.stringify(inv));
                 return `<tr class="hover:bg-slate-50 transition-all border-b" onclick="window.viewInvoiceDetail('${inv.roomId}', '${inv.month}', '${safeJsonStr}')">
                     <td class="p-3 font-semibold text-indigo-600">${inv.month}</td>
@@ -1015,7 +1066,7 @@
             }
         };
 
-        // CO SO PHONG TRO (ROOMS GRID)
+        // CO SO PHONG TRO
         function renderRoomsGrid() {
             const grid = document.getElementById('rooms-grid');
             if(!grid) return;
@@ -1185,7 +1236,6 @@
             if(rankScope === 'month') dataPool = dataPool.filter(b => b.month === currentMonth);
             else dataPool = dataPool.filter(b => b.month.startsWith(currentMonth.slice(0,4)));
 
-            // Tính toán gom nhóm theo phòng
             const grouped = {};
             dataPool.forEach(b => {
                 if(!grouped[b.roomId]) grouped[b.roomId] = { elec: 0, water: 0 };
