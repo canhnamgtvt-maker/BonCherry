@@ -1514,38 +1514,54 @@ function renderBatchInputTable() {
                 });
             }
         }
-        window.recalculateAllBillings = function() {
-    if (!confirm("Xác nhận tính toán lại toàn bộ hóa đơn tháng này với đơn giá mới?")) return;
+        window.recalculateAllBillings = async function() {
+    // 1. Kiểm tra dữ liệu đã tải xong chưa
+    if (!window.systemData || !window.systemData.billings) {
+        alert("Hệ thống đang tải dữ liệu từ Firebase, vui lòng đợi vài giây và thử lại!");
+        return;
+    }
+
+    if (!confirm("Xác nhận tính toán lại toàn bộ hóa đơn tháng này với đơn giá hiện tại?")) return;
 
     const settings = window.systemData.settings;
     if (!settings) { alert("Chưa có thiết lập đơn giá!"); return; }
 
+    // 2. Thực hiện tính toán
     window.systemData.billings.forEach(inv => {
-        // Chỉ tính lại cho tháng đang chọn trên giao diện
         if (inv.month === document.getElementById('global-month').value) {
             const room = window.systemData.rooms.find(r => r.roomId === inv.roomId);
             if (room) {
                 const eCost = Math.max(0, inv.elecEnd - inv.elecStart) * settings.elecFlat;
                 const wCost = Math.max(0, inv.waterEnd - inv.waterStart) * settings.waterFlat;
                 const evCost = Math.max(0, inv.evEnd - inv.evStart) * settings.evFlat;
-                const rCost = (room.members || 1) * settings.garbageFlat;
+                const rCost = (room.members || 1) * (settings.garbageFlat || 0);
+                
                 inv.total = Number(room.price) + eCost + wCost + evCost + rCost + Number(inv.otherCost);
             }
         }
     });
 
-    // Gọi hàm lưu dữ liệu (Tự động tìm hàm Firebase hoặc LocalStorage của anh)
-    if (typeof saveToFirebase === 'function') saveToFirebase();
-    else if (typeof localStorage !== 'undefined') localStorage.setItem('systemData', JSON.stringify(window.systemData));
-    
-    // Cập nhật lại giao diện
-    if (typeof renderSummaryReport === 'function') renderSummaryReport();
-    
-    alert("Đã cập nhật lại toàn bộ hóa đơn!");
-    
-    // Đóng Modal sau khi xong
-    document.getElementById('roomModal').classList.add('hidden');
-    document.getElementById('roomModal').classList.remove('flex');
+    // 3. Đẩy lên Firebase với cơ chế chờ (nếu hàm save có hỗ trợ Promise)
+    try {
+        if (typeof saveToFirebase === 'function') {
+            await saveToFirebase(); // Dùng await để đảm bảo lưu xong mới báo thành công
+        } else {
+            localStorage.setItem('systemData', JSON.stringify(window.systemData));
+        }
+        
+        // 4. Cập nhật giao diện
+        if (typeof renderSummaryReport === 'function') renderSummaryReport();
+        
+        alert("Đã cập nhật lại toàn bộ hóa đơn và lưu lên Firebase thành công!");
+        
+        const modal = document.getElementById('roomModal');
+        if(modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        
+    } catch (error) {
+        console.error("Lỗi khi lưu Firebase:", error);
+        alert("Lỗi kết nối Firebase, vui lòng kiểm tra lại mạng!");
+    }
+};
     </script>
 </body>
 </html>
