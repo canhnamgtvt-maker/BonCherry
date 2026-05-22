@@ -719,35 +719,55 @@
         }
 
         function renderBatchInputTable() {
-            const tbody = document.getElementById('batch-input-tbody');
-            if(!tbody) return;
-            tbody.innerHTML = window.systemData.rooms.map(room => {
-                const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
-                
-                const eStart = billing.elecStart !== undefined ? billing.elecStart : (room.initElec || 0);
-                const eEnd = billing.elecEnd || 0;
-                const wStart = billing.waterStart !== undefined ? billing.waterStart : (room.initWater || 0);
-                const wEnd = billing.waterEnd || 0;
-                const evStart = billing.evStart !== undefined ? billing.evStart : (room.initEv || 0);
-                const evEnd = billing.evEnd || 0;
-
-                return `<tr class="hover:bg-slate-50/70 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
-                    <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">${room.members || 1}</td>
-                    
-                    <td class="p-2 bg-amber-50/20 border-l border-slate-100"><input type="number" id="input-elecStart-${room.roomId}" value="${eStart}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0"></td>
-                    <td class="p-2 bg-amber-50/40"><input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${eEnd < eStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}"></td>
-                    
-                    <td class="p-2 bg-sky-50/20 border-l border-slate-100"><input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0"></td>
-                    <td class="p-2 bg-sky-50/40"><input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${wEnd < wStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}"></td>
-                    
-                    <td class="p-2 bg-teal-50/20 border-l border-slate-100"><input type="number" id="input-evStart-${room.roomId}" value="${evStart}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0"></td>
-                    <td class="p-2 bg-teal-50/40"><input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${evEnd < evStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}"></td>
-                    
-                    <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right"><input type="number" id="input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0"></td>
-                </tr>`;
-            }).join('');
+    const tbody = document.getElementById('batch-input-tbody');
+    if(!tbody) return;
+    tbody.innerHTML = window.systemData.rooms.map(room => {
+        // Tìm hóa đơn hiện tại của tháng đang chọn
+        const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
+        
+        // ---- BỔ SUNG LOGIC TỰ ĐỘNG TÍNH TOÁN VÀ KẾ THỪA TỪ THÁNG TRƯỚC ----
+        // 1. Phân tích chuỗi "YYYY-MM" của tháng hiện tại
+        const [year, month] = currentMonth.split('-').map(Number);
+        
+        // 2. Xác định chuỗi "YYYY-MM" của tháng liền trước
+        let prevMonthStr = "";
+        if (month === 1) {
+            prevMonthStr = `${year - 1}-12`; // Nếu là tháng 1 thì lùi về tháng 12 năm trước
+        } else {
+            prevMonthStr = `${year}-${String(month - 1).padStart(2, '0')}`; // Lùi 1 tháng và thêm số 0 phía trước nếu < 10
         }
+
+        // 3. Tìm hóa đơn lưu trữ của phòng này ở tháng trước đó
+        const prevBilling = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === prevMonthStr);
+
+        // 4. Thiết lập chỉ số đầu kỳ thông minh: Ưu tiên lấy số cuối tháng trước, nếu không có mới lấy số ban đầu của phòng
+        const eStart = billing.elecStart !== undefined ? billing.elecStart : ((prevBilling && prevBilling.elecEnd !== undefined) ? prevBilling.elecEnd : (room.initElec || 0));
+        const eEnd = billing.elecEnd || 0;
+        
+        const wStart = billing.waterStart !== undefined ? billing.waterStart : ((prevBilling && prevBilling.waterEnd !== undefined) ? prevBilling.waterEnd : (room.initWater || 0));
+        const wEnd = billing.waterEnd || 0;
+        
+        const evStart = billing.evStart !== undefined ? billing.evStart : ((prevBilling && prevBilling.evEnd !== undefined) ? prevBilling.evEnd : (room.initEv || 0));
+        const evEnd = billing.evEnd || 0;
+        // ---- KẾT THÚC LOGIC BỔ SUNG ----
+
+        return `<tr class="hover:bg-slate-50/70 transition-all">
+            <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
+            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">${room.members || 1}</td>
+            
+            <td class="p-2 bg-amber-50/20 border-l border-slate-100"><input type="number" id="input-elecStart-${room.roomId}" value="${eStart}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0"></td>
+            <td class="p-2 bg-amber-50/40"><input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${eEnd < eStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}"></td>
+            
+            <td class="p-2 bg-sky-50/20 border-l border-slate-100"><input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0"></td>
+            <td class="p-2 bg-sky-50/40"><input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${wEnd < wStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}"></td>
+            
+            <td class="p-2 bg-teal-50/20 border-l border-slate-100"><input type="number" id="input-evStart-${room.roomId}" value="${evStart}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0"></td>
+            <td class="p-2 bg-teal-50/40"><input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${evEnd < evStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}"></td>
+            
+            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right"><input type="number" id="input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0"></td>
+        </tr>`;
+    }).join('');
+}
 
         window.saveBatchInput = async function() {
             const settings = window.systemData.settings;
