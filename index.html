@@ -276,6 +276,18 @@
                             </thead>
                             <tbody id="batch-input-tbody" class="divide-y divide-slate-150 text-slate-700"></tbody>
                         </table>
+
+<div class="mt-6 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+    <div class="flex items-center gap-2 mb-3 border-b border-slate-50 pb-2">
+        <i class="fa-solid fa-images text-indigo-500 text-sm"></i>
+        <h4 class="text-xs font-bold text-slate-800">Kho Ảnh Minh Chứng Công Tơ (Tháng Hiện Tại)</h4>
+    </div>
+    <div id="evidence-preview-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px] text-slate-400 font-medium">
+        <p class="col-span-full text-center text-slate-400 py-2">Chưa có ảnh minh chứng nào được chụp trong tháng này.</p>
+    </div>
+</div>
+
+                        
                     </div>
                     // camera
                    <div class="flex justify-end items-center gap-3 pt-2">
@@ -512,19 +524,79 @@
             </div>
         </div>
     </div>
-// camera
-    <div id="ocrCameraModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[300] hidden items-center justify-center p-4">
+
+    
+   <div id="ocrCameraModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[300] hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl border border-slate-100 flex flex-col gap-4">
         
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
             <div>
-                <h3 class="text-base font-bold text-slate-900">Hệ Thống Quét Chỉ Số Tập Trung</h3>
-                <p class="text-[11px] text-slate-400 font-medium">Chọn phòng, loại chỉ số và quét liên tục không cần đóng camera</p>
+                <h3 class="text-base font-bold text-slate-900">Quét Chỉ Số & Lưu Ảnh Minh Chứng</h3>
+                <p class="text-[11px] text-slate-400 font-medium">Hình ảnh mặt công tơ sẽ được lưu lại để đối chiếu với khách thuê</p>
             </div>
-            <button onclick="window.closeOcrCamera()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all">
+            <button type="button" onclick="window.closeOcrCamera()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
+
+        <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Chọn phòng nhập liệu</label>
+                <select id="ocrSelectRoom" class="w-full bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-800 p-2 outline-none focus:border-indigo-500"></select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Loại công tơ</label>
+                <select id="ocrSelectField" class="w-full bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-800 p-2 outline-none focus:border-indigo-500">
+                    <option value="elecEnd">💡 Chỉ số ĐIỆN cuối kỳ</option>
+                    <option value="waterEnd">💧 Chỉ số NƯỚC cuối kỳ</option>
+                    <option value="evEnd">⚡ Chỉ số SẠC XE EV cuối</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-800 shadow-inner">
+            <video id="ocrVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+            
+            <img id="ocrPreviewImg" class="absolute inset-0 w-full h-full object-contain bg-slate-950 hidden" />
+
+            <div id="ocrTargetGrid" class="absolute inset-0 border-[20px] border-slate-900/40 pointer-events-none flex items-center justify-center">
+                <div class="w-full h-24 border-2 border-dashed border-amber-500 rounded-lg relative shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                    <span class="absolute -top-5 left-1 text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded font-bold uppercase">Căn dãy số vào khung này</span>
+                </div>
+            </div>
+
+            <button id="ocrFlashBtn" type="button" onclick="window.toggleOcrTorch()" class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-slate-900/80 text-amber-400 border border-slate-700 hover:bg-slate-800 transition-all">
+                <i class="fa-solid fa-lightbulb"></i>
+            </button>
+
+            <div id="ocrScannerStatus" class="absolute inset-0 bg-slate-950/80 hidden flex-col items-center justify-center text-white gap-2">
+                <i class="fa-solid fa-circle-notch text-xl text-amber-400 animate-spin"></i>
+                <span class="text-xs font-medium">AI đang phân tích và khử lóa ảnh công tơ...</span>
+            </div>
+        </div>
+
+        <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100/70 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+                <div class="text-xs">
+                    <span class="block text-slate-500 font-semibold mb-0.5">Số do AI đọc (Anh có thể sửa lại nếu chưa chuẩn):</span>
+                    <input type="number" id="ocrDetectedResult" class="bg-white px-3 py-1.5 border border-amber-200 rounded-lg text-amber-950 font-black text-xl outline-none w-44 shadow-sm focus:border-amber-500 transition-all" placeholder="00000">
+                </div>
+                <div class="flex flex-col gap-1.5 pt-4">
+                    <button type="button" id="ocrActionBtn" onclick="window.captureAndOcrCentral()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-1.5 justify-center">
+                        <i class="fa-solid fa-camera"></i> Chụp & Quét số
+                    </button>
+                </div>
+            </div>
+            
+            <div id="ocrSubmitBox" class="flex gap-2 justify-end border-t border-amber-100 pt-2.5 hidden">
+                <button type="button" onclick="window.resetOcrCapture()" class="px-3 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold rounded-lg transition-all">Chụp lại</button>
+                <button type="button" onclick="window.applyOcrResultCentral()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk"></i> Xác nhận & Lưu ảnh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
         <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
             <div>
@@ -852,6 +924,46 @@
         </tr>`;
     }).join('');
 }
+
+
+        // HÀM TỰ ĐỘNG VẼ ẢNH CHỨNG CỨ ĐỐI CHIẾU RA MÀN HÌNH
+window.renderEvidencePreviewList = function() {
+    const container = document.getElementById('evidence-preview-container');
+    if (!container) return;
+    
+    const currentMonthBillings = window.systemData.billings.filter(b => b.month === currentMonth && b.evidenceImages);
+    
+    if (currentMonthBillings.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center text-slate-400 py-2">Chưa có ảnh minh chứng nào được lưu cho tháng ${currentMonth}.</p>`;
+        return;
+    }
+    
+    let html = '';
+    currentMonthBillings.forEach(b => {
+        Object.keys(b.evidenceImages).forEach(fieldType => {
+            const label = fieldType === 'elecEnd' ? 'Điện' : (fieldType === 'waterEnd' ? 'Nước' : 'Xe EV');
+            const imgSrc = b.evidenceImages[fieldType];
+            if (imgSrc) {
+                html += `
+                <div class="bg-slate-50 border border-slate-100 p-2 rounded-lg flex flex-col gap-1.5 hover:shadow-md transition-all">
+                    <div class="flex justify-between items-center font-bold text-slate-700">
+                        <span>Phòng ${b.roomId} (${label})</span>
+                    </div>
+                    <img src="${imgSrc}" class="w-full aspect-video object-cover rounded border border-slate-200 cursor-pointer" onclick="window.openImageInNewTab('${imgSrc}')" title="Bấm vào để xem ảnh phóng to" />
+                </div>`;
+            }
+        });
+    });
+    
+    container.innerHTML = html || `<p class="col-span-full text-center text-slate-400 py-2">Chưa có ảnh minh chứng nào được lưu.</p>`;
+};
+
+window.openImageInNewTab = function(base64) {
+    const w = window.open();
+    w.document.write(`<img src="${base64}" style="max-w:100%; height:auto; margin:20px auto; display:block; box-shadow:0 4px 12px rgba(0,0,0,0.1); border-radius:8px;" />`);
+};
+
+// Gọi bổ sung hàm render ảnh này vào cuối hàm renderBatchInputTable hiện tại của anh để kích hoạt đồng bộ
 
         window.saveBatchInput = async function() {
             const settings = window.systemData.settings;
@@ -1567,25 +1679,24 @@
 
 let localMediaStream = null;
 let isTorchOn = false;
+let capturedImageBase64 = null; // Biến tạm lưu trữ ảnh minh chứng vừa chụp
 
-// 1. MỞ CAMERA TRUNG TÂM VÀ TỰ ĐỘNG ĐỔ DANH SÁCH PHÒNG VÀO SELECT
+// 1. MỞ CAMERA TRUNG TÂM
 window.openOcrCameraCentral = function() {
     const roomSelect = document.getElementById('ocrSelectRoom');
     if (!roomSelect) return;
     
-    // Tải danh sách phòng hiện có từ hệ thống vào thanh Chọn phòng
     roomSelect.innerHTML = window.systemData.rooms.map(r => 
         `<option value="${r.roomId}">Phòng ${r.roomId}</option>`
     ).join('');
 
-    document.getElementById('ocrDetectedResult').value = '';
+    window.resetOcrCapture();
     document.getElementById('ocrCameraModal').classList.remove('hidden');
     document.getElementById('ocrCameraModal').classList.add('flex');
     isTorchOn = false;
 
-    // Khởi tạo camera với cấu hình môi trường phía sau
     navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }, 
+        video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }, 
         audio: false 
     })
     .then(stream => {
@@ -1593,56 +1704,49 @@ window.openOcrCameraCentral = function() {
         document.getElementById('ocrVideo').srcObject = stream;
     })
     .catch(err => {
-        console.error("Lỗi khởi động thiết bị camera: ", err);
-        alert("Không thể kết nối camera. Vui lòng kiểm tra quyền cài đặt trên trình duyệt!");
+        console.error(err);
+        alert("Không thể kết nối camera. Vui lòng cấp quyền truy cập!");
         window.closeOcrCamera();
     });
 };
 
-// 2. BẬT / TẮT ĐÈN FLASH TRỢ SÁNG TRÊN ĐIỆN THOẠI (XỬ LÝ THIẾU SÁNG)
+// 2. KHỞI ĐỘNG LẠI TRẠNG THÁI CHỤP (KHI ĐỔI PHÒNG HOẶC CHỤP LẠI)
+window.resetOcrCapture = function() {
+    capturedImageBase64 = null;
+    document.getElementById('ocrPreviewImg').classList.add('hidden');
+    document.getElementById('ocrVideo').classList.remove('hidden');
+    document.getElementById('ocrTargetGrid').classList.remove('hidden');
+    document.getElementById('ocrSubmitBox').classList.add('hidden');
+    document.getElementById('ocrDetectedResult').value = '';
+    
+    const actionBtn = document.getElementById('ocrActionBtn');
+    actionBtn.innerHTML = `<i class="fa-solid fa-camera"></i> Chụp & Quét số`;
+    actionBtn.disabled = false;
+};
+
+// 3. BẬT/TẮT ĐÈN FLASH TRỢ SÁNG KHỬ BÓNG ĐỔ
 window.toggleOcrTorch = function() {
     if (!localMediaStream) return;
     const track = localMediaStream.getVideoTracks()[0];
     const capabilities = track.getCapabilities();
-    
-    // Kiểm tra xem phần cứng camera của máy có hỗ trợ đèn flash/torch không
     if (capabilities.torch) {
         isTorchOn = !isTorchOn;
         track.applyConstraints({ advanced: [{ torch: isTorchOn }] })
         .then(() => {
             const btn = document.getElementById('ocrFlashBtn');
-            if (isTorchOn) {
-                btn.classList.remove('text-amber-400');
-                btn.classList.add('bg-amber-500', 'text-white', 'shadow-[0_0_10px_rgba(245,158,11,0.5)]');
-            } else {
-                btn.classList.add('text-amber-400');
-                btn.classList.remove('bg-amber-500', 'text-white', 'shadow-[0_0_10px_rgba(245,158,11,0.5)]');
-            }
-        })
-        .catch(err => console.error("Không áp dụng được đèn Flash: ", err));
+            if (isTorchOn) btn.classList.add('bg-amber-500', 'text-white');
+            else btn.classList.remove('bg-amber-500', 'text-white');
+        }).catch(err => console.error(err));
     } else {
-        alert("Thiết bị hoặc trình duyệt hiện tại không hỗ trợ điều khiển đèn Flash từ Web. Anh nên bật đèn hành lang hoặc rọi thêm ánh sáng bên ngoài!");
+        alert("Thiết bị không hỗ trợ bật Flash từ trình duyệt.");
     }
 };
 
-// 3. TẮT CAMERA AN TOÀN
-window.closeOcrCamera = function() {
-    document.getElementById('ocrCameraModal').classList.add('hidden');
-    document.getElementById('ocrCameraModal').classList.remove('flex');
-    if (localMediaStream) {
-        localMediaStream.getTracks().forEach(track => track.stop());
-        localMediaStream = null;
-    }
-};
-
-// 4. CHỤP VÀ SỬ DỤNG THUẬT TOÁN ĐỘ TƯƠNG PHẢN THAY ĐỔI MÔI TRƯỜNG TỐI
-// =========================================================================
-// THAY THẾ HÀM CHỤP VÀ NHẬN DIỆN DIỆN TÍCH RỘNG + CHỐNG NHẦM LẪN AI
-// =========================================================================
+// 4. CHỤP ẢNH LƯU CHỨNG CỨ VÀ CHẠY THUẬT TOÁN AI BÓC TÁCH SỐ LỌC GẮT
 window.captureAndOcrCentral = function() {
     const video = document.getElementById('ocrVideo');
     const statusDiv = document.getElementById('ocrScannerStatus');
-    const currentField = document.getElementById('ocrSelectField').value; // Xem đang quét Điện hay Nước
+    const currentField = document.getElementById('ocrSelectField').value;
     
     if (!video.srcObject) return;
 
@@ -1651,127 +1755,119 @@ window.captureAndOcrCentral = function() {
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
     
-    // 1. Chụp ảnh góc rộng từ luồng camera
+    // Chụp và lưu lại ảnh gốc chất lượng cao làm minh chứng đối chiếu
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8); // Nén ảnh 80% để nhẹ dung lượng lưu trữ
 
-    // 2. Thuật toán tiền xử lý tăng tương phản chuyên sâu
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const d = imgData.data;
-    for (let i = 0; i < d.length; i += 4) {
-        let grayscale = d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
-        // Ngưỡng phân tách nhị phân (Thresholding) giúp số nổi bật trên nền trắng
-        let threshold = 120; 
-        let v = (grayscale >= threshold) ? 255 : 0;
-        d[i] = d[i+1] = d[i+2] = v; 
-    }
-    ctx.putImageData(imgData, 0, 0);
+    // Hiển thị ảnh vừa chụp đè lên khung video để người dùng kiểm tra độ nét
+    const previewImg = document.getElementById('ocrPreviewImg');
+    previewImg.src = capturedImageBase64;
+    previewImg.classList.remove('hidden');
+    video.classList.add('hidden');
+    document.getElementById('ocrTargetGrid').classList.add('hidden');
 
     statusDiv.classList.remove('hidden');
     statusDiv.classList.add('flex');
 
-    const dataUrl = canvas.toDataURL('image/jpeg');
-    
-    // 3. Gọi lõi AI đọc toàn bộ ký tự số xuất hiện
-    Tesseract.recognize(
-        dataUrl,
-        'eng',
-        { 
-            logger: m => console.log(m),
-            tessedit_char_whitelist: '0123456789' // Chỉ cho phép đọc số
-        }
-    ).then(({ data: { text } }) => {
-        console.log("Dữ liệu thô AI đọc được:", text);
-        
-        // Sử dụng biểu thức chính quy Regex tách ra các cụm số xuất hiện độc lập
-        // Mặt chữ số công tơ nằm thẳng hàng sẽ tạo thành 1 cụm số liền nhau
-        const numberGroups = text.match(/\d+/g); 
-        
-        if (numberGroups && numberGroups.length > 0) {
-            let finalResult = null;
-            
-            if (currentField === 'elecEnd') {
-                // --- THUẬT TOÁN CHO ĐỒNG HỒ ĐIỆN ---
-                // Công tơ điện cơ học thường có dãy số chính gồm 5 hoặc 6 chữ số thẳng hàng (VD: 04336)
-                // Tìm cụm số nào có độ dài nằm trong khoảng từ 5 đến 6 ký tự
-                const targetGroup = numberGroups.find(num => num.length >= 5 && num.length <= 6);
-                
-                if (targetGroup) {
-                    finalResult = parseInt(targetGroup, 10); // "04336" chuyển thành 4336
-                } else {
-                    // Nếu không tìm thấy cụm 5-6 số chuẩn, lấy cụm số dài nhất xuất hiện trong ảnh chụp
-                    const longestGroup = numberGroups.reduce((a, b) => a.length >= b.length ? a : b);
-                    if (longestGroup.length >= 3) finalResult = parseInt(longestGroup, 10);
-                }
-            } else {
-                // --- THUẬT TOÁN CHO ĐỒNG HỒ NƯỚC / XE ĐIỆN ---
-                // Đồng hồ nước thường có cụm số Đen chỉ số Khối (m³) đứng trước, cụm số Đỏ chỉ Lít đứng sau
-                // Chúng ta ưu tiên tìm cụm số có độ dài từ 4 đến 5 ký tự xuất hiện đầu tiên
-                const targetGroup = numberGroups.find(num => num.length >= 4 && num.length <= 5);
-                
-                if (targetGroup) {
-                    finalResult = parseInt(targetGroup, 10);
-                } else {
-                    // Phương án dự phòng: Lấy cụm số đầu tiên đọc được từ trên xuống dưới, từ trái qua phải
-                    finalResult = parseInt(numberGroups[0], 10);
-                }
-            }
+    // Chạy thuật toán lọc bão hòa tương phản cao phục vụ riêng cho AI đọc chữ số
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const d = imgData.data;
+    for (let i = 0; i < d.length; i += 4) {
+        let grayscale = d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
+        let threshold = 125; // Tách lọc cạnh sắc nét
+        let v = (grayscale >= threshold) ? 255 : 0;
+        d[i] = d[i+1] = d[i+2] = v;
+    }
+    ctx.putImageData(imgData, 0, 0);
+    const aiProcessedDataUrl = canvas.toDataURL('image/jpeg');
 
-            // Ghi nhận giá trị xử lý thành công lên ô kết quả giao diện
-            if (finalResult !== null && !isNaN(finalResult)) {
-                document.getElementById('ocrDetectedResult').value = finalResult;
+    Tesseract.recognize(
+        aiProcessedDataUrl,
+        'eng',
+        { logger: m => console.log(m), tessedit_char_whitelist: '0123456789' }
+    ).then(({ data: { text } }) => {
+        const numberGroups = text.match(/\d+/g);
+        let finalResult = "";
+
+        if (numberGroups && numberGroups.length > 0) {
+            if (currentField === 'elecEnd') {
+                // Ưu tiên cụm số thẳng hàng dài từ 5-6 chữ số của công tơ điện
+                const targetGroup = numberGroups.find(num => num.length >= 5 && num.length <= 6);
+                if (targetGroup) finalResult = parseInt(targetGroup, 10);
+                else finalResult = parseInt(numberGroups.reduce((a, b) => a.length >= b.length ? a : b), 10);
             } else {
-                alert("AI bị nhiễu do góc chụp có nhiều thông số phụ. Anh hãy đưa camera lại gần hơn để dãy số chính chiếm trọn khung hình và bấm chụp lại nhé!");
+                // Ưu tiên cụm từ 4-5 chữ số của đồng hồ nước
+                const targetGroup = numberGroups.find(num => num.length >= 4 && num.length <= 5);
+                if (targetGroup) finalResult = parseInt(targetGroup, 10);
+                else finalResult = parseInt(numberGroups[0], 10);
             }
-        } else {
-            alert("Không tìm thấy dãy số hiển thị. Anh hãy bật đèn Flash trợ sáng và căn thẳng hàng hộp số!");
+        }
+        
+        if (finalResult !== "" && !isNaN(finalResult)) {
+            document.getElementById('ocrDetectedResult').value = finalResult;
         }
     })
-    .catch(err => {
-        console.error("Lỗi hệ thống OCR: ", err);
-        alert("Có lỗi xảy ra trong quá trình xử lý hình ảnh.");
-    })
+    .catch(err => console.error(err))
     .finally(() => {
         statusDiv.classList.add('hidden');
         statusDiv.classList.remove('flex');
+        document.getElementById('ocrSubmitBox').classList.remove('hidden'); // Hiện hộp nút Lưu kết quả
+        
+        const actionBtn = document.getElementById('ocrActionBtn');
+        actionBtn.innerText = "Đã quét xong";
+        actionBtn.disabled = true;
     });
 };
 
-// 5. GHI NHẬN VÀ CHUYỂN PHÒNG TIẾP THEO MÀ KHÔNG CẦN TẮT MÀN HÌNH
+// 5. GHI NHẬN KẾT QUẢ VÀ ĐỒNG BỘ LƯU TRỮ TRỰC TIẾP CẢ ẢNH MINH CHỨNG
 window.applyOcrResultCentral = function() {
     const val = document.getElementById('ocrDetectedResult').value;
     const roomId = document.getElementById('ocrSelectRoom').value;
     const field = document.getElementById('ocrSelectField').value;
     
     if (!val) {
-        alert("Chưa có số hợp lệ để ghi nhận!");
+        alert("Vui lòng điền hoặc chỉnh sửa lại số công tơ chính xác trước khi lưu!");
         return;
     }
 
-    // Điền tự động vào bảng ẩn phía dưới của anh
+    // A. Ghi số vào bảng input hiển thị phía dưới
     const inputId = `input-${field}-${roomId}`;
     const targetInput = document.getElementById(inputId);
     if (targetInput) {
         targetInput.value = val;
-        
-        // Kích hoạt tính năng kiểm tra tự động đổi màu của anh
         const fieldType = field === 'elecEnd' ? 'elec' : (field === 'waterEnd' ? 'water' : 'ev');
-        if (window.validateLiveInput) {
-            window.validateLiveInput(roomId, fieldType);
-        }
+        if (window.validateLiveInput) window.validateLiveInput(roomId, fieldType);
     }
 
-    // TỰ ĐỘNG CHUYỂN SANG PHÒNG TIẾP THEO ĐỂ TIẾT KIỆM THỜI GIAN
+    // B. TIẾN HÀNH LƯU TRỰC TIẾP ẢNH MINH CHỨNG VÀO ĐỐI TƯỢNG HÓA ĐƠN HỆ THỐNG
+    const billing = window.systemData.billings.find(b => b.roomId === roomId && b.month === currentMonth);
+    if (billing) {
+        // Tạo trường lưu trữ ảnh động nếu chưa có
+        if (!billing.evidenceImages) billing.evidenceImages = {};
+        // Lưu ảnh Base64 tương ứng với từng loại thiết bị quét (elecEnd / waterEnd / evEnd)
+        billing.evidenceImages[field] = capturedImageBase64;
+    }
+
+    // C. TỰ ĐỘNG ĐIỀU HƯỚNG SANG PHÒNG TIẾP THEO
     const roomSelect = document.getElementById('ocrSelectRoom');
     if (roomSelect.selectedIndex < roomSelect.options.length - 1) {
-        roomSelect.selectedIndex += 1; // Nhảy xuống dòng phòng tiếp theo
-        document.getElementById('ocrDetectedResult').value = ''; // Làm sạch kết quả để chờ chụp phòng mới
-        
-        // Hiển thị thông báo nhỏ trên màn hình để anh biết đã nhảy phòng
-        const currentRoomText = roomSelect.options[roomSelect.selectedIndex].text;
-        alert(`Đã ghi nhận thành công! Hệ thống tự động chuyển sang: ${currentRoomText}`);
+        roomSelect.selectedIndex += 1;
+        window.resetOcrCapture(); // Reset trạng thái để quét phòng mới liên tục
     } else {
-        alert("Chúc mừng anh! Đã quét và ghi nhận đến phòng cuối cùng trong danh sách.");
+        alert("Đã hoàn thành quét, đối chiếu số và lưu ảnh cho tất cả các phòng!");
         window.closeOcrCamera();
+    }
+    
+    // Cập nhật lại danh sách hiển thị chứng cứ trực quan phía dưới bảng nếu có
+    if(window.renderEvidencePreviewList) window.renderEvidencePreviewList();
+};
+
+window.closeOcrCamera = function() {
+    document.getElementById('ocrCameraModal').classList.add('hidden');
+    document.getElementById('ocrCameraModal').classList.remove('flex');
+    if (localMediaStream) {
+        localMediaStream.getTracks().forEach(track => track.stop());
+        localMediaStream = null;
     }
 };
     </script>
