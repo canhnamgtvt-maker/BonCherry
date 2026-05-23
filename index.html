@@ -792,12 +792,11 @@ const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
     }).join('');
 }
 
-       window.saveBatchInput = async function() {
+      window.saveBatchInput = async function() {
     const settings = window.systemData.settings;
     let hasError = false;
     let errorMessages = [];
 
-    // Vòng lặp 1: Kiểm tra lỗi logic (Giữ nguyên)
     window.systemData.rooms.forEach(room => {
         const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
         const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
@@ -816,7 +815,6 @@ const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
         return;
     }
 
-    // Vòng lặp 2: Tính toán chi phí và gán dữ liệu hóa đơn
     window.systemData.rooms.forEach(room => {
         const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
         const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
@@ -838,27 +836,12 @@ const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
 
         const total = basePrice + elecCost + waterCost + evCost + garbageCost + otherCost;
 
-        // --- ĐOẠN ĐƯỢC CHỈNH SỬA TẠI ĐÂY ---
         let billingIndex = window.systemData.billings.findIndex(b => b.roomId === room.roomId && b.month === currentMonth);
-        
-        // Tìm xem phòng này đã có link ảnh được chụp lưu trước đó trong mảng hệ thống chưa
-        const existingEvidences = billingIndex >= 0 ? (window.systemData.billings[billingIndex].evidenceUrls || null) : null;
-
         const billingData = {
-            roomId: room.roomId, 
-            month: currentMonth,
-            elecStart, 
-            elecEnd, 
-            waterStart, 
-            waterEnd, 
-            evStart, 
-            evEnd, 
-            otherCost, 
-            total,
-            paid: billingIndex >= 0 ? window.systemData.billings[billingIndex].paid : false,
-            evidenceUrls: existingEvidences // Bảo lưu link ảnh bằng chứng, không để object mới ghi đè làm mất link ảnh
+            roomId: room.roomId, month: currentMonth,
+            elecStart, elecEnd, waterStart, waterEnd, evStart, evEnd, otherCost, total,
+            paid: billingIndex >= 0 ? window.systemData.billings[billingIndex].paid : false
         };
-        // ------------------------------------
 
         if (billingIndex >= 0) window.systemData.billings[billingIndex] = billingData;
         else window.systemData.billings.push(billingData);
@@ -1563,11 +1546,11 @@ function convertBlobToBase64(blob) {
 
 // Hàm 3: Hàm xử lý cốt lõi khi người dùng bấm chụp ảnh đồng hồ
 window.triggerMeterAIReader = async function(roomId, meterType) {
-    // Tạo phần tử input ẩn để kích hoạt camera điện thoại
+    // Tạo input ẩn để kích hoạt camera sau của iPhone
     const hiddenInput = document.createElement('input');
     hiddenInput.type = 'file';
     hiddenInput.accept = 'image/*';
-    hiddenInput.capture = 'environment'; // Ép buộc mở camera sau trên điện thoại
+    hiddenInput.capture = 'environment'; // Mở thẳng camera chụp ảnh trên điện thoại
     
     hiddenInput.onchange = async (event) => {
         const file = event.target.files[0];
@@ -1577,37 +1560,23 @@ window.triggerMeterAIReader = async function(roomId, meterType) {
         const inputElement = document.getElementById(inputTargetId);
         if (!inputElement) return;
 
-        // Tạo hiệu ứng loading nhấp nháy trực quan trên ô nhập liệu
+        // Tạo hiệu ứng loading nhấp nháy trên ô nhập liệu
         inputElement.disabled = true;
         inputElement.classList.add('animate-pulse', 'bg-indigo-50', 'text-indigo-600');
-        inputElement.placeholder = "AI đang đọc...";
+        inputElement.placeholder = "AI đang quét số...";
 
         try {
-            // 1. Nén ảnh tối ưu dung lượng đám mây
+            // 1. Nén ảnh tại client để tối ưu tốc độ truyền tải gói tin mạng
             const compressedBlob = await compressImageBeforeUpload(file);
 
-            // 2. Tải ảnh lên Firebase Storage để làm bằng chứng pháp lý
-            const storagePath = `evidences_meters/${currentMonth}/${roomId}_${meterType}_${Date.now()}.jpg`;
-            const storageRef = ref(storage, storagePath);
-            const snapshot = await uploadBytes(storageRef, compressedBlob);
-            const downloadURL = await getDownloadURL(snapshot.ref);
-
-            // Lưu trữ tạm URL ảnh vào biến global của hóa đơn phòng để chuẩn bị đồng bộ dữ liệu
-            let billing = window.systemData.billings.find(b => b.roomId === roomId && b.month === currentMonth);
-            if (!billing) {
-                billing = { roomId, month: currentMonth };
-                window.systemData.billings.push(billing);
-            }
-            // Khởi tạo cụm object lưu URL chứng cứ ảnh nếu chưa có
-            if (!billing.evidenceUrls) billing.evidenceUrls = {};
-            billing.evidenceUrls[`${meterType}EndImg`] = downloadURL;
-
-            // 3. Gọi Trí tuệ nhân tạo Gemini 1.5 Flash đọc dữ liệu số hóa
-            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+            // 2. Chuyển đổi Blob ảnh sang chuỗi văn bản Base64 để gửi trực tiếp cho AI
             const base64Data = await convertBlobToBase64(compressedBlob);
             
-            const promptInstruction = `Đây là ảnh chụp trực diện đồng hồ đo chỉ số ${meterType === 'elec' ? 'Điện (kWh)' : (meterType === 'water' ? 'Nước (m³)' : 'Điện xe máy EV')} của một hộ gia đình. 
-            Nhiệm vụ của bạn: Hãy phân tích kỹ vùng hiển thị số, bỏ qua các ký tự nhiễu rác, nhãn hiệu đồng hồ, hoặc các số màu đỏ biểu thị phần thập phân ở cuối nếu là đồng hồ cơ cũ. 
+            // 3. Gọi trực tiếp API Gemini 1.5 Flash xử lý nhận diện chỉ số
+            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+            
+            const promptInstruction = `Đây là ảnh chụp trực diện mặt đồng hồ đo chỉ số ${meterType === 'elec' ? 'Điện (kWh)' : (meterType === 'water' ? 'Nước (m³)' : 'Điện xe máy EV')}. 
+            Nhiệm vụ của bạn: Hãy phân tích kỹ vùng hiển thị chữ số, bỏ qua các ký tự nhiễu rác, nhãn hiệu đồng hồ, hoặc các số màu đỏ biểu thị phần thập phân ở cuối nếu là đồng hồ cơ cũ. 
             Chỉ trích xuất và trả về một con số NGUYÊN duy nhất hiển thị trên mặt số để phục vụ tính tiền. Không giải thích, không viết thêm chữ nào khác ngoài con số đó.`;
 
             const aiResponse = await fetch(geminiUrl, {
@@ -1625,29 +1594,32 @@ window.triggerMeterAIReader = async function(roomId, meterType) {
 
             const aiJson = await aiResponse.json();
             const rawOutput = aiJson.candidates[0].content.parts[0].text.trim();
-            const extractedNumber = parseInt(rawOutput.replace(/\D/g, ''), 10); // Lọc sạch ký tự lạ, ép kiểu số nguyên
+            const extractedNumber = parseInt(rawOutput.replace(/\D/g, ''), 10); // Lọc sạch ký tự chữ, ép kiểu số nguyên
 
             if (!isNaN(extractedNumber)) {
-                // Điền số tự động vào giao diện và kích hoạt bộ check lỗi báo đỏ của anh
+                // Điền số tự động vào giao diện và kích hoạt bộ kiểm tra lỗi báo đỏ live của anh
                 inputElement.value = extractedNumber;
                 window.validateLiveInput(roomId, meterType);
+                
+                // Hiển thị một thông báo nhỏ cạnh ô nhập để biết AI đã đọc xong
+                inputElement.title = "Đã nhập tự động bằng AI thành công";
             } else {
-                alert(`AI không thể định dạng rõ chỉ số từ ảnh chụp phòng ${roomId}. Anh vui lòng điền tay thủ công.`);
+                alert(`AI không đọc rõ được chỉ số từ ảnh của phòng ${roomId}. Anh vui lòng tự điền tay.`);
                 console.log("Dữ liệu gốc AI trả về:", rawOutput);
             }
 
         } catch (err) {
-            console.error("Lỗi vận hành AI & Storage:", err);
-            alert("Hệ thống mất kết nối mạng hoặc lỗi xác thực API Cloud.");
+            console.error("Lỗi vận hành hệ thống AI:", err);
+            alert("Không thể kết nối mạng hoặc lỗi xác thực API Cloud.");
         } finally {
-            // Trả giao diện về trạng thái bình thường
+            // Trả giao diện về trạng thái nhập liệu bình thường
             inputElement.disabled = false;
             inputElement.classList.remove('animate-pulse', 'bg-indigo-50', 'text-indigo-600');
             inputElement.placeholder = "";
         }
     };
 
-    hiddenInput.click(); // Kích hoạt sự kiện chọn file ẩn
+    hiddenInput.click();
 };
     </script>
 </body>
