@@ -503,15 +503,43 @@
                 }
             };
 
-            window.handleLogin = function() {
-                const email = document.getElementById('loginEmail').value;
-                const pass = document.getElementById('loginPass').value;
-                if(email === "admin@quanly.com" && pass === "123456") {
-                    localStorage.setItem('SR_AUTH', 'true');
-                    document.getElementById('loginModal').classList.add('hidden');
-                    document.getElementById('mainApp').classList.remove('hidden');
-                    window.refreshAllViews();
-                } else {
+            window.handleLogin = async function() {
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPass').value;
+    
+    // Tạo hiệu ứng đang xử lý
+    const loginBtn = document.querySelector("button[onclick='window.handleLogin()']");
+    const originalText = loginBtn.innerHTML;
+    loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xác thực...';
+    loginBtn.disabled = true;
+
+    try {
+        // Gọi hàm đăng nhập trực tiếp từ thư viện Firebase Auth đám mây của bạn
+        if (window.firebaseBridge && typeof window.firebaseBridge.login === 'function') {
+            await window.firebaseBridge.login(email, pass);
+        } else if (window.auth) {
+            await firebase.auth().signInWithEmailAndPassword(email, pass);
+        } else {
+            // Trường hợp dự phòng nếu chưa load kịp SDK đám mây
+            if(email === 'admin@quanly.com' && pass === '123456') {
+                console.warn("Đang chạy chế độ offline dự phòng do SDK chưa sẵn sàng.");
+            } else {
+                throw new Error("Hệ thống kết nối đám mây đang bận. Vui lòng thử lại!");
+            }
+        }
+        
+        // Đăng nhập thành công -> Mở khóa màn hình
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+    } catch (error) {
+        // Báo lỗi chi tiết từ Firebase trả về
+        alert("Đăng nhập thất bại: " + error.message);
+    } finally {
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
+    }
+}; 
+                else {
                     alert("Tài khoản hoặc mật mã an toàn chưa chính xác!");
                 }
             };
