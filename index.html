@@ -1642,6 +1642,8 @@ window.closeOcrCamera = function() {
 window.captureAndOcrCentral = function() {
     const video = document.getElementById('ocrVideo');
     const statusDiv = document.getElementById('ocrScannerStatus');
+    const currentField = document.getElementById('ocrSelectField').value; // Xem đang quét Điện hay Nước
+    
     if (!video.srcObject) return;
 
     const canvas = document.createElement('canvas');
@@ -1649,17 +1651,15 @@ window.captureAndOcrCentral = function() {
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
     
-    // 1. Chụp trọn vẹn khung hình từ Camera góc rộng
+    // 1. Chụp ảnh góc rộng từ luồng camera
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // 2. Thuật toán tiền xử lý ảnh nâng cao (Binarization & Contrast)
+    // 2. Thuật toán tiền xử lý tăng tương phản chuyên sâu
     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const d = imgData.data;
     for (let i = 0; i < d.length; i += 4) {
-        // Chuyển về ảnh xám chuẩn kỹ thuật số
         let grayscale = d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
-        
-        // Tăng độ tương phản động: Đẩy số đen đậm lên, xóa mờ vết xước trên mặt kính công tơ
+        // Ngưỡng phân tách nhị phân (Thresholding) giúp số nổi bật trên nền trắng
         let threshold = 120; 
         let v = (grayscale >= threshold) ? 255 : 0;
         d[i] = d[i+1] = d[i+2] = v; 
@@ -1671,36 +1671,64 @@ window.captureAndOcrCentral = function() {
 
     const dataUrl = canvas.toDataURL('image/jpeg');
     
-    // 3. Gọi AI với cấu hình ÉP BUỘC CHỈ ĐỌC SỐ (Tối ưu độ chính xác 99%)
+    // 3. Gọi lõi AI đọc toàn bộ ký tự số xuất hiện
     Tesseract.recognize(
         dataUrl,
         'eng',
         { 
             logger: m => console.log(m),
-            // Cấu hình cốt lõi: Chỉ nhận diện các ký tự từ 0 đến 9, loại bỏ hoàn toàn nhiễu chữ bối cảnh
-            tessedit_char_whitelist: '0123456789' 
+            tessedit_char_whitelist: '0123456789' // Chỉ cho phép đọc số
         }
     ).then(({ data: { text } }) => {
-        // Lọc sạch khoảng trống và các ký tự xuống dòng thừa
-        const cleanText = text.replace(/[^0-9]/g, '');
+        console.log("Dữ liệu thô AI đọc được:", text);
         
-        if (cleanText && cleanText.length >= 3) {
-            // Lấy chuỗi số xuất hiện (thường mặt công tơ sẽ từ 4-6 số)
-            document.getElementById('ocrDetectedResult').value = parseInt(cleanText, 10);
-        } else {
-            // Nếu lọc gắt quá chưa ra, dùng lại phương thức Regex dự phòng
-            const numbers = text.match(/\d+/g);
-            if (numbers && numbers.length > 0) {
-                const validNumber = numbers.find(num => num.length >= 3 && num.length <= 6) || numbers[0];
-                document.getElementById('ocrDetectedResult').value = parseInt(validNumber, 10);
+        // Sử dụng biểu thức chính quy Regex tách ra các cụm số xuất hiện độc lập
+        // Mặt chữ số công tơ nằm thẳng hàng sẽ tạo thành 1 cụm số liền nhau
+        const numberGroups = text.match(/\d+/g); 
+        
+        if (numberGroups && numberGroups.length > 0) {
+            let finalResult = null;
+            
+            if (currentField === 'elecEnd') {
+                // --- THUẬT TOÁN CHO ĐỒNG HỒ ĐIỆN ---
+                // Công tơ điện cơ học thường có dãy số chính gồm 5 hoặc 6 chữ số thẳng hàng (VD: 04336)
+                // Tìm cụm số nào có độ dài nằm trong khoảng từ 5 đến 6 ký tự
+                const targetGroup = numberGroups.find(num => num.length >= 5 && num.length <= 6);
+                
+                if (targetGroup) {
+                    finalResult = parseInt(targetGroup, 10); // "04336" chuyển thành 4336
+                } else {
+                    // Nếu không tìm thấy cụm 5-6 số chuẩn, lấy cụm số dài nhất xuất hiện trong ảnh chụp
+                    const longestGroup = numberGroups.reduce((a, b) => a.length >= b.length ? a : b);
+                    if (longestGroup.length >= 3) finalResult = parseInt(longestGroup, 10);
+                }
             } else {
-                alert("Không tìm thấy chữ số rõ ràng. Anh hãy bật Flash trợ sáng, giữ thẳng tay và bấm chụp lại nhé!");
+                // --- THUẬT TOÁN CHO ĐỒNG HỒ NƯỚC / XE ĐIỆN ---
+                // Đồng hồ nước thường có cụm số Đen chỉ số Khối (m³) đứng trước, cụm số Đỏ chỉ Lít đứng sau
+                // Chúng ta ưu tiên tìm cụm số có độ dài từ 4 đến 5 ký tự xuất hiện đầu tiên
+                const targetGroup = numberGroups.find(num => num.length >= 4 && num.length <= 5);
+                
+                if (targetGroup) {
+                    finalResult = parseInt(targetGroup, 10);
+                } else {
+                    // Phương án dự phòng: Lấy cụm số đầu tiên đọc được từ trên xuống dưới, từ trái qua phải
+                    finalResult = parseInt(numberGroups[0], 10);
+                }
             }
+
+            // Ghi nhận giá trị xử lý thành công lên ô kết quả giao diện
+            if (finalResult !== null && !isNaN(finalResult)) {
+                document.getElementById('ocrDetectedResult').value = finalResult;
+            } else {
+                alert("AI bị nhiễu do góc chụp có nhiều thông số phụ. Anh hãy đưa camera lại gần hơn để dãy số chính chiếm trọn khung hình và bấm chụp lại nhé!");
+            }
+        } else {
+            alert("Không tìm thấy dãy số hiển thị. Anh hãy bật đèn Flash trợ sáng và căn thẳng hàng hộp số!");
         }
     })
     .catch(err => {
-        console.error("Lỗi phân tích OCR: ", err);
-        alert("Có lỗi xảy ra trong quá trình xử lý hình ảnh của AI.");
+        console.error("Lỗi hệ thống OCR: ", err);
+        alert("Có lỗi xảy ra trong quá trình xử lý hình ảnh.");
     })
     .finally(() => {
         statusDiv.classList.add('hidden');
