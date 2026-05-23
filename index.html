@@ -559,7 +559,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.x/firebase-storage.js";
+
         const firebaseConfig = {  
             apiKey: "AIzaSyBLCSiQpn8oEbXQEb5uot7KQQSXcM9CX-w",
             authDomain: "qlnt-e6dc0.firebaseapp.com",
@@ -574,7 +574,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstati
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-const storage = getStorage(app); // <--- THÊM DÒNG NÀY
+
         // Thiết lập mã khóa API Gemini của anh tại đây
 const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
         
