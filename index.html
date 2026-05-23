@@ -1698,7 +1698,20 @@ window.processIPhonePhoto = async function(inputElement) {
 };
 
 // Khởi chạy nạp danh sách phòng tự động ngay khi ứng dụng sẵn sàng dữ liệu từ Firebase
-setTimeout(window.updateAIRoomDropdown, 2000);
+// Giải pháp tối ưu: Lắng nghe trực tiếp khi hệ thống render dữ liệu xong sẽ nạp phòng cho AI ngay
+const originalRenderAll = window.renderAll;
+if (typeof originalRenderAll === 'function') {
+    window.renderAll = function() {
+        originalRenderAll(); // Chạy hàm render gốc của hệ thống
+        setTimeout(window.updateAIRoomDropdown, 300); // Nạp danh sách phòng vào ô chọn AI
+    };
+}
+
+// Chạy kích hoạt dự phòng khi mở phần mềm
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(window.updateAIRoomDropdown, 1500);
+    setTimeout(window.updateAIRoomDropdown, 3000); // Chạy lại lần 2 đề phòng mạng chậm
+});
 
 // Đồng bộ lại danh sách phòng của AI khi người dùng thay đổi tháng làm việc
 const originalChangeMonth = window.changeWorkingMonth;
