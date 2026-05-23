@@ -740,10 +740,11 @@ const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
         const evEnd = billing.evEnd || 0;
         const oCost = billing.otherCost || 0;
 
-        // Kiểm tra xem phòng này đã từng chụp ảnh chứng cứ tháng này chưa để đổi màu nút icon hiển thị trực quan
-        const hasElecImg = billing.evidenceUrls && billing.evidenceUrls.elecEndImg;
-        const hasWaterImg = billing.evidenceUrls && billing.evidenceUrls.waterEndImg;
-        const hasEvImg = billing.evidenceUrls && billing.evidenceUrls.evEndImg;
+        // --- ĐOẠN ĐƯỢC CHỈNH SỬA: Kiểm tra trạng thái đã quét AI thành công qua thuộc tính tạm thời hoặc số cuối kỳ đã nhập ---
+        const hasElecImg = billing.aiScannedElec || (billing.elecEnd > 0);
+        const hasWaterImg = billing.aiScannedWater || (billing.waterEnd > 0);
+        const hasEvImg = billing.aiScannedEv || (billing.evEnd > 0);
+        // ---------------------------------------------------------------------------------------------------------
 
         return `<tr class="hover:bg-slate-50/70 transition-all">
             <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
@@ -762,7 +763,7 @@ const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
             </td>
 
             <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
+                <input type="number" id="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
             </td>
             <td class="p-2 bg-sky-50/40">
                 <div class="flex items-center gap-1.5 justify-between">
@@ -791,7 +792,6 @@ const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
         </tr>`;
     }).join('');
 }
-
       window.saveBatchInput = async function() {
     const settings = window.systemData.settings;
     let hasError = false;
@@ -1597,13 +1597,22 @@ window.triggerMeterAIReader = async function(roomId, meterType) {
             const extractedNumber = parseInt(rawOutput.replace(/\D/g, ''), 10); // Lọc sạch ký tự chữ, ép kiểu số nguyên
 
             if (!isNaN(extractedNumber)) {
-                // Điền số tự động vào giao diện và kích hoạt bộ kiểm tra lỗi báo đỏ live của anh
-                inputElement.value = extractedNumber;
-                window.validateLiveInput(roomId, meterType);
-                
-                // Hiển thị một thông báo nhỏ cạnh ô nhập để biết AI đã đọc xong
-                inputElement.title = "Đã nhập tự động bằng AI thành công";
-            } else {
+    inputElement.value = extractedNumber;
+    
+    // Tìm hoặc tạo cấu trúc billing tạm thời để đánh dấu đã quét AI thành công
+    let billing = window.systemData.billings.find(b => b.roomId === roomId && b.month === currentMonth);
+    if (!billing) {
+        billing = { roomId, month: currentMonth };
+        window.systemData.billings.push(billing);
+    }
+    // Đánh dấu cờ quét thành công để đổi màu icon trực quan
+    if (meterType === 'elec') billing.aiScannedElec = true;
+    if (meterType === 'water') billing.aiScannedWater = true;
+    if (meterType === 'ev') billing.aiScannedEv = true;
+
+    window.validateLiveInput(roomId, meterType);
+    inputElement.title = "Đã nhập tự động bằng AI thành công";
+} else {
                 alert(`AI không đọc rõ được chỉ số từ ảnh của phòng ${roomId}. Anh vui lòng tự điền tay.`);
                 console.log("Dữ liệu gốc AI trả về:", rawOutput);
             }
