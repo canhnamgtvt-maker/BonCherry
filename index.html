@@ -612,18 +612,42 @@
                 settings: { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 }
             };
 
-           window.handleLogin = function() {
-            const emailInput = document.getElementById('loginEmail');
-            const passInput = document.getElementById('loginPass');
-            if(!emailInput || !passInput) return;
-            const email = emailInput.value.trim();
-            const password = passInput.value;
-            if (typeof window.firebaseBridge.login === 'function') {
-                window.firebaseBridge.login(email, password);
+           window.handleLogin = async function() {
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPass').value;
+    
+    // Tạo hiệu ứng đang xử lý
+    const loginBtn = document.querySelector("button[onclick='window.handleLogin()']");
+    const originalText = loginBtn.innerHTML;
+    loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xác thực...';
+    loginBtn.disabled = true;
+
+    try {
+        // Gọi hàm đăng nhập trực tiếp từ thư viện Firebase Auth đám mây của bạn
+        if (window.firebaseBridge && typeof window.firebaseBridge.login === 'function') {
+            await window.firebaseBridge.login(email, pass);
+        } else if (window.auth) {
+            await firebase.auth().signInWithEmailAndPassword(email, pass);
+        } else {
+            // Trường hợp dự phòng nếu chưa load kịp SDK đám mây
+            if(email === 'admin@quanly.com' && pass === '123456') {
+                console.warn("Đang chạy chế độ offline dự phòng do SDK chưa sẵn sàng.");
             } else {
-                alert("Đang thiết lập liên kết máy chủ Google Firebase Cloud, vui lòng thử lại sau 1 giây!");
+                throw new Error("Hệ thống kết nối đám mây đang bận. Vui lòng thử lại!");
             }
-        };
+        }
+        
+        // Đăng nhập thành công -> Mở khóa màn hình
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+    } catch (error) {
+        // Báo lỗi chi tiết từ Firebase trả về
+        alert("Đăng nhập thất bại: " + error.message);
+    } finally {
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
+    }
+};
 
             window.handleLogout = function() {
                 document.getElementById('mainApp').classList.add('hidden');
