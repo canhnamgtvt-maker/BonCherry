@@ -1548,7 +1548,92 @@
                 });
             }
         }
-        window.applyOcrResult = function() {
+        // ... (Các đoạn mã logic cấu hình Chart, Xuất Excel, hoặc Lưu trữ cũ của anh bên trên) ...
+
+// =========================================================================
+// CHÈN TOÀN BỘ CỤM LOGIC CAMERA OCR VÀO ĐÂY (NGAY TRƯỚC THẺ ĐÓNG SCRIPT)
+// =========================================================================
+
+// Biến toàn cục lưu trữ trạng thái quét camera
+let currentTargetField = null;
+let currentTargetRoomId = null;
+let localMediaStream = null;
+
+// 1. HÀM MỞ CAMERA AN TOÀN TRÊN THIẾT BỊ
+window.openOcrCamera = function(field, roomId) {
+    currentTargetField = field;
+    currentTargetRoomId = roomId;
+    
+    let fieldLabel = field === 'elecEnd' ? 'ĐỒNG HỒ ĐIỆN' : (field === 'waterEnd' ? 'ĐỒNG HỒ NƯỚC' : 'CÔNG TƠ SẠC XE EV');
+    document.getElementById('ocrModalTitle').innerText = `Quét Chỉ Số: ${fieldLabel} - Phòng ${roomId}`;
+    document.getElementById('ocrDetectedResult').value = '';
+    document.getElementById('ocrCameraModal').classList.remove('hidden');
+    document.getElementById('ocrCameraModal').classList.add('flex');
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+    .then(stream => {
+        localMediaStream = stream;
+        document.getElementById('ocrVideo').srcObject = stream;
+    })
+    .catch(err => {
+        console.error("Lỗi truy cập thiết bị Camera: ", err);
+        alert("Không thể khởi chạy hệ thống Camera. Vui lòng kiểm tra quyền truy cập camera của trình duyệt!");
+        window.closeOcrCamera();
+    });
+};
+
+// 2. HÀM TẮT CAMERA GIẢI PHÓNG PHẦN CỨNG
+window.closeOcrCamera = function() {
+    document.getElementById('ocrCameraModal').classList.add('hidden');
+    document.getElementById('ocrCameraModal').classList.remove('flex');
+    if (localMediaStream) {
+        localMediaStream.getTracks().forEach(track => track.stop());
+        localMediaStream = null;
+    }
+};
+
+// 3. CHỤP ẢNH VÀ TRÍCH XUẤT CHỮ SỐ BẰNG AI (TESSERACT)
+window.captureAndOcr = function() {
+    const video = document.getElementById('ocrVideo');
+    const statusDiv = document.getElementById('ocrScannerStatus');
+    if (!video.srcObject) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    statusDiv.classList.remove('hidden');
+    statusDiv.classList.add('flex');
+
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    
+    Tesseract.recognize(
+        dataUrl,
+        'eng',
+        { logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        const numbers = text.match(/\d+/g);
+        if (numbers && numbers.length > 0) {
+            const validNumber = numbers.find(num => num.length >= 3 && num.length <= 6) || numbers[0];
+            document.getElementById('ocrDetectedResult').value = parseInt(validNumber, 10);
+        } else {
+            alert("Môi trường thiếu sáng hoặc ảnh mờ, AI không đọc được số. Vui lòng căn chỉnh lại góc chụp hoặc tự nhập tay!");
+        }
+    })
+    .catch(err => {
+        console.error("Lỗi thư viện OCR: ", err);
+        alert("Có lỗi xảy ra trong quá trình xử lý hình ảnh.");
+    })
+    .finally(() => {
+        statusDiv.classList.add('hidden');
+        statusDiv.classList.remove('flex');
+    });
+};
+
+// 4. HÀM ÁP DỤNG KẾT QUẢ VÀO ĐÚNG Ô INPUT TRÊN BẢNG GỐC CỦA ANH
+window.applyOcrResult = function() {
     const val = document.getElementById('ocrDetectedResult').value;
     if (!val) {
         alert("Chưa có chỉ số hợp lệ để điền vào bảng!");
@@ -1562,7 +1647,6 @@
         targetInput.value = val;
         
         // Kích hoạt tính năng kiểm tra trực tiếp (Live Validate) sẵn có của anh
-        // Phục vụ cơ chế đổi màu đỏ cảnh báo nếu số cuối nhỏ hơn số đầu
         const fieldType = currentTargetField === 'elecEnd' ? 'elec' : (currentTargetField === 'waterEnd' ? 'water' : 'ev');
         if (window.validateLiveInput) {
             window.validateLiveInput(currentTargetRoomId, fieldType);
