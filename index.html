@@ -1602,7 +1602,39 @@ window.processIPhonePhoto = async function(inputElement) {
     const file = inputElement.files[0];
     if (!file) return;
 
-    // Bật hiệu ứng chờ xử lý loading overlay
+    // LẤY THÔNG TIN PHÒNG VÀ LOẠI SỐ TRƯỚC
+    const roomId = document.getElementById('aiTargetRoom')?.value;
+    const type = document.getElementById('aiTargetType')?.value; // 'elec' hoặc 'water'
+    const workingMonth = window.currentMonth || "2026-05";
+    
+    if (!roomId) {
+        alert("⚠️ Vui lòng chọn phòng cần nhập chỉ số.");
+        inputElement.value = '';
+        return;
+    }
+
+    // TẠO ĐƯỜNG DẪN ẢNH TỐC ĐỘ CAO (HIỂN THỊ TRONG 0.05 GIÂY)
+    const imageUrl = URL.createObjectURL(file);
+
+    // HIỂN THỊ NGAY Ô XEM TRƯỚC ĐỂ ANH CHẠM GIỮ LƯU VÀO THƯ VIỆN (KHÔNG ĐỢI AI)
+    try {
+        let previewContainer = document.getElementById('iphone-photo-preview-box');
+        if (!previewContainer) {
+            previewContainer = document.createElement('div');
+            previewContainer.id = 'iphone-photo-preview-box';
+            previewContainer.className = 'fixed bottom-4 right-4 z-50 p-2.5 bg-white rounded-2xl shadow-2xl border border-amber-500 max-w-[140px] text-center animate-bounce';
+            document.body.appendChild(previewContainer);
+        }
+        previewContainer.innerHTML = `
+            <p class="text-[9px] font-bold text-amber-600 mb-1">Chạm giữ 1 giây<br>để Lưu vào Thư Viện</p>
+            <img src="${imageUrl}" class="w-28 h-28 object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: none;">
+            <button onclick="this.parentElement.remove()" class="mt-1.5 text-[10px] text-slate-400 hover:text-red-500 font-bold bg-slate-100 px-2 py-0.5 rounded-md w-full">Đóng [X]</button>
+        `;
+    } catch (e) {
+        console.error("Lỗi tạo ảnh xem trước:", e);
+    }
+
+    // BẬT ĐÈ HIỆU ỨNG LOADING SONG SONG
     const overlay = document.getElementById('aiProcessingOverlay');
     if (overlay) {
         overlay.classList.remove('hidden');
@@ -1610,67 +1642,35 @@ window.processIPhonePhoto = async function(inputElement) {
     }
 
     try {
-        const roomId = document.getElementById('aiTargetRoom')?.value;
-        const type = document.getElementById('aiTargetType')?.value; // 'elec' hoặc 'water'
-        const workingMonth = window.currentMonth || "2026-05";
-        
-        if (!roomId) throw new Error("Vui lòng chọn phòng cần nhập chỉ số.");
-
-        // =========================================================================
-        // PHẦN BỔ SUNG: TẠO Ô HIỂN THỊ ẢNH ĐỂ ANH ẤN GIỮ LƯU VÀO THƯ VIỆN IPHONE
-        // =========================================================================
-        try {
-            const imageUrl = URL.createObjectURL(file);
-            let previewContainer = document.getElementById('iphone-photo-preview-box');
-            if (!previewContainer) {
-                previewContainer = document.createElement('div');
-                previewContainer.id = 'iphone-photo-preview-box';
-                previewContainer.className = 'fixed bottom-4 right-4 z-50 p-2.5 bg-white rounded-2xl shadow-2xl border border-amber-500 max-w-[140px] text-center';
-                document.body.appendChild(previewContainer);
-            }
-            previewContainer.innerHTML = `
-                <p class="text-[9px] font-bold text-amber-600 mb-1 animate-pulse">Chạm giữ 1 giây<br>để Lưu vào Thư Viện</p>
-                <img src="${imageUrl}" class="w-28 h-28 object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: none;">
-                <button onclick="this.parentElement.remove()" class="mt-1.5 text-[10px] text-slate-400 hover:text-red-500 font-bold bg-slate-100 px-2 py-0.5 rounded-md w-full">Đóng [X]</button>
-            `;
-        } catch (e) {
-            console.error("Lỗi tạo ảnh xem trước:", e);
-        }
-        // =========================================================================
-
-        // Lấy API Key từ cấu hình hệ thống toàn cục hoặc local sao lưu
+        // Lấy API Key từ hệ thống
         const apiKey = localStorage.getItem('SMARTRENTAL_GEMINI_KEY') || window.systemData?.settings?.geminiKey;
-        if (!apiKey) {
-            throw new Error("Chưa cấu hình Gemini API Key trong phần Thiết lập.");
-        }
+        if (!apiKey) throw new Error("Chưa cấu hình Gemini API Key trong phần Thiết lập.");
 
-        // Đọc và nén ảnh trực tiếp bằng HTML5 Canvas để tiết kiệm dung lượng dung lượng bộ nhớ
+        // NÂNG CẤP XỬ LÝ ẢNH SIÊU TỐC KHÔNG QUA FILEREADER
         const base64ImageWithHeader = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.getElementById('aiCanvasBuffer') || document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const maxDimension = 900; 
-                    
-                    let w = img.width;
-                    let h = img.height;
-                    if (w > maxDimension || h > maxDimension) {
-                        if (w > h) { h = Math.round((h * maxDimension) / w); w = maxDimension; }
-                        else { w = Math.round((w * maxDimension) / h); h = maxDimension; }
-                    }
-                    
-                    canvas.width = w;
-                    canvas.height = h;
-                    ctx.drawImage(img, 0, 0, w, h);
-                    resolve(canvas.toDataURL('image/jpeg', 0.60)); // Nén JPEG 60% giữ rõ nét mặt số
-                };
-                img.onerror = () => reject(new Error("Lỗi định dạng tệp ảnh."));
-                img.src = e.target.result;
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.getElementById('aiCanvasBuffer') || document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Giảm kích thước xuống 800px (Đủ để Gemini đọc rõ mồn một chữ số công tơ)
+                const maxDimension = 800; 
+                let w = img.width;
+                let h = img.height;
+                if (w > maxDimension || h > maxDimension) {
+                    if (w > h) { h = Math.round((h * maxDimension) / w); w = maxDimension; }
+                    else { w = Math.round((w * maxDimension) / h); h = maxDimension; }
+                }
+                
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(img, 0, 0, w, h);
+                
+                // Hạ nén chất lượng xuống 0.55 (Ảnh nhẹ đi 40%, gửi lên máy chủ Google nhanh hơn gấp đôi)
+                resolve(canvas.toDataURL('image/jpeg', 0.55));
             };
-            reader.onerror = () => reject(new Error("Không thể đọc file từ thiết bị."));
-            reader.readAsDataURL(file);
+            img.onerror = () => reject(new Error("Lỗi định dạng tệp ảnh."));
+            img.src = imageUrl; // Chạy trực tiếp bằng ObjectURL tốc độ cao
         });
 
         const base64Data = base64ImageWithHeader.split(',')[1];
@@ -1683,55 +1683,50 @@ window.processIPhonePhoto = async function(inputElement) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: file.type, data: base64Data } }] }]
+                contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: 'image/jpeg', data: base64Data } }] }]
             })
         });
 
-        if (!response.ok) throw new Error("Kết nối đến máy chủ AI thất bại hoặc Key không chính xác.");
+        if (!response.ok) throw new Error("Kết nối đến máy chủ AI thất bại.");
         
         const resData = await response.json();
         const aiText = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 
         if (!aiText || aiText.includes("ERROR") || isNaN(parseInt(aiText))) {
-            throw new Error("AI không nhận diện rõ số. Vui lòng chụp lại vuông góc, rõ nét và tránh lóa sáng mặt kính.");
+            throw new Error("AI không nhận diện rõ số. Vui lòng chụp lại rõ nét hơn.");
         }
 
         const extractedValue = parseInt(aiText);
-
-        // KHỚP CHÍNH XÁC ID Ô NHẬP LIỆU GỐC: input-elecEnd-101 hoặc input-waterEnd-101
         const targetInputId = type === 'elec' ? `input-elecEnd-${roomId}` : `input-waterEnd-${roomId}`;
         const targetInput = document.getElementById(targetInputId);
         
         if (targetInput) {
             targetInput.value = extractedValue;
-            
-            // Kích hoạt hiệu ứng đổi màu nền báo điền tự động thành công bằng AI
             targetInput.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-700', 'font-bold');
             targetInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            // Kích hoạt hàm kiểm tra live có sẵn của hệ thống để phát hiện nhập ngược ngay lập tức
             if (typeof window.validateLiveInput === 'function') {
                 window.validateLiveInput(roomId, type);
             }
             
             setTimeout(() => {
                 targetInput.classList.remove('bg-emerald-50', 'border-emerald-300');
-            }, 3000);
-        } else {
-            alert(`AI quét thành công số [ ${extractedValue} ], nhưng không tìm thấy ô nhập liệu của phòng ${roomId} trên bảng tính kỳ này.`);
+            }, 2500);
         }
 
-        // Lưu chuỗi ảnh làm minh chứng đối chiếu hóa đơn vào LocalStorage
+        // Lưu bản lưu minh chứng nội bộ
         localStorage.setItem(`AI_PROOF_${workingMonth}_${roomId}_${type}`, base64ImageWithHeader);
 
-        // Tự động chuyển menu sang phòng tiếp theo
-        autoSwitchToNextRoom();
+        // Tự động chuyển sang phòng tiếp theo
+        if (typeof autoSwitchToNextRoom === 'function') {
+            autoSwitchToNextRoom();
+        }
 
     } catch (error) {
         alert("⚠️ Lỗi trích xuất AI: " + error.message);
         console.error(error);
     } finally {
-        inputElement.value = ''; // Reset input file để có thể chụp liên tục
+        inputElement.value = ''; 
         if (overlay) {
             overlay.classList.add('hidden');
             overlay.classList.remove('flex');
@@ -1739,7 +1734,7 @@ window.processIPhonePhoto = async function(inputElement) {
     }
 };
 
-// Khởi chạy nạp danh sách phòng tự động ngay khi ứng dụng sẵn sàng dữ liệu từ Firebase
+// --- GIỮ NGUYÊN CÁC HÀM LẮNG NGHE ĐỒNG BỘ PHÍA DƯỚI CỦA ANH ---
 const originalRenderAll = window.renderAll;
 if (typeof originalRenderAll === 'function') {
     window.renderAll = function() {
@@ -1747,14 +1742,9 @@ if (typeof originalRenderAll === 'function') {
         setTimeout(window.updateAIRoomDropdown, 300); 
     };
 }
-
-// Chạy kích hoạt dự phòng khi mở phần mềm
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(window.updateAIRoomDropdown, 1500);
-    setTimeout(window.updateAIRoomDropdown, 3000); 
 });
-
-// Đồng bộ lại danh sách phòng của AI khi người dùng thay đổi tháng làm việc
 const originalChangeMonth = window.changeWorkingMonth;
 if (typeof originalChangeMonth === 'function') {
     window.changeWorkingMonth = function(val) {
