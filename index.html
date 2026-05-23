@@ -525,7 +525,7 @@
     </div>
 
     
-   <div id="ocrCameraModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[300] hidden items-center justify-center p-4">
+   <div id="ocrCameraModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[300] items-center justify-center p-4" hidden>
     <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl border border-slate-100 flex flex-col gap-4">
         
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -1683,32 +1683,24 @@ window.openImageInNewTab = function(base64) {
     let capturedImageBase64 = null;
 
     // 1. MỞ CAMERA TRUNG TÂM VÀ ĐỔ DANH SÁCH PHÒNG
-    window.openOcrCameraCentral = function() {
-        const roomSelect = document.getElementById('ocrSelectRoom');
-        if (!roomSelect) return;
-        
-        roomSelect.innerHTML = window.systemData.rooms.map(r => 
-            `<option value="${r.roomId}">Phòng ${r.roomId}</option>`
-        ).join('');
+   window.openOcrCameraCentral = function() {
+        const modal = document.getElementById('ocrCameraModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Logic mở camera chỉ chạy khi hàm này được gọi
+            window.startCameraStream(); 
+        }
+    };
 
-        window.resetOcrCapture();
-        document.getElementById('ocrCameraModal').classList.remove('hidden');
-        document.getElementById('ocrCameraModal').classList.add('flex');
-        isTorchOn = false;
-
-        navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }, 
-            audio: false 
-        })
-        .then(stream => {
-            localMediaStream = stream;
-            document.getElementById('ocrVideo').srcObject = stream;
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Không thể kết nối camera. Vui lòng cấp quyền truy cập!");
-            window.closeOcrCamera();
-        });
+    window.closeOcrCamera = function() {
+        const modal = document.getElementById('ocrCameraModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        // Dừng camera khi đóng
+        if (window.localMediaStream) {
+            window.localMediaStream.getTracks().forEach(track => track.stop());
+        }
     };
 
     // 2. KHỞI ĐỘNG LẠI TRẠNG THÁI KHUNG CHỤP
