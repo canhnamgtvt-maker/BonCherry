@@ -935,13 +935,29 @@
             let roomPrice = 0;
 
             if (savedInvoiceStr) {
-                const savedData = JSON.parse(decodeURIComponent(savedInvoiceStr));
-                billing = savedData.details || savedData;
-                renterName = savedData.renter || "Khách thuê lịch sử";
-                const roomObj = window.systemData.rooms.find(r => r.roomId === roomId) || {};
-                roomPrice = billing.total - ((billing.elecEnd - billing.elecStart) * 3500) - ((billing.waterEnd - billing.waterStart) * 15000);
-                members = roomObj.members || 1;
-            } else {
+        const savedData = JSON.parse(decodeURIComponent(savedInvoiceStr));
+        billing = savedData.details || savedData;
+        renterName = savedData.renter || "Khách thuê lịch sử";
+        const roomObj = window.systemData.rooms.find(r => r.roomId === roomId) || {};
+        
+        // Sửa lỗi: Lấy giá phòng gốc trực tiếp từ thuộc tính lịch sử, nếu không có mới tính toán trừ khống theo đơn giá thiết lập hệ thống
+        const currentSettings = window.systemData.settings || { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
+        const eUsage = Math.max(0, (billing.elecEnd || 0) - (billing.elecStart || 0));
+        const wUsage = Math.max(0, (billing.waterEnd || 0) - (billing.waterStart || 0));
+        const evUsage = Math.max(0, (billing.evEnd || 0) - (billing.evStart || 0));
+        
+        const eCost = eUsage * (currentSettings.elecFlat || 3500);
+        const wCost = wUsage * (currentSettings.waterFlat || 15000);
+        const evCost = evUsage * (currentSettings.evFlat || 4000);
+        const gMembers = billing.members || roomObj.members || 1;
+        const gCost = gMembers * (currentSettings.garbageFlat || 10000);
+        const oCost = billing.otherCost || 0;
+
+        // Ưu tiên lấy giá phòng được lưu trong cấu trúc, nếu không có sẽ trừ chuẩn theo cài đặt hệ thống
+        roomPrice = roomObj.price || (billing.total - eCost - wCost - evCost - gCost - oCost);
+        members = gMembers;
+    }
+            else {
                 billing = window.systemData.billings.find(b => b.roomId === roomId && b.month === month);
                 const roomObj = window.systemData.rooms.find(r => r.roomId === roomId);
                 if (roomObj) { renterName = roomObj.renter; members = roomObj.members; roomPrice = roomObj.price; }
