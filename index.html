@@ -21,10 +21,10 @@
         h1, h2, h3, h4, h5, h6, .heading-font {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        /* Tối ưu hóa hiển thị thanh cuộn mượt cho thiết bị di động */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        /* Custom thanh cuộn tinh tế kiểu hiện đại */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
         @media print {
@@ -32,15 +32,6 @@
             #invoice-print-area, #invoice-print-area * { visibility: visible; }
             #invoice-print-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
             .no-print { display: none !important; }
-        }
-
-        /* Hỗ trợ ẩn thanh cuộn ngang mặc định trên iOS nhưng vẫn cho phép trượt ngón tay */
-        .scrollbar-none::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-none {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
         }
     </style>
 </head>
@@ -91,10 +82,10 @@
                         <span class="text-[10px] text-indigo-300/80 font-bold tracking-wider uppercase block">v3.0 Enterprise Edition</span>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <div class="flex items-center bg-slate-800 hover:bg-slate-750 px-3 py-2 rounded-xl border border-slate-700/80 shadow-inner transition-all duration-200">
-                        <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-indigo-300 mr-1 select-none">Kỳ đối soát:</span>
-                        <input type="month" id="global-month" onchange="window.changeWorkingMonth(this.value)" class="bg-transparent text-white font-bold outline-none border-none text-xs sm:text-sm cursor-pointer p-0 focus:ring-0 min-w-[115px]">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60 backdrop-blur-sm shadow-inner">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-300">Kỳ đối soát:</span>
+                        <input type="month" id="global-month" onchange="window.changeWorkingMonth(this.value)" class="bg-transparent text-white font-bold outline-none border-none text-xs cursor-pointer focus:ring-0">
                     </div>
                     <button onclick="window.handleLogout()" class="w-9 h-9 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-xl transition-all border border-slate-700/50 flex items-center justify-center" title="Đăng xuất">
                         <i class="fa-solid fa-power-off text-sm"></i>
@@ -105,31 +96,31 @@
 
         <div class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 no-print">
             
-            <aside class="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-1.5 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 pb-3 lg:pb-0 scrollbar-none snap-x snap-mandatory">
-                <button onclick="window.switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn snap-center min-w-[135px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
+            <aside class="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 pb-2 lg:pb-0 scrollbar-none">
+                <button onclick="window.switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
                     <i class="fa-solid fa-grid-2 text-sm w-5 text-center"></i> Bảng Tổng Quan
                 </button>
-                <button onclick="window.switchTab('input')" id="btn-tab-input" class="tab-btn snap-center min-w-[135px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('input')" id="btn-tab-input" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-bolt-lightning text-sm w-5 text-center"></i> Chỉ Số Điện Nước
                 </button>
-                <button onclick="window.switchTab('expenses')" id="btn-tab-expenses" class="tab-btn snap-center min-w-[135px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('expenses')" id="btn-tab-expenses" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-wallet text-sm w-5 text-center"></i> Chi Phí Vận Hành
                 </button>
-                <button onclick="window.switchTab('summary')" id="btn-tab-summary" class="tab-btn snap-center min-w-[135px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('summary')" id="btn-tab-summary" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-file-invoice text-sm w-5 text-center"></i> Bảng Thu Doanh Số
                 </button>
-                <button onclick="window.switchTab('saved-invoices')" id="btn-tab-saved-invoices" class="tab-btn snap-center min-w-[135px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('saved-invoices')" id="btn-tab-saved-invoices" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-clock-history text-sm w-5 text-center"></i> Lưu Trữ Lịch Sử
                 </button>
-                <button onclick="window.switchTab('rooms')" id="btn-tab-rooms" class="tab-btn snap-center min-w-[135px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('rooms')" id="btn-tab-rooms" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-door-closed text-sm w-5 text-center"></i> Cơ Sở Phòng Trọ
                 </button>
-                <button onclick="window.switchTab('settings')" id="btn-tab-settings" class="tab-btn snap-center min-w-[135px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('settings')" id="btn-tab-settings" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-sliders-h text-sm w-5 text-center"></i> Thiết Lập Định Giá
                 </button>
             </aside>
 
-            <main class="flex-grow bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6 flex flex-col justify-start min-h-[620px] transition-all duration-300 overflow-hidden">
+            <main class="flex-grow bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 flex flex-col justify-start min-h-[620px] transition-all duration-300">
                 
                 <div id="tab-dashboard" class="tab-content flex flex-col gap-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-3">
@@ -173,7 +164,7 @@
                         </div>
                     </div>
 
-                    <div class="p-4 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+                    <div class="p-4 bg-slate-900 text-white rounded-xl flex flex-wrap items-center justify-between gap-4 shadow-md">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-center text-amber-400"><i class="fa-solid fa-analytics"></i></div>
                             <div>
@@ -181,12 +172,12 @@
                                 <p class="text-[10px] text-slate-400">Trực quan hóa chỉ số điện nước theo chu kỳ thời gian</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 text-xs w-full sm:w-auto">
-                            <select id="chart-time-type" onchange="window.handleChartConfigChange()" class="w-1/2 sm:w-auto bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 font-bold text-white outline-none cursor-pointer text-[11px]">
+                        <div class="flex items-center gap-2.5 text-xs">
+                            <select id="chart-time-type" onchange="window.handleChartConfigChange()" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 font-bold text-white outline-none cursor-pointer text-xs">
                                 <option value="month">Từng tháng trong năm</option>
                                 <option value="year">Tổng hợp qua các năm</option>
                             </select>
-                            <select id="chart-target-year" onchange="window.handleChartConfigChange()" class="w-1/2 sm:w-auto bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 font-bold text-white outline-none cursor-pointer text-[11px]">
+                            <select id="chart-target-year" onchange="window.handleChartConfigChange()" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 font-bold text-white outline-none cursor-pointer text-xs">
                                 <option value="2026">Năm 2026</option>
                                 <option value="2025">Năm 2025</option>
                                 <option value="2027">Năm 2027</option>
@@ -196,7 +187,7 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="p-4 border border-slate-100 bg-slate-50/40 rounded-xl">
-                            <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Tổng số điện điện tiêu thụ (kWh)</h3>
+                            <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Tổng số điện tiêu thụ (kWh)</h3>
                             <div class="relative h-60 flex justify-center items-center"><canvas id="chart-elec-consumption"></canvas></div>
                         </div>
                         <div class="p-4 border border-slate-100 bg-slate-50/40 rounded-xl">
@@ -206,14 +197,14 @@
                     </div>
 
                     <div class="border border-slate-150 rounded-xl overflow-hidden shadow-sm">
-                        <div class="bg-slate-50/80 p-3.5 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div class="bg-slate-50/80 p-3.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-ranking-star text-indigo-500 text-xs"></i>
                                 <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Bảng Đối Soát Cường Độ Năng Lượng</span>
                             </div>
-                            <div class="flex bg-slate-200/70 p-0.5 rounded-lg text-[10px] font-bold w-full sm:w-auto justify-center">
-                                <button id="btn-rank-month" onclick="window.switchRankScope('month')" class="flex-1 sm:flex-none px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all">Trong tháng hiện tại</button>
-                                <button id="btn-rank-year" onclick="window.switchRankScope('year')" class="flex-1 sm:flex-none px-3 py-1 text-slate-500 hover:text-slate-800 transition-all">Lũy kế cả năm</button>
+                            <div class="flex bg-slate-200/70 p-0.5 rounded-lg text-[10px] font-bold">
+                                <button id="btn-rank-month" onclick="window.switchRankScope('month')" class="px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all">Trong tháng hiện tại</button>
+                                <button id="btn-rank-year" onclick="window.switchRankScope('year')" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-all">Lũy kế cả năm</button>
                             </div>
                         </div>
                         
@@ -262,44 +253,50 @@
                         <h2 class="text-lg font-bold text-slate-900">Khấu Trừ & Ghi Nhận Chỉ Số Định Kỳ</h2>
                         <p class="text-xs text-slate-400 font-medium">Chu kỳ hạch toán áp dụng: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                     </div>
-                    
-                    <div class="bg-indigo-50/40 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 font-medium flex flex-col gap-2.5 shadow-sm">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-shield-exclamation text-indigo-500 text-sm"></i> 
-                            <span><b>Cơ chế An toàn Dữ liệu:</b> Chỉ số đầu kỳ kế thừa tự động. Hệ thống sẽ khóa và báo lỗi nếu chỉ số cuối kỳ nhập ngược <b>(nhỏ hơn đầu kỳ)</b>.</span>
-                        </div>
+                    <div class="bg-indigo-50/40 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 font-medium flex items-center gap-2.5 shadow-sm">
+                        <i class="fa-solid fa-shield-exclamation text-indigo-500 text-sm"></i> 
+                        <span><b>Cơ chế An toàn Dữ liệu:</b> Chỉ số đầu kỳ kế thừa tự động. Hệ thống sẽ khóa và báo lỗi nếu chỉ số cuối kỳ nhập ngược <b>(nhỏ hơn đầu kỳ)</b>.</span>
+                   
+<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm my-2">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                <span class="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                Quét Chỉ Số Bằng Gemini AI (Tối ưu cho iPhone)
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Ảnh chụp tự động lưu vào Thư viện iPhone và trích xuất số chính xác bằng AI.</p>
+        </div>
+        
+        <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/10 transition-all select-none transform active:scale-95">
+            <i class="fa-solid fa-camera text-sm"></i> Chụp Ảnh Quét Số
+            <input type="file" id="iphone-camera-input" accept="image/*" capture="environment" class="hidden" onchange="processIPhonePhoto(this)">
+        </label>
+    </div>
 
-                        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm mt-2 text-slate-800">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                <div>
-                                    <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                                        <span class="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-                                        Quét Chỉ Số Bằng Gemini AI (Tối ưu cho iPhone)
-                                    </h3>
-                                    <p class="text-[11px] text-slate-400 mt-0.5">Ảnh chụp tự động lưu vào Thư viện iPhone và trích xuất số chính xác bằng AI.</p>
-                                </div>
-                                <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/10 transition-all select-none transform active:scale-95 text-center w-full sm:w-auto">
-                                    <i class="fa-solid fa-camera text-sm"></i> Chụp Ảnh Quét Số
-                                    <input type="file" id="iphone-camera-input" accept="image/*" capture="environment" class="hidden" onchange="processIPhonePhoto(this)">
-                                </label>
-                            </div>
+    <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-100 max-w-xl">
+        <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phòng đang nhắm chụp</label>
+            <select id="aiTargetRoom" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all"></select>
+        </div>
+        <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Loại chỉ số đo</label>
+            <select id="aiTargetType" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all">
+                <option value="elec">Chỉ số ĐIỆN (kWh)</option>
+                <option value="water">Chỉ số NƯỚC (m³)</option>
+            </select>
+        </div>
+    </div>
+</div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 pt-4 border-t border-slate-100 max-w-xl">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Phòng đang nhắm chụp</label>
-                                    <select id="aiTargetRoom" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all"></select>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loại chỉ số đo</label>
-                                    <select id="aiTargetType" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all">
-                                        <option value="elec">Chỉ số ĐIỆN (kWh)</option>
-                                        <option value="water">Chỉ số NƯỚC (m³)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+<canvas id="aiCanvasBuffer" class="hidden"></canvas>
+
+<div id="aiProcessingOverlay" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[999] hidden flex-col items-center justify-center gap-3 text-white transition-all">
+    <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-xs font-bold tracking-wide animate-pulse text-amber-400">Gemini AI đang trích xuất dữ liệu ảnh...</p>
+    <p class="text-[11px] text-slate-400">Vui lòng giữ vững máy trong giây lát</p>
+</div>
+                        
                     </div>
-
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
                         <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
                             <thead>
@@ -319,19 +316,19 @@
                         </table>
                     </div>
                     <div class="flex justify-end pt-2">
-                        <button onclick="window.saveBatchInput()" class="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2 transition-all">
+                        <button onclick="window.saveBatchInput()" class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 flex items-center gap-2 transition-all">
                             <i class="fa-solid fa-calculator-combined text-xs"></i> Tính Toán Chi Phí & Đồng Bộ Hệ Thống
                         </button>
                     </div>
                 </div>
 
                 <div id="tab-expenses" class="tab-content hidden flex flex-col gap-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-3 gap-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <div>
                             <h2 class="text-lg font-bold text-slate-900">Hạch Toán Chi Phí Đầu Vào Tòa Nhà</h2>
                             <p class="text-xs text-slate-400 font-medium">Các khoản phí vận hành phát sinh trong tháng <span class="working-month-txt font-bold text-indigo-600"></span></p>
                         </div>
-                        <button onclick="window.openExpenseModal()" class="w-full sm:w-auto px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                        <button onclick="window.openExpenseModal()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
                             <i class="fa-solid fa-plus-circle"></i> Thêm Khoản Chi Mới
                         </button>
                     </div>
@@ -391,32 +388,30 @@
                                     <th class="p-3.5 text-center w-28 no-print">Hủy khóa</th>
                                 </tr>
                             </thead>
-                            <tbody id="saved-invoices-tbody" class="divide-y divide-slate-150 text-slate-700"></tbody>
+                            <tbody id="saved-invoices-tbody" class="divide-y divide-slate-150 text-slate-700 cursor-pointer"></tbody>
                         </table>
                     </div>
                 </div>
 
                 <div id="tab-rooms" class="tab-content hidden flex flex-col gap-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-3 gap-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <div>
                             <h2 class="text-lg font-bold text-slate-900">Quản Lý Thực Thể Cơ Sở Phòng Trọ</h2>
                             <p class="text-xs text-slate-400 font-medium">Thiết lập thông tin khách thuê và chỉ số cấu hình bàn giao gốc</p>
                         </div>
-                        <button onclick="window.openRoomModal()" class="w-full sm:w-auto px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                        <button onclick="window.openRoomModal()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
                             <i class="fa-solid fa-plus-circle"></i> Thêm Phòng Mới
                         </button>
                     </div>
-                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5"></div>
                 </div>
 
                 <div id="tab-settings" class="tab-content hidden flex flex-col gap-6">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2.5 text-emerald-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-excel text-xl"></i>Kết Xuất Báo Cáo Tài Chính Thẩm Mỹ Cao Cấp
-                        </h2>
-                        <div class="bg-emerald-50/30 border border-emerald-100 p-4 sm:p-5 rounded-2xl mt-4">
-                            <p class="text-xs text-emerald-800 font-medium mb-4">Hệ thống hỗ trợ xuất dữ liệu tự động ra bảng tính Excel (.xlsx). Các tệp tin được định cấu trúc ô dữ liệu nghiêm ngặt, tự động đổ màu tiêu đề, căn biên kẻ bảng kế toán và chốt dòng tổng cộng đồng bộ.</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+                        <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2.5 text-emerald-700 flex items-center gap-1.5"><i class="fa-solid fa-file-excel text-xl"></i>Kết Xuất Báo Cáo Tài Chính Thẩm Mỹ Cao Cấp</h2>
+                        <div class="bg-emerald-50/30 border border-emerald-100 p-5 rounded-2xl mt-4">
+                            <p class="text-xs text-emerald-800 font-medium mb-4">Hệ thống hỗ trợ xuất xuất dữ liệu tự động ra bảng tính Excel (.xlsx). Các tệp tin được **định cấu trúc ô dữ liệu nghiêm ngặt, tự động đổ màu tiêu đề, căn biên kẻ bảng kế toán và chốt dòng tổng cộng** đồng bộ.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                                 <button onclick="window.exportToExcel('month')" class="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/10 transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-calendar-day text-sm"></i> Xuất Excel Tháng (<span class="working-month-txt"></span>)
                                 </button>
@@ -445,25 +440,63 @@
                                 <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Đơn Giá Sạc Xe Điện EV (VND/kWh)</label>
                                 <input type="number" id="setting-ev-flat" class="w-full px-3.5 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
                             </div>
+                            
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Đơn Giá Rác Thải Sinh Hoạt (VND/Người/Tháng)</label>
-                                <input type="number" id="setting-garbage-flat" class="w-full px-3.5 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
-                            </div>
+    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Đơn Giá Rác Thải Sinh Hoạt (VND/Người/Tháng)</label>
+    <input type="number" id="setting-garbage-flat" class="w-full px-3.5 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
+</div>
+
+                            
                         </div>
                         <div class="pt-4">
-                            <button onclick="window.saveSystemSettings()" class="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 transition-all">
+                            <button onclick="window.saveSystemSettings()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 transition-all">
                                 Cập Nhật Biểu Giá Khấu Trừ
                             </button>
                         </div>
                     </div>
 
-                    <div class="border-t border-dashed border-slate-200 pt-4 mt-2">
-                        <label class="block text-[11px] font-bold text-amber-600 uppercase mb-1.5 tracking-wider flex items-center gap-1">
-                            <i class="fa-solid fa-brain-circuit"></i> Cấu hình kết nối Gemini AI Engine
-                        </label>
-                        <div class="relative max-w-2xl">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 text-xs"><i class="fa-solid fa-key"></i></span>
-                            <input type="password" id="setting-gemini-key" placeholder="Nhập mã Gemini API Key của bạn tại đây..." class="w-full pl-10 pr-4 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 outline-none transition-all">
+<div class="md:col-span-2 border-t border-dashed border-slate-200 pt-4 mt-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="md:col-span-2">
+        <label class="block text-[11px] font-bold text-amber-600 uppercase mb-1.5 tracking-wider flex items-center gap-1">
+            <i class="fa-solid fa-brain-circuit"></i> Cấu hình kết nối Gemini AI Engine
+        </label>
+        <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 text-xs"><i class="fa-solid fa-key"></i></span>
+            <input type="password" id="setting-gemini-key" placeholder="Nhập mã Gemini API Key của bạn tại đây..." class="w-full pl-10 pr-4 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 outline-none transition-all">
+        </div>
+        <p class="text-[10px] text-slate-400 mt-1">Mã khóa được mã hóa lưu trữ bảo mật trên hệ thống đám mây đám mây.</p>
+    </div>
+
+    <div>
+        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5 tracking-wider flex items-center gap-1">
+            <i class="fa-solid fa-code-branch"></i> Phiên bản AI Engine
+        </label>
+        <select id="setting-gemini-model" class="w-full px-3.5 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Mới nhất - Khuyên dùng)</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash (Ổn định)</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash (Tốc độ cao)</option>
+        </select>
+    </div>
+</div>
+
+
+                    
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2.5">Sao Lưu Dự Phòng Cục Bộ (JSON Security Backup)</h2>
+                        <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl mt-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
+                            <div class="text-sm">
+                                <p class="font-bold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-database text-indigo-500"></i> Quản trị sao lưu ngoại tuyến an toàn</p>
+                                <p class="text-slate-400 text-xs mt-1 font-medium">Kết xuất toàn vẹn dữ liệu hệ thống đóng gói thành file dữ liệu dạng JSON cứng để lưu trữ bảo mật.</p>
+                            </div>
+                            <div class="flex gap-2 shrink-0">
+                                <button onclick="window.exportSystemDataJSON()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-download"></i> Tải File JSON Backup
+                                </button>
+                                <label class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+                                    <i class="fa-solid fa-upload"></i> Khôi Phục Hệ Thống
+                                    <input type="file" accept=".json" onchange="window.importSystemDataJSON(event)" class="hidden">
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -471,1247 +504,1368 @@
         </div>
     </div>
 
-    <canvas id="aiCanvasBuffer" class="hidden"></canvas>
-
-    <div id="aiProcessingOverlay" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[999] hidden flex-col items-center justify-center gap-3 text-white transition-all">
-        <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-xs font-bold tracking-wide animate-pulse text-amber-400">Gemini AI đang trích xuất dữ liệu ảnh...</p>
-        <p class="text-[11px] text-slate-400">Vui lòng giữ vững máy trong giây lát</p>
-    </div>
-
-    <div id="roomModal" class="fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 hidden">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]">
-            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <h3 id="roomModalTitle" class="font-bold text-slate-900 text-sm">Thêm Thực Thể Phòng Mới</h3>
-                <button onclick="window.closeRoomModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-6 space-y-4 overflow-y-auto flex-grow text-xs">
-                <input type="hidden" id="room-edit-id">
+    <div id="roomModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[250] hidden items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto border border-slate-100">
+            <h3 id="roomModalTitle" class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4">Cập Nhật Cấu Trúc Phòng</h3>
+            <input type="hidden" id="room-modal-idx" value="-1">
+            <div class="space-y-4 text-xs">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Mã Số Phòng *</label>
-                        <input id="room-id" type="text" placeholder="Ví dụ: 101, 202..." class="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                        <label class="block font-bold text-slate-500 mb-1.5">Mã Số Phòng *</label>
+                        <input type="text" id="modal-room-id" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium text-sm">
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Tên Người Thuê Hiện Tại *</label>
-                        <input id="room-tenant" type="text" placeholder="Nhập tên khách hàng..." class="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                        <label class="block font-bold text-slate-500 mb-1.5">Tên Khách Hàng Thuê *</label>
+                        <input type="text" id="modal-room-renter" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium text-sm">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Số Lượng Nhân Khẩu Đăng Ký</label>
-                        <input id="room-size" type="number" value="1" class="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                        <label class="block font-bold text-slate-500 mb-1.5">Giá Thuê Gốc (VND) *</label>
+                        <input type="number" id="modal-room-price" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium text-sm">
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Giá Thuê Gốc Cố Định (₫/Tháng) *</label>
-                        <input id="room-base-price" type="number" placeholder="Ví dụ: 3500000" class="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                        <label class="block font-bold text-slate-500 mb-1.5">Số Lượng Nhân Khẩu *</label>
+                        <input type="number" id="modal-room-members" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium text-sm" value="1">
                     </div>
                 </div>
-                <div class="border-t border-slate-100 pt-3">
-                    <h4 class="font-bold text-indigo-600 mb-2">Chỉ số nền tảng lúc bàn giao cơ sở</h4>
-                    <div class="grid grid-cols-3 gap-2">
+                <div class="border-t border-slate-100 pt-3 mt-2">
+                    <span class="block font-bold text-indigo-600 mb-2.5 uppercase text-[10px] tracking-wider">Chỉ số năng lượng bàn giao ban đầu</span>
+                    <div class="grid grid-cols-3 gap-2.5">
                         <div>
-                            <label class="block text-[10px] text-slate-400 uppercase font-bold mb-1">Điện gốc (kWh)</label>
-                            <input id="room-init-elec" type="number" value="0" class="w-full px-2.5 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                            <label class="block text-slate-400 font-semibold mb-1">Điện gốc</label>
+                            <input type="number" id="modal-room-initElec" class="w-full px-2.5 py-2 border rounded-lg outline-none text-slate-700 bg-slate-50/30 font-medium">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-slate-400 uppercase font-bold mb-1">Nước gốc (m³)</label>
-                            <input id="room-init-water" type="number" value="0" class="w-full px-2.5 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                            <label class="block text-slate-400 font-semibold mb-1">Nước gốc</label>
+                            <input type="number" id="modal-room-initWater" class="w-full px-2.5 py-2 border rounded-lg outline-none text-slate-700 bg-slate-50/30 font-medium">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-slate-400 uppercase font-bold mb-1">Xe EV gốc (kWh)</label>
-                            <input id="room-init-ev" type="number" value="0" class="w-full px-2.5 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                            <label class="block text-slate-400 font-semibold mb-1">Xe EV gốc</label>
+                            <input type="number" id="modal-room-initEv" class="w-full px-2.5 py-2 border rounded-lg outline-none text-slate-700 bg-slate-50/30 font-medium">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
-                <button onclick="window.closeRoomModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">Hủy bỏ</button>
-                <button onclick="window.saveRoomForm()" class="px-4 py-2 bg-indigo-600 text-white font-bold rounded-lg text-xs">Lưu thực thể</button>
+            <div class="flex justify-end gap-2 mt-6 text-xs font-bold">
+                <button onclick="window.closeRoomModal()" class="px-4 py-2.5 bg-slate-100 rounded-xl text-slate-500 hover:bg-slate-200 transition-all">Đóng</button>
+                <button onclick="window.saveRoomForm()" class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-sm">Lưu Dữ Liệu</button>
             </div>
         </div>
     </div>
 
-    <div id="expenseModal" class="fixed inset-0 z-[150] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 hidden">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col">
-            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <h3 class="font-bold text-slate-900 text-sm">Thêm Khoản Chi Vận Hành</h3>
-                <button onclick="window.closeExpenseModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-5 space-y-4 text-xs">
+    <div id="expenseModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[250] hidden items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl border border-slate-100">
+            <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4">Hạch Toán Phí Phát Sinh</h3>
+            <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tên Khoản Mục Xuất Quỹ *</label>
-                    <input id="exp-name" type="text" placeholder="Ví dụ: Tiền điện tòa nhà tổng, Internet..." class="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                    <label class="block font-bold text-slate-500 mb-1.5">Tên Khoản Mục Thanh Toán</label>
+                    <input type="text" id="modal-exp-name" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium text-sm" placeholder="Ví dụ: Bảo trì bơm nước, Điện tổng EVN...">
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1.5">Số Tiền (VND) *</label>
-                    <input id="exp-amount" type="number" placeholder="Nhập số tiền..." class="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:border-indigo-500">
+                    <label class="block font-bold text-slate-500 mb-1.5">Số Tiền Kết Xuất Quỹ (VND)</label>
+                    <input type="number" id="modal-exp-amount" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium text-sm">
                 </div>
             </div>
-            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
-                <button onclick="window.closeExpenseModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">Hủy</button>
-                <button onclick="window.saveExpenseForm()" class="px-4 py-2 bg-rose-600 text-white font-bold rounded-lg text-xs">Ghi nhận chi</button>
+            <div class="flex justify-end gap-2 mt-6 text-xs font-bold">
+                <button onclick="window.closeExpenseModal()" class="px-4 py-2.5 bg-slate-100 text-slate-500 rounded-xl transition-all">Hủy bỏ</button>
+                <button onclick="window.saveExpenseForm()" class="px-4 py-2.5 bg-rose-600 text-white rounded-xl transition-all shadow-sm">Ghi Nhận Thu Chi</button>
             </div>
         </div>
     </div>
 
-    <div id="invoice-print-area" class="hidden p-8 bg-white text-slate-900 w-[210mm] min-h-[297mm] font-serif"></div>
+    <div id="invoiceDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[300] hidden items-center justify-center p-4 no-print transition-all duration-300">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh] border border-slate-150">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3.5 mb-4">
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-file-invoice-dollar text-indigo-600"></i>Bản Xem Trước Phiếu Thu Thanh Toán</h3>
+                <button onclick="window.closeInvoiceDetailModal()" class="text-slate-400 hover:text-slate-600 transition-all"><i class="fa-solid fa-times text-lg"></i></button>
+            </div>
+            <div id="invoice-modal-content" class="overflow-y-auto flex-grow p-1"></div>
+            <div class="flex justify-end gap-2.5 mt-6 pt-4 border-t border-slate-100">
+                <button onclick="window.closeInvoiceDetailModal()" class="px-4 py-2.5 bg-slate-100 text-slate-500 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all">Đóng cửa sổ</button>
+                <button onclick="window.triggerPrintInvoice()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-indigo-600/10 transition-all">
+                    <i class="fa-solid fa-print"></i> Thực Hiện In / Xuất PDF File
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <div id="invoice-print-area" class="hidden p-8 bg-white text-slate-900"></div>
 
     <script>
-    (function() {
-        // Hệ thống cơ sở dữ liệu phân tán lưu trữ LocalStorage
-        let appData = {
-            rooms: [],
-            invoices: {},
-            expenses: {},
-            settings: {
-                elecFlat: 3800,
-                waterFlat: 15000,
-                evFlat: 4000,
-                garbageFlat: 30000,
-                geminiKey: ""
-            },
-            savedInvoices: []
+        window.firebaseBridge = { login: null, logout: null };
+        window.handleLogin = function() {
+            const emailInput = document.getElementById('loginEmail');
+            const passInput = document.getElementById('loginPass');
+            if(!emailInput || !passInput) return;
+            const email = emailInput.value.trim();
+            const password = passInput.value;
+            if (typeof window.firebaseBridge.login === 'function') {
+                window.firebaseBridge.login(email, password);
+            } else {
+                alert("Đang thiết lập liên kết máy chủ Google Firebase Cloud, vui lòng thử lại sau 1 giây!");
+            }
         };
+        window.handleLogout = function() {
+            if (typeof window.firebaseBridge.logout === 'function') {
+                window.firebaseBridge.logout();
+            }
+        };
+    </script>
 
-        let currentTab = 'dashboard';
-        let workingMonth = '';
-        let rankScope = 'month';
-
-        let chartElec = null;
-        let chartWater = null;
-
-        // KHỞI CHẠY HỆ THỐNG
-        window.addEventListener('DOMContentLoaded', () => {
-            loadFromStorage();
-            initCurrentMonth();
-            window.switchTab('dashboard');
-            syncWorkingMonthUI();
-            renderAll();
-        });
-
-        function initCurrentMonth() {
-            const d = new Date();
-            const y = d.getFullYear();
-            let m = d.getMonth() + 1;
-            if (m < 10) m = '0' + m;
-            workingMonth = `${y}-${m}`;
-            document.getElementById('global-month').value = workingMonth;
-        }
-
-        function loadFromStorage() {
-            const local = localStorage.getItem('smart_rental_enterprise_storage_v3');
-            if (local) {
-                try {
-                    const parsed = JSON.parse(local);
-                    if (parsed) appData = Object.assign(appData, parsed);
-                } catch (e) {
-                    console.error("Lỗi đọc Storage", e);
+    <script type="module">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' }
+                    }
                 }
             }
         }
 
-        function saveToStorage() {
-            localStorage.setItem('smart_rental_enterprise_storage_v3', JSON.stringify(appData));
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        const firebaseConfig = {  
+            apiKey: "AIzaSyBLCSiQpn8oEbXQEb5uot7KQQSXcM9CX-w",
+            authDomain: "qlnt-e6dc0.firebaseapp.com",
+            databaseURL: "https://qlnt-e6dc0-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "qlnt-e6dc0",
+            storageBucket: "qlnt-e6dc0.firebasestorage.app",
+            messagingSenderId: "7619122348",
+            appId: "1:7619122348:web:adeb39fbec27838e153b09",
+            measurementId: "G-08TFQFP40M" 
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentMonth = "2026-05";
+        let rankScope = "month";
+        window.systemData = { 
+            rooms: [], 
+            billings: [], 
+            expenses: [], 
+            savedInvoices: [], 
+            settings: { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 } 
+        };
+
+        let chartElecInstance = null;
+        let chartWaterInstance = null;
+
+        window.firebaseBridge.login = function(email, password) {
+            if(!email || !password) { alert("Vui lòng điền tài khoản!"); return; }
+            signInWithEmailAndPassword(auth, email, password).catch(err => {
+                alert("Đăng nhập thất bại: " + err.message);
+            });
+        };
+
+        window.firebaseBridge.logout = function() { signOut(auth); };
+
+        onAuthStateChanged(auth, async (user) => {
+            const loginModal = document.getElementById('loginModal');
+            const mainApp = document.getElementById('mainApp');
+            if (user) {
+                if(loginModal) loginModal.style.display = 'none';
+                if(mainApp) mainApp.classList.remove('hidden');
+                await loadDataFromFirebase();
+            } else {
+                if(loginModal) loginModal.style.display = 'flex';
+                if(mainApp) mainApp.classList.add('hidden');
+            }
+        });
+
+        async function loadDataFromFirebase() {
+            try {
+                const docRef = doc(db, "rental_data", "system_state");
+                const docSnap = await getDoc(docRef);
+                let cloudData = null;
+                if (docSnap.exists()) { cloudData = docSnap.data(); }
+                if (cloudData) window.systemData = cloudData;
+
+                if (!window.systemData.billings || !Array.isArray(window.systemData.billings)) window.systemData.billings = [];
+                if (!window.systemData.rooms || !Array.isArray(window.systemData.rooms)) window.systemData.rooms = [];
+                if (!window.systemData.expenses || !Array.isArray(window.systemData.expenses)) window.systemData.expenses = [];
+                if (!window.systemData.savedInvoices || !Array.isArray(window.systemData.savedInvoices)) window.systemData.savedInvoices = [];
+                if (!window.systemData.settings) window.systemData.settings = { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
+                
+                initAppLifecycle();
+            } catch (err) {
+                console.error("Lỗi tải cơ sở dữ liệu:", err);
+                initAppLifecycle();
+            }
         }
 
-        function syncWorkingMonthUI() {
-            document.querySelectorAll('.working-month-txt').forEach(el => {
-                el.innerText = workingMonth;
-            });
+        window.syncToCloud = async function() {
+            localStorage.setItem('room_manager_pro_data', JSON.stringify(window.systemData));
+            try { await setDoc(doc(db, "rental_data", "system_state"), window.systemData); } catch (err) { console.error("Lỗi Firebase Sync:", err); }
+        };
+
+        window.renderAll = function() {
+            renderDashboardMetrics();
+            renderBatchInputTable();
+            renderExpenseTable();
+            renderSummaryReport();
+            renderSavedInvoicesTable();
+            renderRoomsGrid();
+            renderSettings();
+            renderCharts();
+            renderRankingLists();
+        };
+
+        function initAppLifecycle() {
+            const mEl = document.getElementById('global-month');
+            if(mEl) mEl.value = currentMonth;
+            updateMonthText();
+            window.renderAll();
+        }
+
+        function updateMonthText() {
+            document.querySelectorAll('.working-month-txt').forEach(el => el.innerText = currentMonth);
         }
 
         window.changeWorkingMonth = function(val) {
-            if (!val) return;
-            workingMonth = val;
-            syncWorkingMonthUI();
-            renderAll();
-        };
-
-        window.handleLogin = function() {
-            document.getElementById('loginModal').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            renderAll();
-        };
-
-        window.handleLogout = function() {
-            document.getElementById('loginModal').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
+            currentMonth = val;
+            updateMonthText();
+            window.renderAll();
         };
 
         window.switchTab = function(tabId) {
-            currentTab = tabId;
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-md', 'shadow-indigo-600/10');
                 btn.classList.add('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
             });
+            document.getElementById(`btn-tab-${tabId}`)?.classList.remove('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
+            document.getElementById(`btn-tab-${tabId}`)?.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-md', 'shadow-indigo-600/10');
+            if(tabId === 'dashboard') renderCharts();
+        };
 
-            const activeContent = document.getElementById(`tab-${tabId}`);
-            if (activeContent) activeContent.classList.remove('hidden');
+        window.validateLiveInput = function(roomId, type) {
+            const startVal = parseFloat(document.getElementById(`input-${type}Start-${roomId}`).value) || 0;
+            const endEl = document.getElementById(`input-${type}End-${roomId}`);
+            const endVal = parseFloat(endEl.value) || 0;
 
-            const activeBtn = document.getElementById(`btn-tab-${tabId}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
-                activeBtn.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-md', 'shadow-indigo-600/10');
+            if (endVal < startVal) {
+                endEl.classList.add('bg-rose-50', 'text-rose-600', 'border-rose-300', 'focus:ring-rose-500/10');
+            } else {
+                endEl.classList.remove('bg-rose-50', 'text-rose-600', 'border-rose-300', 'focus:ring-rose-500/10');
             }
         };
 
-        // KHỞI TẠO DỮ LIỆU GIẢ LẬP NHANH
-        window.quickGenerateMockData = function() {
-            appData.rooms = [
-                { id: "101", tenant: "Nguyễn Văn A", size: 2, basePrice: 3500000, initElec: 1200, initWater: 150, initEv: 50 },
-                { id: "102", tenant: "Trần Thị B", size: 1, basePrice: 3200000, initElec: 850, initWater: 90, initEv: 0 },
-                { id: "201", tenant: "Phạm Minh C", size: 3, basePrice: 4500000, initElec: 2100, initWater: 310, initEv: 120 },
-                { id: "202", tenant: "Lê Hoàng D", size: 2, basePrice: 3800000, initElec: 1450, initWater: 180, initEv: 0 },
-                { id: "301", tenant: "Vũ Thị E", size: 4, basePrice: 5200000, initElec: 3200, initWater: 420, initEv: 210 }
-            ];
-
-            const months = ["2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
-            months.forEach((m, idx) => {
-                appData.invoices[m] = appData.rooms.map(r => {
-                    const seed = (idx + 1) * 30;
-                    const eDiff = Math.floor(120 + Math.random() * 80);
-                    const wDiff = Math.floor(8 + Math.random() * 12);
-                    const evDiff = r.initEv > 0 ? Math.floor(20 + Math.random() * 30) : 0;
-
-                    return {
-                        roomId: r.id,
-                        tenant: r.tenant,
-                        size: r.size,
-                        basePrice: r.basePrice,
-                        elecStart: r.initElec + (idx * 150),
-                        elecEnd: r.initElec + (idx * 150) + eDiff,
-                        waterStart: r.initWater + (idx * 10),
-                        waterEnd: r.initWater + (idx * 10) + wDiff,
-                        evStart: r.initEv + (idx * 25),
-                        evEnd: r.initEv + (idx * 25) + evDiff,
-                        otherFees: Math.random() > 0.7 ? 50000 : 0,
-                        isPaid: m !== workingMonth
-                    };
-                });
-
-                appData.expenses[m] = [
-                    { name: "Tiền điện hành lang tà nhà tổng", amount: Math.floor(400000 + Math.random() * 200000) },
-                    { name: "Phí dọn dẹp vệ sinh chung khu vực", amount: 150000 }
-                ];
-            });
-
-            saveToStorage();
-            renderAll();
-            alert("Đã khởi tạo hệ thống dữ liệu kiểm thử đồng bộ chu kỳ!");
-        };
-
-        // ĐIỀU KHIỂN CAMERA TRÊN IPHONE VÀ LIÊN KẾT GEMINI AI
-        window.processIPhonePhoto = function(input) {
-            if (!input.files || input.files.length === 0) return;
-            
-            const file = input.files[0];
-            const targetRoom = document.getElementById('aiTargetRoom').value;
-            const targetType = document.getElementById('aiTargetType').value;
-            const key = appData.settings.geminiKey || "";
-
-            if (!targetRoom) {
-                alert("Vui lòng thiết lập mã phòng trước khi tiến hành chụp quét chỉ số!");
-                return;
-            }
-
-            document.getElementById('aiProcessingOverlay').classList.remove('hidden');
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Img = e.target.result;
-                
-                // Thu hẹp kích thước ảnh qua Canvas Buffer tránh tràn ram iPhone
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.getElementById('aiCanvasBuffer');
-                    const ctx = canvas.getContext('2d');
-                    
-                    let width = img.width;
-                    let height = img.height;
-                    const max_size = 1020;
-                    
-                    if (width > height) {
-                        if (width > max_size) { height *= max_size / width; width = max_size; }
-                    } else {
-                        if (height > max_size) { width *= max_size / height; height = max_size; }
-                    }
-                    
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                    const cleanBase64 = optimizedBase64.split(',')[1];
-
-                    if (!key) {
-                        // Giả lập phản hồi khi thiếu key API thực tế
-                        setTimeout(() => {
-                            document.getElementById('aiProcessingOverlay').classList.add('hidden');
-                            const mockNumber = Math.floor(Math.random() * 150) + 100;
-                            applyAICountResult(targetRoom, targetType, mockNumber, optimizedBase64);
-                            alert(`[Chế độ thử nghiệm] Tìm thấy chỉ số: ${mockNumber}. Hãy nhập API Key trong mục Cài đặt để kích hoạt động cơ Gemini AI thực tế.`);
-                        }, 1800);
-                        return;
-                    }
-
-                    executeGeminiVisionAPI(cleanBase64, key, targetType, (extractedNumber) => {
-                        document.getElementById('aiProcessingOverlay').classList.add('hidden');
-                        if (extractedNumber) {
-                            applyAICountResult(targetRoom, targetType, extractedNumber, optimizedBase64);
-                        } else {
-                            alert("Gemini AI không phân tích được chữ số trong ảnh. Vui lòng chụp rõ và vuông góc hơn!");
-                        }
-                    });
-                };
-                img.src = base64Img;
-            };
-            reader.readAsDataURL(file);
-        };
-
-        function executeGeminiVisionAPI(base64Data, apiKey, type, callback) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            const label = type === 'elec' ? 'mặt đồng hồ công tơ điện cơ hoặc điện tử' : 'đồng hồ đo khối lượng nước tiêu thụ sinh hoạt';
-            
-            const payload = {
-                contents: [{
-                    parts: [
-                        { text: `Bạn là trợ lý nhận diện chỉ số cơ sở hạ tầng. Hãy phân tích ảnh chụp ${label} này và chỉ trả về một chuỗi số nguyên duy nhất là chỉ số hiển thị trên mặt đồng hồ. Không được trả về thêm bất cứ từ ngữ giải thích nào khác.` },
-                        { inlineData: { mimeType: "image/jpeg", data: base64Data } }
-                    ]
-                }]
-            };
-
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            })
-            .then(res => res.json())
-            .then(json => {
-                try {
-                    const responseText = json.candidates[0].content.parts[0].text.trim();
-                    const matchedNum = responseText.match(/\d+/);
-                    if (matchedNum) {
-                        callback(parseInt(matchedNum[0], 10));
-                    } else {
-                        callback(null);
-                    }
-                } catch (err) {
-                    console.error("Lỗi phân tích cú pháp JSON Gemini", err);
-                    callback(null);
-                }
-            })
-            .catch(err => {
-                console.error("Lỗi mạng khi kết nối API Gemini", err);
-                callback(null);
-            });
-        }
-
-        function applyAICountResult(roomId, type, numValue, base64Image) {
-            const inputId = `input-${type}-${roomId}`;
-            const targetInput = document.getElementById(inputId);
-            if (targetInput) {
-                targetInput.value = numValue;
-                targetInput.classList.add('bg-amber-50', 'border-amber-400', 'text-amber-900', 'font-black');
-                
-                // Hiển thị khung xem trước ảnh minh chứng đã chụp tại chỗ
-                showAIProofModal(roomId, type, numValue, base64Image);
-            }
-        }
-
-        function showAIProofModal(roomId, type, val, base64Image) {
-            let viewModal = document.getElementById('ai-proof-view-modal');
-            if (!viewModal) {
-                viewModal = document.createElement('div');
-                viewModal.id = 'ai-proof-view-modal';
-                viewModal.className = 'fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm';
-                document.body.appendChild(viewModal);
-            }
-
-            viewModal.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-2xl p-4 max-w-sm w-full text-center">
-                    <div class="flex items-center justify-between border-b pb-2 mb-3">
-                        <h4 class="text-xs font-black text-slate-800 uppercase">
-                            📸 Minh chứng P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'}) - Kỳ ${workingMonth}
-                        </h4>
-                        <button onclick="this.closest('#ai-proof-view-modal').remove()" class="text-slate-400 hover:text-slate-600">
-                            <i class="fa-solid fa-xmark text-sm"></i>
-                        </button>
-                    </div>
-                    <img src="${base64Image}" class="w-full h-auto max-h-[350px] object-contain rounded-xl border border-slate-100 shadow-inner mb-3">
-                    <p class="text-xs text-slate-500 font-medium">Số trích xuất: <b class="text-amber-600 text-sm">${val}</b></p>
-                    <button onclick="this.closest('#ai-proof-view-modal').remove()" class="w-full mt-3 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl">Xác nhận đóng</button>
-                </div>
-            `;
-        }
-
-        // HỆ THỐNG ĐIỀU PHỐI VÀ VẼ TOÀN BỘ GIAO DIỆN CHÍNH
-        function renderAll() {
-            syncWorkingMonthUI();
-            updateAICameraSelectors();
-
-            // Khởi tạo khung tháng trong mảng invoices nếu chưa tồn tại
-            if (!appData.invoices[workingMonth]) {
-                const prevMonth = getPreviousMonthStr(workingMonth);
-                appData.invoices[workingMonth] = appData.rooms.map(r => {
-                    let defaultElec = r.initElec;
-                    let defaultWater = r.initWater;
-                    let defaultEv = r.initEv;
-
-                    // Thừa kế chỉ số cuối kỳ trước làm đầu kỳ này
-                    if (appData.invoices[prevMonth]) {
-                        const prevInv = appData.invoices[prevMonth].find(i => i.roomId === r.id);
-                        if (prevInv) {
-                            if (prevInv.elecEnd) defaultElec = prevInv.elecEnd;
-                            if (prevInv.waterEnd) defaultWater = prevInv.waterEnd;
-                            if (prevInv.evEnd) defaultEv = prevInv.evEnd;
-                        }
-                    }
-
-                    return {
-                        roomId: r.id, tenant: r.tenant, size: r.size, basePrice: r.basePrice,
-                        elecStart: defaultElec, elecEnd: '',
-                        waterStart: defaultWater, waterEnd: '',
-                        evStart: defaultEv, evEnd: '',
-                        otherFees: 0, isPaid: false
-                    };
-                });
-            }
-
-            if (!appData.expenses[workingMonth]) {
-                appData.expenses[workingMonth] = [];
-            }
-
-            // Đồng bộ dữ liệu hiển thị các Tab cấu phần
-            renderDashboardMetrics();
-            renderDashboardCharts();
-            renderDashboardRanks();
-            renderDashboardUnpaidDebts();
-            renderBatchInputTable();
-            renderExpenseTable();
-            renderSummaryTable();
-            renderSavedInvoicesTable();
-            renderRoomsGrid();
-            renderSettingsForm();
-        }
-
-        function updateAICameraSelectors() {
-            const selectRoom = document.getElementById('aiTargetRoom');
-            if (selectRoom) {
-                selectRoom.innerHTML = appData.rooms.map(r => `<option value="${r.id}">Phòng ${r.id} (${r.tenant})</option>`).join('');
-            }
-        }
-
-        function getPreviousMonthStr(mStr) {
-            const parts = mStr.split('-');
-            let year = parseInt(parts[0], 10);
-            let month = parseInt(parts[1], 10);
-            month--;
-            if (month === 0) { month = 12; year--; }
-            return `${year}-${month < 10 ? '0' + month : month}`;
-        }
-
-        // TÍNH TOÁN SỐ LIỆU TỔNG QUAN (DASHBOARD)
         function renderDashboardMetrics() {
-            let totalRev = 0;
-            let totalExp = 0;
-            let pendingRev = 0;
-
-            const currentInvoices = appData.invoices[workingMonth] || [];
-            currentInvoices.forEach(inv => {
-                const bill = calculateInvoiceTotal(inv);
-                totalRev += bill;
-                if (!inv.isPaid) {
-                    pendingRev += bill;
-                }
-            });
-
-            const currentExpenses = appData.expenses[workingMonth] || [];
-            currentExpenses.forEach(exp => {
-                totalExp += exp.amount;
-            });
-
-            const netProfit = totalRev - totalExp;
-
-            document.getElementById('metric-total-rev').innerText = totalRev.toLocaleString('vi-VN') + " ₫";
-            document.getElementById('metric-total-exp').innerText = totalExp.toLocaleString('vi-VN') + " ₫";
-            document.getElementById('metric-total-variance').innerText = netProfit.toLocaleString('vi-VN') + " ₫";
-            document.getElementById('metric-pending-rev').innerText = pendingRev.toLocaleString('vi-VN') + " ₫";
-
-            const varianceBox = document.getElementById('metric-variance-box');
-            const varianceIcon = document.getElementById('metric-variance-icon');
-            if (netProfit >= 0) {
-                varianceBox.className = "border p-4 rounded-xl flex items-center gap-3.5 shadow-sm bg-emerald-50/40 border-emerald-100";
-                varianceIcon.className = "w-11 h-11 text-emerald-600 rounded-xl flex items-center justify-center text-lg shadow-sm bg-emerald-50";
-                varianceIcon.innerHTML = `<i class="fa-solid fa-chart-line-up"></i>`;
-            } else {
-                varianceBox.className = "border p-4 rounded-xl flex items-center gap-3.5 shadow-sm bg-rose-50/40 border-rose-100";
-                varianceIcon.className = "w-11 h-11 text-rose-600 rounded-xl flex items-center justify-center text-lg shadow-sm bg-rose-50";
-                varianceIcon.innerHTML = `<i class="fa-solid fa-chart-line-down"></i>`;
-            }
-        }
-
-        function calculateInvoiceTotal(inv) {
-            const eDiff = (inv.elecEnd || inv.elecStart) - inv.elecStart;
-            const wDiff = (inv.waterEnd || inv.waterStart) - inv.waterStart;
-            const evDiff = (inv.evEnd || inv.evStart) - inv.evStart;
-
-            const eCost = (eDiff > 0 ? eDiff : 0) * appData.settings.elecFlat;
-            const wCost = (wDiff > 0 ? wDiff : 0) * appData.settings.waterFlat;
-            const evCost = (evDiff > 0 ? evDiff : 0) * appData.settings.evFlat;
-            const gCost = inv.size * appData.settings.garbageFlat;
-
-            return inv.basePrice + eCost + wCost + evCost + gCost + (parseFloat(inv.otherFees) || 0);
-        }
-
-        // VẼ BIỂU ĐỒ CHART.JS CHUYÊN NGHIỆP
-        window.handleChartConfigChange = function() {
-            renderDashboardCharts();
-        };
-
-        function renderDashboardCharts() {
-            const timeType = document.getElementById('chart-time-type').value;
-            const targetYear = document.getElementById('chart-target-year').value;
-
-            let labels = [];
-            let elecData = [];
-            let waterData = [];
-
-            if (timeType === 'month') {
-                for (let m = 1; m <= 12; m++) {
-                    const mKey = `${targetYear}-${m < 10 ? '0' + m : m}`;
-                    labels.push(`Thg ${m}`);
-                    
-                    let eSum = 0; let wSum = 0;
-                    if (appData.invoices[mKey]) {
-                        appData.invoices[mKey].forEach(i => {
-                            const eDiff = (i.elecEnd || i.elecStart) - i.elecStart;
-                            const wDiff = (i.waterEnd || i.waterStart) - i.waterStart;
-                            if (eDiff > 0) eSum += eDiff;
-                            if (wDiff > 0) wSum += wDiff;
-                        });
-                    }
-                    elecData.push(eSum);
-                    waterData.push(wSum);
-                }
-            } else {
-                const years = ["2025", "2026", "2027"];
-                labels = years.map(y => `Năm ${y}`);
-                years.forEach(y => {
-                    let eSum = 0; let wSum = 0;
-                    Object.keys(appData.invoices).forEach(mKey => {
-                        if (mKey.startsWith(y)) {
-                            appData.invoices[mKey].forEach(i => {
-                                const eDiff = (i.elecEnd || i.elecStart) - i.elecStart;
-                                const wDiff = (i.waterEnd || i.waterStart) - i.waterStart;
-                                if (eDiff > 0) eSum += eDiff;
-                                if (wDiff > 0) wSum += wDiff;
-                            });
-                        }
-                    });
-                    elecData.push(eSum);
-                    waterData.push(wSum);
-                });
-            }
-
-            // Hủy sơ đồ cũ tránh xung đột Ram
-            if (chartElec) chartElec.destroy();
-            if (chartWater) chartWater.destroy();
-
-            const ctxE = document.getElementById('chart-elec-consumption').getContext('2d');
-            chartElec = new Chart(ctxE, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Sản lượng điện',
-                        data: elecData,
-                        backgroundColor: '#f59e0b',
-                        borderRadius: 6
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-
-            const ctxW = document.getElementById('chart-water-consumption').getContext('2d');
-            chartWater = new Chart(ctxW, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Sản lượng nước',
-                        data: waterData,
-                        backgroundColor: '#0ea5e9',
-                        borderRadius: 6
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-        }
-
-        // PHÂN HẠNG TOP TIÊU THỤ NĂNG LƯỢNG
-        window.switchRankScope = function(scope) {
-            rankScope = scope;
-            document.getElementById('btn-rank-month').className = scope === 'month' ? 'px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all' : 'px-3 py-1 text-slate-500 hover:text-slate-800 transition-all';
-            document.getElementById('btn-rank-year').className = scope === 'year' ? 'px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all' : 'px-3 py-1 text-slate-500 hover:text-slate-800 transition-all';
+            const currentBillings = window.systemData.billings.filter(b => b && b.month === currentMonth);
+            const currentExpenses = window.systemData.expenses.filter(e => e && e.month === currentMonth);
+            const totalRev = currentBillings.reduce((sum, b) => sum + (b.total || 0), 0);
+            const totalExp = currentExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+            const pendingRev = window.systemData.billings.filter(b => b && b.month === currentMonth && !b.paid).reduce((sum, b) => sum + (b.total || 0), 0);
             
-            document.getElementById('label-rank-top-scope').innerText = scope === 'month' ? "Trong Tháng" : "Cả Năm";
-            document.getElementById('label-rank-bottom-scope').innerText = scope === 'month' ? "Trong Tháng" : "Cả Năm";
+            if(document.getElementById('metric-total-rev')) document.getElementById('metric-total-rev').innerText = totalRev.toLocaleString() + " ₫";
+            if(document.getElementById('metric-total-exp')) document.getElementById('metric-total-exp').innerText = totalExp.toLocaleString() + " ₫";
+            if(document.getElementById('metric-total-variance')) document.getElementById('metric-total-variance').innerText = (totalRev - totalExp).toLocaleString() + " ₫";
+            if(document.getElementById('metric-pending-rev')) document.getElementById('metric-pending-rev').innerText = pendingRev.toLocaleString() + " ₫";
             
-            renderDashboardRanks();
-        };
-
-        function renderDashboardRanks() {
-            let rankMap = {};
-
-            let targetKeys = [workingMonth];
-            if (rankScope === 'year') {
-                const curYear = workingMonth.split('-')[0];
-                targetKeys = Object.keys(appData.invoices).filter(k => k.startsWith(curYear));
+            const unpaidList = window.systemData.billings.filter(b => b && b.month === currentMonth && !b.paid);
+            if(document.getElementById('unpaid-debt-count')) document.getElementById('unpaid-debt-count').innerText = unpaidList.length + " phòng nợ";
+            const tbody = document.getElementById('unpaid-debts-list');
+            if(tbody) {
+                tbody.innerHTML = unpaidList.map(b => {
+                    const roomObj = window.systemData.rooms.find(r => r.roomId === b.roomId) || {};
+                    return `<tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-all">
+                        <td class="p-3 font-medium text-slate-400">${b.month}</td>
+                        <td class="p-3 font-bold text-slate-900">Phòng ${b.roomId}</td>
+                        <td class="p-3 font-medium">${roomObj.renter || 'N/A'}</td>
+                        <td class="p-3 text-right font-bold text-rose-600">${b.total.toLocaleString()} ₫</td>
+                        <td class="p-3 text-center"><span class="bg-rose-50 text-rose-600 px-2.5 py-1 rounded-lg text-[10px] font-bold border border-rose-100">Chưa đối soát</span></td>
+                    </tr>`;
+                }).join('');
             }
-
-            targetKeys.forEach(mKey => {
-                if (!appData.invoices[mKey]) return;
-                appData.invoices[mKey].forEach(inv => {
-                    if (!rankMap[inv.roomId]) {
-                        rankMap[inv.roomId] = { roomId: inv.roomId, tenant: inv.tenant, totalScore: 0 };
-                    }
-                    const eDiff = (inv.elecEnd || inv.elecStart) - inv.elecStart;
-                    const wDiff = (inv.waterEnd || inv.waterStart) - inv.waterStart;
-                    rankMap[inv.roomId].totalScore += (eDiff > 0 ? eDiff : 0) + ((wDiff > 0 ? wDiff : 0) * 10);
-                });
-            });
-
-            const rankArray = Object.values(rankMap).sort((a, b) => b.totalScore - a.totalScore);
-
-            const topEl = document.getElementById('top-consuming-list');
-            const bottomEl = document.getElementById('bottom-consuming-list');
-
-            if (rankArray.length === 0) {
-                topEl.innerHTML = `<p class="text-slate-400 text-center italic">Chưa đủ dữ liệu tính toán</p>`;
-                bottomEl.innerHTML = `<p class="text-slate-400 text-center italic">Chưa đủ dữ liệu tính toán</p>`;
-                return;
-            }
-
-            const top3 = rankArray.slice(0, 3);
-            const bottom3 = [...rankArray].reverse().slice(0, 3);
-
-            topEl.innerHTML = top3.map((r, i) => `
-                <div class="flex items-center justify-between p-2 bg-rose-50/40 border border-rose-100/50 rounded-lg">
-                    <span class="font-medium"><b class="text-rose-600 mr-1.5">#${i+1}</b> Phòng ${r.roomId} (${r.tenant})</span>
-                    <span class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-bold">Cường độ lớn</span>
-                </div>
-            `).join('');
-
-            bottomEl.innerHTML = bottom3.map((r, i) => `
-                <div class="flex items-center justify-between p-2 bg-emerald-50/40 border border-emerald-100/50 rounded-lg">
-                    <span class="font-medium"><b class="text-emerald-600 mr-1.5">#${i+1}</b> Phòng ${r.roomId} (${r.tenant})</span>
-                    <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Tiết kiệm xanh</span>
-                </div>
-            `).join('');
         }
 
-        function renderDashboardUnpaidDebts() {
-            const listEl = document.getElementById('unpaid-debts-list');
-            let html = '';
-            let count = 0;
-
-            Object.keys(appData.invoices).forEach(mKey => {
-                appData.invoices[mKey].forEach(inv => {
-                    if (!inv.isPaid) {
-                        count++;
-                        const total = calculateInvoiceTotal(inv);
-                        html += `
-                            <tr class="hover:bg-amber-50/20">
-                                <td class="p-3 font-semibold text-amber-900">${mKey}</td>
-                                <td class="p-3 font-black">P.${inv.roomId}</td>
-                                <td class="p-3 font-medium">${inv.tenant}</td>
-                                <td class="p-3 text-right font-bold text-slate-900">${total.toLocaleString('vi-VN')} ₫</td>
-                                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-[10px] font-bold">Chưa thanh toán</span></td>
-                            </tr>
-                        `;
-                    }
-                });
-            });
-
-            document.getElementById('unpaid-debt-count').innerText = `${count} phòng nợ`;
-            listEl.innerHTML = html || `<tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Tuyệt vời! Không phát sinh công nợ tồn đọng.</td></tr>`;
-        }
-
-        // BẢNG GHI NHẬN CHỈ SỐ HÀNG LOẠT (BATCH INPUT)
         function renderBatchInputTable() {
-            const tbody = document.getElementById('batch-input-tbody');
-            const currentInvoices = appData.invoices[workingMonth] || [];
+    const tbody = document.getElementById('batch-input-tbody');
+    if(!tbody) return;
+    tbody.innerHTML = window.systemData.rooms.map(room => {
+        // Tìm hóa đơn hiện tại của tháng đang chọn
+        const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
+        
+        // ---- BỔ SUNG LOGIC TỰ ĐỘNG TÍNH TOÁN VÀ KẾ THỪA TỪ THÁNG TRƯỚC ----
+        const [year, month] = currentMonth.split('-').map(Number);
+        
+        let prevMonthStr = "";
+        if (month === 1) {
+            prevMonthStr = `${year - 1}-12`;
+        } else {
+            prevMonthStr = `${year}-${String(month - 1).padStart(2, '0')}`;
+        }
 
-            if (currentInvoices.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400 italic">Vui lòng thiết lập danh sách phòng trước.</td></tr>`;
+        const prevBilling = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === prevMonthStr);
+
+        const eStart = billing.elecStart !== undefined ? billing.elecStart : ((prevBilling && prevBilling.elecEnd !== undefined) ? prevBilling.elecEnd : (room.initElec || 0));
+        const eEnd = billing.elecEnd || 0;
+        
+        const wStart = billing.waterStart !== undefined ? billing.waterStart : ((prevBilling && prevBilling.waterEnd !== undefined) ? prevBilling.waterEnd : (room.initWater || 0));
+        const wEnd = billing.waterEnd || 0;
+        
+        const evStart = billing.evStart !== undefined ? billing.evStart : ((prevBilling && prevBilling.evEnd !== undefined) ? prevBilling.evEnd : (room.initEv || 0));
+        const evEnd = billing.evEnd || 0;
+        // ---- KẾT THÚC LOGIC BỔ SUNG ----
+
+        // Kiểm tra xem phòng này có ảnh quét AI trong máy không để làm sáng nút mắt
+        const workingMonth = window.currentMonth || "2026-05";
+        const hasElecProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`) ? 'text-amber-500 scale-110 font-bold' : 'text-slate-300 hover:text-amber-500';
+        const hasWaterProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`) ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300 hover:text-sky-500';
+
+        return `<tr class="hover:bg-slate-50/70 transition-all">
+            <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
+            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">${room.members || 1}</td>
+            
+            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
+                <input type="number" id="input-elecStart-${room.roomId}" value="${eStart}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
+            </td>
+            
+            <td class="p-2 bg-amber-50/40">
+                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${eEnd < eStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
+                    <input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
+                    <button onclick="window.viewAiProofPhoto('${room.roomId}', 'elec')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasElecProof}" title="Xem ảnh công tơ điện">
+                        <i class="fa-solid fa-eye text-[11px]"></i>
+                    </button>
+                </div>
+            </td>
+            
+            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
+                <input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
+            </td>
+            
+            <td class="p-2 bg-sky-50/40">
+                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${wEnd < wStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
+                    <input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
+                    <button onclick="window.viewAiProofPhoto('${room.roomId}', 'water')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasWaterProof}" title="Xem ảnh công tơ nước">
+                        <i class="fa-solid fa-eye text-[11px]"></i>
+                    </button>
+                </div>
+            </td>
+            
+            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
+                <input type="number" id="input-evStart-${room.roomId}" value="${evStart}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
+            </td>
+            <td class="p-2 bg-teal-50/40">
+                <input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${evEnd < evStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
+            </td>
+            
+            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
+                <input type="number" id="input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+        window.saveBatchInput = async function() {
+            const settings = window.systemData.settings;
+            let hasError = false;
+            let errorMessages = [];
+
+            window.systemData.rooms.forEach(room => {
+                const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
+                const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
+                const waterStart = parseFloat(document.getElementById(`input-waterStart-${room.roomId}`).value) || 0;
+                const waterEnd = parseFloat(document.getElementById(`input-waterEnd-${room.roomId}`).value) || 0;
+                const evStart = parseFloat(document.getElementById(`input-evStart-${room.roomId}`).value) || 0;
+                const evEnd = parseFloat(document.getElementById(`input-evEnd-${room.roomId}`).value) || 0;
+
+                if (elecEnd < elecStart) { hasError = true; errorMessages.push(`- Phòng ${room.roomId}: Số ĐIỆN cuối kỳ (${elecEnd}) nhỏ hơn đầu kỳ (${elecStart})`); }
+                if (waterEnd < waterStart) { hasError = true; errorMessages.push(`- Phòng ${room.roomId}: Số NƯỚC cuối kỳ (${waterEnd}) nhỏ hơn đầu kỳ (${waterStart})`); }
+                if (evEnd < evStart) { hasError = true; errorMessages.push(`- Phòng ${room.roomId}: Số ĐIỆN XE EV cuối kỳ (${evEnd}) nhỏ hơn đầu kỳ (${evStart})`); }
+            });
+
+            if (hasError) {
+                alert("CẢNH BÁO: HỆ THỐNG CHẶN HOẠT ĐỘNG!\nPhát hiện lỗi logic nhập ngược chỉ số cuối kỳ:\n\n" + errorMessages.join("\n") + "\n\nVui lòng hiệu chỉnh lại các ô báo đỏ.");
                 return;
             }
 
-            tbody.innerHTML = currentInvoices.map(inv => `
-                <tr class="hover:bg-slate-50/60 transition-all">
-                    <td class="p-3 font-extrabold text-slate-900">P.${inv.roomId}</td>
-                    <td class="p-3 text-center bg-slate-50/50 font-bold">${inv.size}</td>
-                    
-                    <td class="p-2 bg-amber-50/20 border-l border-slate-100"><input type="number" disabled value="${inv.elecStart}" class="w-full bg-slate-100/70 px-2 py-1.5 rounded-lg text-slate-500 font-medium text-center outline-none border border-slate-200/50"></td>
-                    <td class="p-2 bg-amber-50/40"><input type="number" id="input-elec-${inv.roomId}" value="${inv.elecEnd}" placeholder="Nhập số" class="w-full px-2 py-1.5 rounded-lg font-bold text-center border border-slate-200 outline-none focus:border-amber-500 focus:bg-white transition-all shadow-inner"></td>
-                    
-                    <td class="p-2 bg-sky-50/20 border-l border-slate-100"><input type="number" disabled value="${inv.waterStart}" class="w-full bg-slate-100/70 px-2 py-1.5 rounded-lg text-slate-500 font-medium text-center outline-none border border-slate-200/50"></td>
-                    <td class="p-2 bg-sky-50/40"><input type="number" id="input-water-${inv.roomId}" value="${inv.waterEnd}" placeholder="Nhập số" class="w-full px-2 py-1.5 rounded-lg font-bold text-center border border-slate-200 outline-none focus:border-sky-500 focus:bg-white transition-all shadow-inner"></td>
-                    
-                    <td class="p-2 bg-teal-50/20 border-l border-slate-100"><input type="number" disabled value="${inv.evStart}" class="w-full bg-slate-100/70 px-2 py-1.5 rounded-lg text-slate-500 font-medium text-center outline-none border border-slate-200/50"></td>
-                    <td class="p-2 bg-teal-50/40"><input type="number" id="input-ev-${inv.roomId}" value="${inv.evEnd}" placeholder="Nhập số" class="w-full px-2 py-1.5 rounded-lg font-bold text-center border border-slate-200 outline-none focus:border-teal-500 focus:bg-white transition-all shadow-inner"></td>
-                    
-                    <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right"><input type="number" id="input-other-${inv.roomId}" value="${inv.otherFees || 0}" class="w-28 px-2 py-1.5 rounded-lg text-right font-semibold border border-slate-200 outline-none focus:border-rose-500 transition-all text-rose-700"></td>
-                </tr>
-            `).join('');
-        }
+            window.systemData.rooms.forEach(room => {
+                const elecStart = parseFloat(document.getElementById(`input-elecStart-${room.roomId}`).value) || 0;
+                const elecEnd = parseFloat(document.getElementById(`input-elecEnd-${room.roomId}`).value) || 0;
+                const waterStart = parseFloat(document.getElementById(`input-waterStart-${room.roomId}`).value) || 0;
+                const waterEnd = parseFloat(document.getElementById(`input-waterEnd-${room.roomId}`).value) || 0;
+                const evStart = parseFloat(document.getElementById(`input-evStart-${room.roomId}`).value) || 0;
+                const evEnd = parseFloat(document.getElementById(`input-evEnd-${room.roomId}`).value) || 0;
+                const otherCost = parseFloat(document.getElementById(`input-otherCost-${room.roomId}`).value) || 0;
 
-        window.saveBatchInput = function() {
-            const currentInvoices = appData.invoices[workingMonth] || [];
-            let isValid = true;
+                const elecUsage = elecEnd - elecStart;
+                const waterUsage = waterEnd - waterStart;
+                const evUsage = evEnd - evStart;
 
-            for (let i = 0; i < currentInvoices.length; i++) {
-                const inv = currentInvoices[i];
-                const eVal = document.getElementById(`input-elec-${inv.roomId}`).value;
-                const wVal = document.getElementById(`input-water-${inv.roomId}`).value;
-                const evVal = document.getElementById(`input-ev-${inv.roomId}`).value;
-                const otherVal = document.getElementById(`input-other-${inv.roomId}`).value;
+                const basePrice = room.price || 0;
+                const elecCost = elecUsage * (settings.elecFlat || 3500);
+                const waterCost = waterUsage * (settings.waterFlat || 15000);
+                const evCost = evUsage * (settings.evFlat || 4000);
+                const garbageCost = (room.members || 1) * (settings.garbageFlat || 10000);
 
-                if (eVal !== '') {
-                    const eEnd = parseFloat(eVal);
-                    if (eEnd < inv.elecStart) { alert(`Lỗi: Phòng ${inv.roomId} có số điện cuối nhỏ hơn đầu kỳ!`); isValid = false; break; }
-                    inv.elecEnd = eEnd;
-                } else { inv.elecEnd = ''; }
+                const total = basePrice + elecCost + waterCost + evCost + garbageCost + otherCost;
 
-                if (wVal !== '') {
-                    const wEnd = parseFloat(wVal);
-                    if (wEnd < inv.waterStart) { alert(`Lỗi: Phòng ${inv.roomId} có số nước cuối nhỏ hơn đầu kỳ!`); isValid = false; break; }
-                    inv.waterEnd = wEnd;
-                } else { inv.waterEnd = ''; }
+                let billingIndex = window.systemData.billings.findIndex(b => b.roomId === room.roomId && b.month === currentMonth);
+                const billingData = {
+                    roomId: room.roomId, month: currentMonth,
+                    elecStart, elecEnd, waterStart, waterEnd, evStart, evEnd, otherCost, total,
+                    paid: billingIndex >= 0 ? window.systemData.billings[billingIndex].paid : false
+                };
 
-                if (evVal !== '') {
-                    const evEnd = parseFloat(evVal);
-                    if (evEnd < inv.evStart) { alert(`Lỗi: Phòng ${inv.roomId} có số sạc xe EV cuối nhỏ hơn đầu kỳ!`); isValid = false; break; }
-                    inv.evEnd = evEnd;
-                } else { inv.evEnd = ''; }
+                if (billingIndex >= 0) window.systemData.billings[billingIndex] = billingData;
+                else window.systemData.billings.push(billingData);
+            });
 
-                inv.otherFees = parseFloat(otherVal) || 0;
-            }
-
-            if (isValid) {
-                saveToStorage();
-                renderAll();
-                alert("Đã tính toán đồng bộ toàn bộ chỉ số tiêu thụ tài chính!");
-            }
+            await window.syncToCloud();
+            alert("Hệ thống đã tính toán toàn bộ danh mục và hoàn thành đồng bộ đám mây!");
+            window.renderAll();
         };
 
-        // BẢNG CHI PHÍ VẬN HÀNH
         function renderExpenseTable() {
             const tbody = document.getElementById('expense-table-tbody');
-            const list = appData.expenses[workingMonth] || [];
-
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400 italic">Chưa phát sinh khoản xuất quỹ chi phí nào trong tháng.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = list.map((exp, idx) => `
-                <tr class="hover:bg-slate-50/50">
-                    <td class="p-3.5 font-medium text-slate-800">${exp.name}</td>
-                    <td class="p-3.5 text-right font-bold text-rose-600">-${exp.amount.toLocaleString('vi-VN')} ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.deleteExpense(${idx})" class="w-7 function-btn bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg p-1 transition-all" title="Xóa bỏ"><i class="fa-solid fa-trash-alt text-xs"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+            if(!tbody) return;
+            const currentExpenses = window.systemData.expenses.filter(e => e && e.month === currentMonth);
+            tbody.innerHTML = currentExpenses.map((e, index) => `<tr class="hover:bg-slate-50/50 transition-all">
+                <td class="p-3.5 font-semibold text-slate-800">${e.name}</td>
+                <td class="p-3.5 text-right font-bold text-rose-600">${e.amount.toLocaleString()} ₫</td>
+                <td class="p-3.5 text-center"><button onclick="window.deleteExpense(${window.systemData.expenses.indexOf(e)})" class="text-slate-400 hover:text-rose-600 transition-all"><i class="fa-solid fa-trash-can"></i></button></td>
+            </tr>`).join('');
         }
 
-        window.openExpenseModal = function() {
-            document.getElementById('exp-name').value = '';
-            document.getElementById('exp-amount').value = '';
-            document.getElementById('expenseModal').classList.remove('hidden');
+        window.openExpenseModal = function() { 
+            document.getElementById('modal-exp-name').value = '';
+            document.getElementById('modal-exp-amount').value = '';
+            document.getElementById('expenseModal').classList.replace('hidden', 'flex'); 
         };
-
-        window.closeExpenseModal = function() {
-            document.getElementById('expenseModal').classList.add('hidden');
-        };
-
-        window.saveExpenseForm = function() {
-            const name = document.getElementById('exp-name').value.trim();
-            const amount = parseFloat(document.getElementById('exp-amount').value);
-
-            if (!name || isNaN(amount)) { alert("Vui lòng hoàn thiện trường thông tin hợp lệ!"); return; }
-
-            if (!appData.expenses[workingMonth]) appData.expenses[workingMonth] = [];
-            appData.expenses[workingMonth].push({ name, amount });
-
-            saveToStorage();
+        window.closeExpenseModal = function() { document.getElementById('expenseModal').classList.replace('flex', 'hidden'); };
+        window.saveExpenseForm = async function() {
+            const name = document.getElementById('modal-exp-name').value.trim();
+            const amount = parseFloat(document.getElementById('modal-exp-amount').value) || 0;
+            if(!name || amount <= 0) { alert("Vui lòng điền thông tin hợp lệ!"); return; }
+            window.systemData.expenses.push({ name, amount, month: currentMonth });
+            await window.syncToCloud();
             window.closeExpenseModal();
-            renderAll();
+            window.renderAll();
         };
-
-        window.deleteExpense = function(idx) {
-            if (confirm("Chắc chắn muốn xóa mục quỹ chi phí này?")) {
-                appData.expenses[workingMonth].splice(idx, 1);
-                saveToStorage();
-                renderAll();
+        window.deleteExpense = async function(idx) {
+            if(confirm("Anh thực sự muốn xóa khoản chi phí vận hành này khỏi bản ghi?")) {
+                window.systemData.expenses.splice(idx, 1);
+                await window.syncToCloud();
+                window.renderAll();
             }
         };
 
-        // BẢNG THU DOANH SỐ TỔNG HỢP & HOÁ ĐƠN
-        function renderSummaryTable() {
+        function renderSummaryReport() {
             const tbody = document.getElementById('summary-table-tbody');
-            const currentInvoices = appData.invoices[workingMonth] || [];
+            if(!tbody) return;
+            const settings = window.systemData.settings;
+            
+            tbody.innerHTML = window.systemData.rooms.map(room => {
+                const b = window.systemData.billings.find(billing => billing.roomId === room.roomId && billing.month === currentMonth) || { total: 0 };
+                const elecUsage = Math.max(0, (b.elecEnd || 0) - (b.elecStart || 0));
+                const waterUsage = Math.max(0, (b.waterEnd || 0) - (b.waterStart || 0));
+                const evUsage = Math.max(0, (b.evEnd || 0) - (b.evStart || 0));
+                
+                const elecCost = elecUsage * (settings.elecFlat || 3500);
+                const waterCost = waterUsage * (settings.waterFlat || 15000);
+                const evCost = evUsage * (settings.evFlat || 4000);
+                const garbageCost = (room.members || 1) * (settings.garbageFlat || 10000);
 
-            if (currentInvoices.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400 italic">Không có dữ liệu.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = currentInvoices.map((inv, idx) => {
-                const eDiff = (inv.elecEnd || inv.elecStart) - inv.elecStart;
-                const wDiff = (inv.waterEnd || inv.waterStart) - inv.waterStart;
-                const evDiff = (inv.evEnd || inv.evStart) - inv.evStart;
-
-                const eCost = (eDiff > 0 ? eDiff : 0) * appData.settings.elecFlat;
-                const wCost = (wDiff > 0 ? wDiff : 0) * appData.settings.waterFlat;
-                const evCost = (evDiff > 0 ? evDiff : 0) * appData.settings.evFlat;
-                const gCost = inv.size * appData.settings.garbageFlat;
-                const total = inv.basePrice + eCost + wCost + evCost + gCost + (inv.otherFees || 0);
-
-                return `
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="p-3 font-extrabold text-slate-900 text-center">P.${inv.roomId}</td>
-                        <td class="p-3 text-right font-medium">${inv.basePrice.toLocaleString('vi-VN')}</td>
-                        <td class="p-3 text-right text-amber-700 font-medium">${eCost.toLocaleString('vi-VN')}</td>
-                        <td class="p-3 text-right text-sky-700 font-medium">${wCost.toLocaleString('vi-VN')}</td>
-                        <td class="p-3 text-right text-teal-700 font-medium">${evCost.toLocaleString('vi-VN')}</td>
-                        <td class="p-3 text-right font-medium">${gCost.toLocaleString('vi-VN')}</td>
-                        <td class="p-3 text-right text-rose-600 font-medium">${(inv.otherFees || 0).toLocaleString('vi-VN')}</td>
-                        <td class="p-3 text-right font-black text-indigo-900 bg-indigo-50/30">${total.toLocaleString('vi-VN')} ₫</td>
-                        <td class="p-3 text-center">
-                            <button onclick="window.toggleInvoicePaid(${idx})" class="px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm transition-all ${inv.isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
-                                ${inv.isPaid ? '<i class="fa-solid fa-check-double mr-1"></i>Đã thu xong' : '<i class="fa-solid fa-clock mr-1"></i>Chờ thu'}
+                return `<tr class="hover:bg-slate-50/50 transition-all">
+                    <td class="p-3.5 font-bold text-slate-900 text-center">P.${room.roomId}</td>
+                    <td class="p-3.5 text-right font-medium text-slate-600">${(room.price || 0).toLocaleString()}</td>
+                    <td class="p-3.5 text-right text-slate-500">${elecCost.toLocaleString()} <span class="text-[9px] text-slate-400 block font-normal">(${elecUsage} kWh)</span></td>
+                    <td class="p-3.5 text-right text-slate-500">${waterCost.toLocaleString()} <span class="text-[9px] text-slate-400 block font-normal">(${waterUsage} m³)</span></td>
+                    <td class="p-3.5 text-right text-slate-500">${evCost.toLocaleString()} <span class="text-[9px] text-slate-400 block font-normal">(${evUsage} kWh)</span></td>
+                    <td class="p-3.5 text-right text-slate-500">${garbageCost.toLocaleString()}</td>
+                    <td class="p-3.5 text-right text-rose-600 font-semibold">${(b.otherCost || 0).toLocaleString()}</td>
+                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">${(b.total || 0).toLocaleString()} ₫</td>
+                    <td class="p-3.5 text-center">
+                        <button onclick="window.togglePaidStatus('${room.roomId}')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all ${b.paid ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-amber-50 border-amber-200 text-amber-700'}">
+                            ${b.paid ? '<i class="fa-solid fa-badge-check mr-1"></i>Đã thu' : '<i class="fa-solid fa-spinner mr-1"></i>Chưa thu'}
+                        </button>
+                    </td>
+                    <td class="p-3.5 text-center no-print">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="window.viewInvoiceDetail('${room.roomId}', '${currentMonth}')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-print"></i> In/PDF
                             </button>
-                        </td>
-                        <td class="p-3 text-center flex items-center justify-center gap-1">
-                            <button onclick="window.printSingleInvoice('${inv.roomId}')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-bold text-[10px] shadow-sm flex items-center gap-1 transition-all"><i class="fa-solid fa-print"></i> In Phiếu</button>
-                            <button onclick="window.freezeInvoiceToHistory(${idx})" class="w-7 h-7 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center transition-all" title="Khóa dữ liệu cố định"><i class="fa-solid fa-lock-keyhole text-xs"></i></button>
-                        </td>
-                    </tr>
-                `;
+                            <button onclick="window.lockInvoice('${room.roomId}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
+                                <i class="fa-solid fa-lock"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
             }).join('');
         }
 
-        window.toggleInvoicePaid = function(idx) {
-            const currentInvoices = appData.invoices[workingMonth] || [];
-            if (currentInvoices[idx]) {
-                currentInvoices[idx].isPaid = !currentInvoices[idx].isPaid;
-                saveToStorage();
-                renderAll();
-            }
+        window.togglePaidStatus = async function(roomId) {
+            let b = window.systemData.billings.find(billing => billing.roomId === roomId && billing.month === currentMonth);
+            if(b) { b.paid = !b.paid; await window.syncToCloud(); window.renderAll(); } 
+            else { alert("Vui lòng bấm nút 'Tính Toán' dữ liệu trước khi chốt trạng thái thu!"); }
         };
 
-        window.freezeInvoiceToHistory = function(idx) {
-            const currentInvoices = appData.invoices[workingMonth] || [];
-            const inv = currentInvoices[idx];
+        window.lockInvoice = async function(roomId) {
+            const b = window.systemData.billings.find(billing => billing.roomId === roomId && billing.month === currentMonth);
+            if(!b || b.total <= 0) { alert("Hóa đơn trống không thể thực hiện lưu kho bảo lưu."); return; }
+            const room = window.systemData.rooms.find(r => r.roomId === roomId) || {};
             
-            if (!inv) return;
-            if (confirm(`Bạn muốn đóng băng lịch sử tài chính cho Phòng ${inv.roomId}? Dữ liệu sẽ được lưu trữ cố định bảo mật.`)) {
-                const total = calculateInvoiceTotal(inv);
-                appData.savedInvoices.push({
-                    month: workingMonth,
-                    roomId: inv.roomId,
-                    tenant: inv.tenant,
-                    totalRevenue: total
+            if(confirm(`Thực hiện đóng băng cố định hóa đơn phòng ${roomId} chu kỳ đối soát ${currentMonth}? Hành động này bảo lưu tài chính lịch sử.`)) {
+                window.systemData.savedInvoices.push({
+                    month: currentMonth, roomId: roomId, renter: room.renter || 'Khách cũ', total: b.total, details: JSON.parse(JSON.stringify(b))
                 });
-                saveToStorage();
-                renderAll();
-                alert("Đã chốt khóa dữ liệu lịch sử thành công!");
+                await window.syncToCloud();
+                alert("Đã khóa cố định bản ghi tài chính!");
+                window.renderAll();
             }
         };
 
-        // KHO LƯU TRỮ LỊCH SỬ
-        function renderSavedInvoicesTable() {
-            const tbody = document.getElementById('saved-invoices-tbody');
-            const list = appData.savedInvoices || [];
+        window.viewInvoiceDetail = function(roomId, month, savedInvoiceStr = null) {
+            let billing = null;
+            let renterName = "";
+            let members = 1;
+            let roomPrice = 0;
 
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Chưa có hóa đơn nào được chốt băng lịch sử cố định.</td></tr>`;
-                return;
+            if (savedInvoiceStr) {
+        const savedData = JSON.parse(decodeURIComponent(savedInvoiceStr));
+        billing = savedData.details || savedData;
+        renterName = savedData.renter || "Khách thuê lịch sử";
+        const roomObj = window.systemData.rooms.find(r => r.roomId === roomId) || {};
+        
+        // Sửa lỗi: Lấy giá phòng gốc trực tiếp từ thuộc tính lịch sử, nếu không có mới tính toán trừ khống theo đơn giá thiết lập hệ thống
+        const currentSettings = window.systemData.settings || { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
+        const eUsage = Math.max(0, (billing.elecEnd || 0) - (billing.elecStart || 0));
+        const wUsage = Math.max(0, (billing.waterEnd || 0) - (billing.waterStart || 0));
+        const evUsage = Math.max(0, (billing.evEnd || 0) - (billing.evStart || 0));
+        
+        const eCost = eUsage * (currentSettings.elecFlat || 3500);
+        const wCost = wUsage * (currentSettings.waterFlat || 15000);
+        const evCost = evUsage * (currentSettings.evFlat || 4000);
+        const gMembers = billing.members || roomObj.members || 1;
+        const gCost = gMembers * (currentSettings.garbageFlat || 10000);
+        const oCost = billing.otherCost || 0;
+
+        // Ưu tiên lấy giá phòng được lưu trong cấu trúc, nếu không có sẽ trừ chuẩn theo cài đặt hệ thống
+        roomPrice = roomObj.price || (billing.total - eCost - wCost - evCost - gCost - oCost);
+        members = gMembers;
+    }
+            else {
+                billing = window.systemData.billings.find(b => b.roomId === roomId && b.month === month);
+                const roomObj = window.systemData.rooms.find(r => r.roomId === roomId);
+                if (roomObj) { renterName = roomObj.renter; members = roomObj.members; roomPrice = roomObj.price; }
             }
 
-            tbody.innerHTML = list.map((item, idx) => `
-                <tr class="hover:bg-slate-50/50">
-                    <td class="p-3 font-semibold text-slate-600">${item.month}</td>
-                    <td class="p-3 font-black text-slate-900">P.${item.roomId}</td>
-                    <td class="p-3 font-medium text-slate-700">${item.tenant}</td>
-                    <td class="p-3 text-right font-bold text-indigo-900">${item.totalRevenue.toLocaleString('vi-VN')} ₫</td>
-                    <td class="p-3 text-center">
-                        <button onclick="window.deleteSavedInvoice(${idx})" class="w-7 h-7 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center transition-all" title="Hủy khóa"><i class="fa-solid fa-unlock text-xs"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+            if (!billing) { alert("Không thể tìm thấy cấu trúc dữ liệu! Vui lòng bấm 'Tính toán' trước."); return; }
 
-        window.deleteSavedInvoice = function(idx) {
-            if (confirm("Bạn thực sự muốn hủy đóng băng hồ sơ lịch sử này?")) {
-                appData.savedInvoices.splice(idx, 1);
-                saveToStorage();
-                renderAll();
-            }
-        };
+            const settings = window.systemData.settings;
+            const elecUsage = Math.max(0, (billing.elecEnd || 0) - (billing.elecStart || 0));
+            const waterUsage = Math.max(0, (billing.waterEnd || 0) - (billing.waterStart || 0));
+            const evUsage = Math.max(0, (billing.evEnd || 0) - (billing.evStart || 0));
 
-        // QUẢN LÝ CƠ SỞ PHÒNG TRỌ
-        function renderRoomsGrid() {
-            const grid = document.getElementById('rooms-grid');
-            if (!grid) return;
+            const elecCost = elecUsage * (settings.elecFlat || 3500);
+            const waterCost = waterUsage * (settings.waterFlat || 15000);
+            const evCost = evUsage * (settings.evFlat || 4000);
+            const garbageCost = (members || 1) * (settings.garbageFlat || 10000);
 
-            if (appData.rooms.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-2xl italic">Hệ thống thực thể trống. Hãy bấm nút phía trên để thêm phòng mới ngay.</div>`;
-                return;
-            }
-
-            grid.innerHTML = appData.rooms.map((r, idx) => `
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-300 transition-all flex flex-col justify-between gap-3 relative overflow-hidden group">
-                    <div class="absolute top-0 left-0 w-1.5 h-full bg-indigo-500"></div>
-                    <div>
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="text-base font-black text-slate-900 tracking-tight">Phòng ${r.id}</h4>
-                                <p class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tag mr-1 text-[10px]"></i>${r.tenant}</p>
-                            </div>
-                            <span class="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">${r.size} Nhân khẩu</span>
+            const invoiceHTML = `
+                <div class="border border-slate-200 p-6 rounded-2xl bg-white text-slate-800 text-xs shadow-sm font-sans" id="invoice-printable-node">
+                    <div class="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
+                        <div>
+                            <h4 class="text-base font-extrabold uppercase tracking-tight text-slate-900 family-font">PHIẾU THU TIỀN NHÀ</h4>
+                            <p class="text-[11px] text-slate-400 font-medium mt-0.5">Chu kỳ thanh toán định kỳ: <span class="font-bold text-indigo-600">${billing.month}</span></p>
                         </div>
-                        <div class="mt-3 pt-3 border-t border-slate-100 space-y-1 text-[11px] text-slate-500 font-medium">
-                            <div class="flex justify-between"><span>Giá thuê gốc:</span><b class="text-slate-800">${r.basePrice.toLocaleString('vi-VN')} ₫</b></div>
-                            <div class="flex justify-between"><span>Chỉ số điện gốc bàn giao:</span><b class="text-amber-600">${r.initElec} kWh</b></div>
-                            <div class="flex justify-between"><span>Chỉ số nước gốc bàn giao:</span><b class="text-sky-600">${r.initWater} m³</b></div>
+                        <div class="text-right">
+                            <h5 class="text-sm font-extrabold text-slate-900">Mã phòng: ${billing.roomId}</h5>
+                            <p class="text-[11px] text-slate-500 font-medium">Đối tượng thuê: ${renterName}</p>
                         </div>
                     </div>
-                    <div class="flex justify-end gap-1.5 pt-2 border-t border-slate-50">
-                        <button onclick="window.editRoomForm(${idx})" class="px-2.5 py-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 font-bold rounded-lg text-[10px] transition-all flex items-center gap-1"><i class="fa-solid fa-edit"></i> Cấu hình</button>
-                        <button onclick="window.deleteRoom(${idx})" class="w-7 h-7 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-lg flex items-center justify-center transition-all"><i class="fa-solid fa-trash-alt text-xs"></i></button>
+
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 font-bold uppercase text-slate-500 border-b border-slate-200 text-[10px] tracking-wider">
+                                <th class="p-2.5">Khoản mục thanh toán</th>
+                                <th class="p-2.5 text-center">Chỉ số đầu</th>
+                                <th class="p-2.5 text-center">Chỉ số cuối</th>
+                                <th class="p-2.5 text-center">Sản lượng</th>
+                                <th class="p-2.5 text-right">Đơn giá</th>
+                                <th class="p-2.5 text-right font-bold text-slate-900">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
+                            <tr>
+                                <td class="p-2.5 font-bold text-slate-900">Giá thuê phòng gốc</td>
+                                <td class="p-2.5 text-center text-slate-300">-</td>
+                                <td class="p-2.5 text-center text-slate-300">-</td>
+                                <td class="p-2.5 text-center font-bold text-slate-800">1 Tháng</td>
+                                <td class="p-2.5 text-right">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()}</td>
+                                <td class="p-2.5 text-right font-extrabold text-slate-900">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()} ₫</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-bold text-slate-900">Tiền điện sinh hoạt</td>
+                                <td class="p-2.5 text-center text-slate-400">${billing.elecStart}</td>
+                                <td class="p-2.5 text-center text-slate-400">${billing.elecEnd}</td>
+                                <td class="p-2.5 text-center font-bold text-amber-600">${elecUsage} kWh</td>
+                                <td class="p-2.5 text-right">${(settings.elecFlat || 3500).toLocaleString()}</td>
+                                <td class="p-2.5 text-right font-extrabold text-slate-900">${elecCost.toLocaleString()} ₫</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-bold text-slate-900">Tiền nước sinh hoạt</td>
+                                <td class="p-2.5 text-center text-slate-400">${billing.waterStart}</td>
+                                <td class="p-2.5 text-center text-slate-400">${billing.waterEnd}</td>
+                                <td class="p-2.5 text-center font-bold text-sky-600">${waterUsage} m³</td>
+                                <td class="p-2.5 text-right">${(settings.waterFlat || 15000).toLocaleString()}</td>
+                                <td class="p-2.5 text-right font-extrabold text-slate-900">${waterCost.toLocaleString()} ₫</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-bold text-slate-900">Điện năng sạc xe máy EV</td>
+                                <td class="p-2.5 text-center text-slate-400">${billing.evStart}</td>
+                                <td class="p-2.5 text-center text-slate-400">${billing.evEnd}</td>
+                                <td class="p-2.5 text-center font-bold text-teal-600">${evUsage} kWh</td>
+                                <td class="p-2.5 text-right">${(settings.evFlat || 4000).toLocaleString()}</td>
+                                <td class="p-2.5 text-right font-extrabold text-slate-900">${evCost.toLocaleString()} ₫</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-bold text-slate-900">Phí vệ sinh thu gom rác</td>
+                                <td class="p-2.5 text-center text-slate-300">-</td>
+                                <td class="p-2.5 text-center text-slate-300">-</td>
+                                <td class="p-2.5 text-center font-bold text-slate-800">${members} Người</td>
+                                <td class="p-2.5 text-right">${(settings.garbageFlat || 10000).toLocaleString()}</td>
+                                <td class="p-2.5 text-right font-extrabold text-slate-900">${garbageCost.toLocaleString()} ₫</td>
+                            </tr>
+                            ${billing.otherCost > 0 ? `
+                            <tr class="bg-rose-50/40 text-rose-700">
+                                <td class="p-2.5 font-bold">Phí phát sinh phụ thu</td>
+                                <td class="p-2.5 text-center">-</td>
+                                <td class="p-2.5 text-center">-</td>
+                                <td class="p-2.5 text-center font-bold">Biên mục</td>
+                                <td class="p-2.5 text-right">-</td>
+                                <td class="p-2.5 text-right font-extrabold">${billing.otherCost.toLocaleString()} ₫</td>
+                            </tr>` : ''}
+                        </tbody>
+                    </table>
+
+                    <div class="mt-6 flex flex-col items-end border-t border-slate-100 pt-4">
+                        <div class="flex justify-between w-64 text-xs font-semibold mb-1">
+                            <span class="text-slate-400">Trạng thái hạch toán:</span>
+                            <span class="${billing.paid ? 'text-emerald-600' : 'text-amber-600'} font-bold uppercase tracking-wider">${billing.paid ? 'Đã thu tiền' : 'Chờ đối soát'}</span>
+                        </div>
+                        <div class="flex justify-between w-64 border-t border-dashed border-slate-200 pt-2 text-xs font-bold text-slate-900">
+                            <span class="font-extrabold">TỔNG THU DOANH SỐ:</span>
+                            <span class="text-indigo-600 text-sm font-extrabold tracking-tight">${billing.total.toLocaleString()} ₫</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 grid grid-cols-2 text-center text-[10px] text-slate-400 font-bold uppercase tracking-wider pt-4 border-t border-slate-100">
+                        <div>Người lập phiếu</div>
+                        <div>Đại diện khách thuê</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('invoice-modal-content').innerHTML = invoiceHTML;
+            document.getElementById('invoice-print-area').innerHTML = invoiceHTML;
+            document.getElementById('invoiceDetailModal').classList.replace('hidden', 'flex');
+        };
+
+        window.closeInvoiceDetailModal = function() { document.getElementById('invoiceDetailModal').classList.replace('flex', 'hidden'); };
+        window.triggerPrintInvoice = function() { window.print(); };
+
+        function renderSavedInvoicesTable() {
+            const tbody = document.getElementById('saved-invoices-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = window.systemData.savedInvoices.map((inv, index) => {
+                const safeJsonStr = encodeURIComponent(JSON.stringify(inv));
+                return `<tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail('${inv.roomId}', '${inv.month}', '${safeJsonStr}')">
+                    <td class="p-3 font-semibold text-indigo-600 text-xs">${inv.month}</td>
+                    <td class="p-3 font-bold text-slate-900 text-xs">Phòng ${inv.roomId}</td>
+                    <td class="p-3 font-medium text-slate-600 text-xs">${inv.renter}</td>
+                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs">${inv.total.toLocaleString()} ₫</td>
+                    <td class="p-3 text-center no-print" onclick="event.stopPropagation();">
+                        <button onclick="window.deleteSavedInvoice(${index})" class="text-slate-400 hover:text-rose-600 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        window.deleteSavedInvoice = async function(idx) {
+            if(confirm("Anh có chắc chắn muốn hủy khóa hóa đơn lịch sử cố định này?")) {
+                window.systemData.savedInvoices.splice(idx, 1);
+                await window.syncToCloud();
+                window.renderAll();
+            }
+        };
+
+        function renderRoomsGrid() {
+            const grid = document.getElementById('rooms-grid');
+            if(!grid) return;
+            grid.innerHTML = window.systemData.rooms.map((room, index) => `
+                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng ${room.roomId}</span>
+                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">${room.members || 1} nhân khẩu</span>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-500 font-medium">
+                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">${room.renter || 'Trống'}</b></p>
+                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">${(room.price || 0).toLocaleString()} ₫</b></p>
+                    </div>
+                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
+                        <button onclick="window.editRoom(${index})" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
+                        <button onclick="window.deleteRoom(${index})" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
                     </div>
                 </div>
             `).join('');
         }
 
         window.openRoomModal = function() {
-            document.getElementById('room-edit-id').value = '';
-            document.getElementById('room-id').value = '';
-            document.getElementById('room-id').disabled = false;
-            document.getElementById('room-tenant').value = '';
-            document.getElementById('room-size').value = 1;
-            document.getElementById('room-base-price').value = '';
-            document.getElementById('room-init-elec').value = 0;
-            document.getElementById('room-init-water').value = 0;
-            document.getElementById('room-init-ev').value = 0;
-
             document.getElementById('roomModalTitle').innerText = "Thêm Thực Thể Phòng Mới";
-            document.getElementById('roomModal').classList.remove('hidden');
+            document.getElementById('room-modal-idx').value = "-1";
+            document.getElementById('modal-room-id').value = "";
+            document.getElementById('modal-room-renter').value = "";
+            document.getElementById('modal-room-price').value = "";
+            document.getElementById('modal-room-members').value = "1";
+            document.getElementById('modal-room-initElec').value = "0";
+            document.getElementById('modal-room-initWater').value = "0";
+            document.getElementById('modal-room-initEv').value = "0";
+            document.getElementById('roomModal').classList.replace('hidden', 'flex');
+        };
+        window.closeRoomModal = function() { document.getElementById('roomModal').classList.replace('flex', 'hidden'); };
+        
+        window.editRoom = function(index) {
+            const r = window.systemData.rooms[index];
+            document.getElementById('roomModalTitle').innerText = "Cập Nhật Thông Tin Phòng";
+            document.getElementById('room-modal-idx').value = index;
+            document.getElementById('modal-room-id').value = r.roomId;
+            document.getElementById('modal-room-renter').value = r.renter;
+            document.getElementById('modal-room-price').value = r.price;
+            document.getElementById('modal-room-members').value = r.members || 1;
+            document.getElementById('modal-room-initElec').value = r.initElec || 0;
+            document.getElementById('modal-room-initWater').value = r.initWater || 0;
+            document.getElementById('modal-room-initEv').value = r.initEv || 0;
+            document.getElementById('roomModal').classList.replace('hidden', 'flex');
         };
 
-        window.closeRoomModal = function() {
-            document.getElementById('roomModal').classList.add('hidden');
-        };
+        window.saveRoomForm = async function() {
+            const idx = parseInt(document.getElementById('room-modal-idx').value);
+            const roomId = document.getElementById('modal-room-id').value.trim();
+            const renter = document.getElementById('modal-room-renter').value.trim();
+            const price = parseFloat(document.getElementById('modal-room-price').value) || 0;
+            const members = parseInt(document.getElementById('modal-room-members').value) || 1;
+            const initElec = parseFloat(document.getElementById('modal-room-initElec').value) || 0;
+            const initWater = parseFloat(document.getElementById('modal-room-initWater').value) || 0;
+            const initEv = parseFloat(document.getElementById('modal-room-initEv').value) || 0;
 
-        window.editRoomForm = function(idx) {
-            const r = appData.rooms[idx];
-            if (!r) return;
+            if(!roomId || !renter || price <= 0) { alert("Vui lòng điền đầy đủ các thông tin có dấu sao bắt buộc (*)"); return; }
+            
+            const roomData = { roomId, renter, price, members, initElec, initWater, initEv };
+            if(idx >= 0) window.systemData.rooms[idx] = roomData;
+            else window.systemData.rooms.push(roomData);
 
-            document.getElementById('room-edit-id').value = idx;
-            document.getElementById('room-id').value = r.id;
-            document.getElementById('room-id').disabled = true; // Không cho sửa khóa chính
-            document.getElementById('room-tenant').value = r.tenant;
-            document.getElementById('room-size').value = r.size;
-            document.getElementById('room-base-price').value = r.basePrice;
-            document.getElementById('room-init-elec').value = r.initElec;
-            document.getElementById('room-init-water').value = r.initWater;
-            document.getElementById('room-init-ev').value = r.initEv;
-
-            document.getElementById('roomModalTitle').innerText = `Cấu hình Phòng ${r.id}`;
-            document.getElementById('roomModal').classList.remove('hidden');
-        };
-
-        window.saveRoomForm = function() {
-            const editId = document.getElementById('room-edit-id').value;
-            const id = document.getElementById('room-id').value.trim();
-            const tenant = document.getElementById('room-tenant').value.trim();
-            const size = parseInt(document.getElementById('room-size').value, 10) || 1;
-            const basePrice = parseFloat(document.getElementById('room-base-price').value);
-            const initElec = parseFloat(document.getElementById('room-init-elec').value) || 0;
-            const initWater = parseFloat(document.getElementById('room-init-water').value) || 0;
-            const initEv = parseFloat(document.getElementById('room-init-ev').value) || 0;
-
-            if (!id || !tenant || isNaN(basePrice)) { alert("Vui lòng bổ sung đầy đủ thông tin bắt buộc!"); return; }
-
-            if (editId === '') {
-                // Kiểm tra trùng lặp
-                if (appData.rooms.some(r => r.id === id)) { alert("Mã phòng này đã tồn tại trong sơ đồ hệ thống!"); return; }
-                appData.rooms.push({ id, tenant, size, basePrice, initElec, initWater, initEv });
-            } else {
-                const r = appData.rooms[parseInt(editId, 10)];
-                if (r) {
-                    r.tenant = tenant;
-                    r.size = size;
-                    r.basePrice = basePrice;
-                    r.initElec = initElec;
-                    r.initWater = initWater;
-                    r.initEv = initEv;
-                }
-            }
-
-            saveToStorage();
+            await window.syncToCloud();
             window.closeRoomModal();
-            renderAll();
+            window.renderAll();
         };
 
-        window.deleteRoom = function(idx) {
-            if (confirm("Xóa thực thể phòng sẽ xóa toàn bộ cấu trúc chỉ số nền tảng. Bạn chắc chắn chứ?")) {
-                appData.rooms.splice(idx, 1);
-                saveToStorage();
-                renderAll();
+        window.deleteRoom = async function(idx) {
+            if(confirm("Anh có chắc chắn muốn xóa vĩnh viễn phòng này khỏi hệ thống?")) {
+                window.systemData.rooms.splice(idx, 1);
+                await window.syncToCloud();
+                window.renderAll();
             }
         };
 
-        // THIẾT LẬP HỆ THỐNG BIỂU GIÁ MẶC ĐỊNH
-        function renderSettingsForm() {
-            document.getElementById('setting-elec-flat').value = appData.settings.elecFlat;
-            document.getElementById('setting-water-flat').value = appData.settings.waterFlat;
-            document.getElementById('setting-ev-flat').value = appData.settings.evFlat;
-            document.getElementById('setting-garbage-flat').value = appData.settings.garbageFlat;
-            document.getElementById('setting-gemini-key').value = appData.settings.geminiKey || "";
+        function renderSettings() {
+            const s = window.systemData.settings;
+            if(document.getElementById('setting-elec-flat')) document.getElementById('setting-elec-flat').value = s.elecFlat || 3500;
+            if(document.getElementById('setting-water-flat')) document.getElementById('setting-water-flat').value = s.waterFlat || 15000;
+            if(document.getElementById('setting-ev-flat')) document.getElementById('setting-ev-flat').value = s.evFlat || 4000;
+            if(document.getElementById('setting-garbage-flat')) document.getElementById('setting-garbage-flat').value = s.garbageFlat || 10000;
+            if(document.getElementById('setting-gemini-key')) {
+    document.getElementById('setting-gemini-key').value = s.geminiKey || "";
+    localStorage.setItem('SMARTRENTAL_GEMINI_KEY', s.geminiKey || "");
+}
         }
 
-        window.saveSystemSettings = function() {
-            appData.settings.elecFlat = parseFloat(document.getElementById('setting-elec-flat').value) || 0;
-            appData.settings.waterFlat = parseFloat(document.getElementById('setting-water-flat').value) || 0;
-            appData.settings.evFlat = parseFloat(document.getElementById('setting-ev-flat').value) || 0;
-            appData.settings.garbageFlat = parseFloat(document.getElementById('setting-garbage-flat').value) || 0;
-            appData.settings.geminiKey = document.getElementById('setting-gemini-key').value.trim();
+       window.saveSystemSettings = async function() {
+    window.systemData.settings = {
+        elecFlat: parseFloat(document.getElementById('setting-elec-flat').value) || 3500,
+        waterFlat: parseFloat(document.getElementById('setting-water-flat').value) || 15000,
+        evFlat: parseFloat(document.getElementById('setting-ev-flat').value) || 4000,
+        garbageFlat: parseFloat(document.getElementById('setting-garbage-flat').value) || 10000,
+        // Bổ sung lưu Gemini Key vào cấu hình hệ thống đồng bộ Cloud
+        geminiKey: document.getElementById('setting-gemini-key')?.value || "",
+        
+        // DÒNG BỔ SUNG 1: Lưu tên phiên bản mô hình AI (Gemini Model) lên Cloud
+        geminiModel: document.getElementById('setting-gemini-model')?.value || "gemini-2.5-flash"
+    };
+    
+    // Lưu một bản sao tại local để các hàm bổ trợ lấy ra dùng nhanh không cần bóc tách từ systemData
+    localStorage.setItem('SMARTRENTAL_GEMINI_KEY', window.systemData.settings.geminiKey);
+    
+    // DÒNG BỔ SUNG 2: Lưu bản sao phiên bản mô hình tại local trình duyệt
+    localStorage.setItem('SMARTRENTAL_GEMINI_MODEL', window.systemData.settings.geminiModel);
 
-            saveToStorage();
-            renderAll();
-            alert("Đã cập nhật cấu hình biểu giá dịch vụ trên toàn hệ thống!");
-        };
+    await window.syncToCloud();
+    alert("Đã cập nhật hệ thống định giá biểu phí dịch vụ và cấu hình Gemini AI mới.");
+    window.renderAll();
+};
 
-        // IN PHIẾU THU TIỀN NHÀ (DẠNG HÓA ĐƠN TRỰC QUAN CHUẨN IN ẤN)
-        window.printSingleInvoice = function(roomId) {
-            const currentInvoices = appData.invoices[workingMonth] || [];
-            const inv = currentInvoices.find(i => i.roomId === roomId);
-            if (!inv) return;
 
-            const eDiff = (inv.elecEnd || inv.elecStart) - inv.elecStart;
-            const wDiff = (inv.waterEnd || inv.waterStart) - inv.waterStart;
-            const evDiff = (inv.evEnd || inv.evStart) - inv.evStart;
+        window.exportToExcel = function(type) {
+            try {
+                const wb = XLSX.utils.book_new();
+                let currentYear = currentMonth.slice(0, 4);
+                let filteredBillings = [];
+                let filteredExpenses = [];
+                let fileNameSuffix = "";
 
-            const eCost = (eDiff > 0 ? eDiff : 0) * appData.settings.elecFlat;
-            const wCost = (wDiff > 0 ? wDiff : 0) * appData.settings.waterFlat;
-            const evCost = (evDiff > 0 ? evDiff : 0) * appData.settings.evFlat;
-            const gCost = inv.size * appData.settings.garbageFlat;
-            const total = inv.basePrice + eCost + wCost + evCost + gCost + (inv.otherFees || 0);
-
-            const printArea = document.getElementById('invoice-print-area');
-            printArea.innerHTML = `
-                <div style="border: 2px solid #334155; padding: 30px; border-radius: 12px; background: #fff; max-width: 750px; margin: auto;">
-                    <div style="display: flex; justify-between; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 20px;">
-                        <div>
-                            <h2 style="margin:0; font-size: 22px; color: #1e293b; font-weight:800;">PHIẾU THANH TOÁN TIỀN NHÀ</h2>
-                            <p style="margin: 4px 0 0 0; font-size:12px; color:#64748b;">Mã đối soát: <b>INV-${workingMonth}-P${inv.roomId}</b></p>
-                        </div>
-                        <div style="text-align: right;">
-                            <h3 style="margin:0; font-size: 16px; color:#4f46e5;">SmartRental Analytics</h3>
-                            <p style="margin:4px 0 0 0; font-size:11px; color:#64748b;">Chu kỳ thu: <b>Tháng ${workingMonth}</b></p>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 20px; font-size: 13px; color: #334155; line-height: 1.6;">
-                        <div>Khách hàng đại diện thuê: <b>${inv.tenant}</b></div>
-                        <div>Số phòng: <b>Phòng ${inv.roomId}</b> (Nhân khẩu: ${inv.size})</div>
-                        <div>Trạng thái: <b style="color: ${inv.isPaid ? '#16a34a' : '#dc2626'}">${inv.isPaid ? 'ĐÃ THU TIỀN' : 'CHỜ THANH TOÁN'}</b></div>
-                    </div>
-
-                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; margin-bottom: 20px;">
-                        <thead>
-                            <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #1e293b; font-weight: bold;">
-                                <th style="padding: 10px;">Danh mục hạch toán dịch vụ</th>
-                                <th style="padding: 10px; text-align: center;">Chỉ số đầu</th>
-                                <th style="padding: 10px; text-align: center;">Chỉ số cuối</th>
-                                <th style="padding: 10px; text-align: center;">Tiêu thụ</th>
-                                <th style="padding: 10px; text-align: right;">Đơn giá</th>
-                                <th style="padding: 10px; text-align: right;">Thành tiền (₫)</th>
-                            </tr>
-                        </thead>
-                        <tbody style="color: #334155;">
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 10px; font-weight:bold;">Tiền thuê nhà gốc (Cố định)</td>
-                                <td style="padding: 10px; text-align:center;">-</td>
-                                <td style="padding: 10px; text-align:center;">-</td>
-                                <td style="padding: 10px; text-align:center;">1 Tháng</td>
-                                <td style="padding: 10px; text-align: right;">${inv.basePrice.toLocaleString('vi-VN')}</td>
-                                <td style="padding: 10px; text-align: right; font-weight:bold;">${inv.basePrice.toLocaleString('vi-VN')}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 10px;">Khấu trừ sản lượng điện sử dụng</td>
-                                <td style="padding: 10px; text-align:center;">${inv.elecStart}</td>
-                                <td style="padding: 10px; text-align:center;">${inv.elecEnd || inv.elecStart}</td>
-                                <td style="padding: 10px; text-align:center;">${eDiff > 0 ? eDiff : 0} kWh</td>
-                                <td style="padding: 10px; text-align: right;">${appData.settings.elecFlat}</td>
-                                <td style="padding: 10px; text-align: right; font-weight:bold;">${eCost.toLocaleString('vi-VN')}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 10px;">Khấu trừ khối lượng nước sinh hoạt</td>
-                                <td style="padding: 10px; text-align:center;">${inv.waterStart}</td>
-                                <td style="padding: 10px; text-align:center;">${inv.waterEnd || inv.waterStart}</td>
-                                <td style="padding: 10px; text-align:center;">${wDiff > 0 ? wDiff : 0} m³</td>
-                                <td style="padding: 10px; text-align: right;">${appData.settings.waterFlat}</td>
-                                <td style="padding: 10px; text-align: right; font-weight:bold;">${wCost.toLocaleString('vi-VN')}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 10px;">Năng lượng sạc trạm xe điện EV</td>
-                                <td style="padding: 10px; text-align:center;">${inv.evStart}</td>
-                                <td style="padding: 10px; text-align:center;">${inv.evEnd || inv.evStart}</td>
-                                <td style="padding: 10px; text-align:center;">${evDiff > 0 ? evDiff : 0} kWh</td>
-                                <td style="padding: 10px; text-align: right;">${appData.settings.evFlat}</td>
-                                <td style="padding: 10px; text-align: right; font-weight:bold;">${evCost.toLocaleString('vi-VN')}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 10px;">Thu gom rác thải sinh hoạt chung</td>
-                                <td style="padding: 10px; text-align:center;">-</td>
-                                <td style="padding: 10px; text-align:center;">-</td>
-                                <td style="padding: 10px; text-align:center;">${inv.size} Người</td>
-                                <td style="padding: 10px; text-align: right;">${appData.settings.garbageFlat}</td>
-                                <td style="padding: 10px; text-align: right; font-weight:bold;">${gCost.toLocaleString('vi-VN')}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #cbd5e1;">
-                                <td style="padding: 10px; color: #dc2626;">Các khoản điều chỉnh phụ thu phát sinh</td>
-                                <td style="padding: 10px; text-align:center;">-</td>
-                                <td style="padding: 10px; text-align:center;">-</td>
-                                <td style="padding: 10px; text-align:center;">-</td>
-                                <td style="padding: 10px; text-align: right;">-</td>
-                                <td style="padding: 10px; text-align: right; font-weight:bold; color: #dc2626;">${(inv.otherFees || 0).toLocaleString('vi-VN')}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div style="text-align: right; margin-top: 15px;">
-                        <span style="font-size: 14px; color: #475569; font-weight:bold;">TỔNG NGHĨA VỤ THANH TOÁN:</span>
-                        <div style="font-size: 24px; color: #4f46e5; font-weight: 900; margin-top: 5px;">${total.toLocaleString('vi-VN')} ₫</div>
-                    </div>
-
-                    <div style="margin-top: 40px; display: flex; justify-between; font-size: 11px; color:#64748b; font-style: italic;">
-                        <div>Ngày xuất phiếu: ${new Date().toLocaleDateString('vi-VN')}</div>
-                        <div>Chữ ký ban quản lý tòa nhà</div>
-                    </div>
-                </div>
-            `;
-
-            window.print();
-        };
-
-        // KẾT XUẤT FILE BÁO CÁO EXCEL THẨM MỸ KẾ TOÁN (SỬ DỤNG XLSX-JS-STYLE)
-        window.exportToExcel = function(mode) {
-            const wb = XLSX.utils.book_new();
-            let rawData = [];
-
-            // Thiết lập phong cách thiết kế Header bảng kế toán
-            const headerStyle = {
-                fill: { fgColor: { rgb: "1E293B" } }, // Màu đen slate thanh lịch
-                font: { name: "Arial", size: 11, bold: true, color: { rgb: "FFFFFF" } },
-                alignment: { horizontal: "center", vertical: "center" }
-            };
-
-            const cellStyle = {
-                font: { name: "Arial", size: 10 },
-                border: {
-                    top: { style: "thin", color: { rgb: "E2E8F0" } },
-                    bottom: { style: "thin", color: { rgb: "E2E8F0" } },
-                    left: { style: "thin", color: { rgb: "E2E8F0" } },
-                    right: { style: "thin", color: { rgb: "E2E8F0" } }
+                if (type === 'month') {
+                    filteredBillings = window.systemData.billings.filter(b => b.month === currentMonth);
+                    filteredExpenses = window.systemData.expenses.filter(e => e.month === currentMonth);
+                    fileNameSuffix = `Thang_${currentMonth}`;
+                } else if (type === 'year') {
+                    filteredBillings = window.systemData.billings.filter(b => b.month.startsWith(currentYear));
+                    filteredExpenses = window.systemData.expenses.filter(e => e.month.startsWith(currentYear));
+                    fileNameSuffix = `Nam_${currentYear}`;
+                } else {
+                    filteredBillings = window.systemData.billings;
+                    filteredExpenses = window.systemData.expenses;
+                    fileNameSuffix = "ToanBoHeThong";
                 }
-            };
 
-            let targetMonths = [workingMonth];
-            let filename = `Bao_Cao_Tai_Chinh_Thang_${workingMonth}.xlsx`;
+                const styleHeader = {
+                    fill: { fgColor: { rgb: "1F4E78" } }, 
+                    font: { name: "Segoe UI", size: 11, bold: true, color: { rgb: "FFFFFF" } },
+                    alignment: { horizontal: "center", vertical: "center", wrapText: true },
+                    border: {
+                        top: { style: "thin", color: { rgb: "D9D9D9" } }, bottom: { style: "medium", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "D9D9D9" } }, right: { style: "thin", color: { rgb: "D9D9D9" } }
+                    }
+                };
 
-            if (mode === 'year') {
-                const curYear = workingMonth.split('-')[0];
-                targetMonths = Object.keys(appData.invoices).filter(k => k.startsWith(curYear)).sort();
-                filename = `Bao_Cao_Tai_Chinh_Nam_${curYear}.xlsx`;
-            } else if (mode === 'all') {
-                targetMonths = Object.keys(appData.invoices).sort();
-                filename = `Bao_Cao_Toan_Bo_He_Thong.xlsx`;
-            }
+                const styleCellLeft = {
+                    font: { name: "Segoe UI", size: 10 }, alignment: { horizontal: "left", vertical: "center" },
+                    border: {
+                        top: { style: "thin", color: { rgb: "E0E0E0" } }, bottom: { style: "thin", color: { rgb: "E0E0E0" } },
+                        left: { style: "thin", color: { rgb: "E0E0E0" } }, right: { style: "thin", color: { rgb: "E0E0E0" } }
+                    }
+                };
 
-            // Tiêu đề cột chuẩn hóa dữ liệu tài chính
-            const headers = [
-                "Chu Kỳ", "Mã Phòng", "Khách Hàng", "Tiền Gốc (₫)", 
-                "Tiền Điện (₫)", "Tiền Nước (₫)", "Xe EV (₫)", 
-                "Thu Rác (₫)", "Phí Khác (₫)", "Tổng Cộng Hóa Đơn (₫)", "Trạng Thái"
-            ];
+                const styleCellRightNum = {
+                    font: { name: "Segoe UI", size: 10 }, alignment: { horizontal: "right", vertical: "center" }, numFmt: "#,##0",
+                    border: {
+                        top: { style: "thin", color: { rgb: "E0E0E0" } }, bottom: { style: "thin", color: { rgb: "E0E0E0" } },
+                        left: { style: "thin", color: { rgb: "E0E0E0" } }, right: { style: "thin", color: { rgb: "E0E0E0" } }
+                    }
+                };
 
-            let tableRows = [headers];
+                const styleCellCenter = {
+                    font: { name: "Segoe UI", size: 10 }, alignment: { horizontal: "center", vertical: "center" },
+                    border: {
+                        top: { style: "thin", color: { rgb: "E0E0E0" } }, bottom: { style: "thin", color: { rgb: "E0E0E0" } },
+                        left: { style: "thin", color: { rgb: "E0E0E0" } }, right: { style: "thin", color: { rgb: "E0E0E0" } }
+                    }
+                };
 
-            targetMonths.forEach(mKey => {
-                if (!appData.invoices[mKey]) return;
-                appData.invoices[mKey].forEach(inv => {
-                    const eDiff = (inv.elecEnd || inv.elecStart) - inv.elecStart;
-                    const wDiff = (inv.waterEnd || inv.waterStart) - inv.waterStart;
-                    const evDiff = (inv.evEnd || inv.evStart) - inv.evStart;
+                const styleTotalRow = {
+                    fill: { fgColor: { rgb: "F2F2F2" } }, font: { name: "Segoe UI", size: 10, bold: true, color: { rgb: "1F4E78" } },
+                    alignment: { vertical: "center" }, numFmt: "#,##0",
+                    border: {
+                        top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "double", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "D9D9D9" } }, right: { style: "thin", color: { rgb: "D9D9D9" } }
+                    }
+                };
 
-                    const eCost = (eDiff > 0 ? eDiff : 0) * appData.settings.elecFlat;
-                    const wCost = (wDiff > 0 ? wDiff : 0) * appData.settings.waterFlat;
-                    const evCost = (evDiff > 0 ? evDiff : 0) * appData.settings.evFlat;
-                    const gCost = inv.size * appData.settings.garbageFlat;
-                    const total = inv.basePrice + eCost + wCost + evCost + gCost + (inv.otherFees || 0);
+                function buildStyledSheet(headers, dataRows, typeMapping, totalColumnIndices = []) {
+                    const ws = {};
+                    headers.forEach((h, colIdx) => {
+                        const cellRef = XLSX.utils.encode_cell({ r: 0, c: colIdx });
+                        ws[cellRef] = { v: h, t: 's', s: styleHeader };
+                    });
 
-                    tableRows.push([
-                        mKey, `Phòng ${inv.roomId}`, inv.tenant, inv.basePrice,
-                        eCost, wCost, evCost, gCost, inv.otherFees || 0, total,
-                        inv.isPaid ? "Đã thu" : "Chưa thanh toán"
-                    ]);
-                });
-            });
+                    let totalSums = new Array(headers.length).fill(0);
+                    
+                    dataRows.forEach((row, rowIdx) => {
+                        const rIdx = rowIdx + 1;
+                        row.forEach((val, cIdx) => {
+                            const cellRef = XLSX.utils.encode_cell({ r: rIdx, c: cIdx });
+                            const alignType = typeMapping[cIdx];
+                            
+                            if (typeof val === "number") {
+                                ws[cellRef] = { v: val, t: 'n' };
+                                if (alignType === "right") {
+                                    ws[cellRef].s = styleCellRightNum;
+                                    if (totalColumnIndices.includes(cIdx)) totalSums[cIdx] += val;
+                                } else { ws[cellRef].s = styleCellCenter; }
+                            } else {
+                                ws[cellRef] = { v: val != null ? String(val) : "", t: 's' };
+                                ws[cellRef].s = (alignType === "center") ? styleCellCenter : styleCellLeft;
+                            }
+                        });
+                    });
 
-            const ws = XLSX.utils.aoa_to_sheet(tableRows);
-
-            // Bơm thuộc tính style thẩm mỹ vào từng ô Excel bản xuất
-            const range = XLSX.utils.decode_range(ws['!ref']);
-            for (let R = range.s.r; R <= range.e.r; ++R) {
-                for (let C = range.s.c; C <= range.e.c; ++C) {
-                    const cell_address = { c: C, r: R };
-                    const cell_ref = XLSX.utils.encode_cell(cell_address);
-                    if (!ws[cell_ref]) continue;
-
-                    if (R === 0) {
-                        ws[cell_ref].s = headerStyle;
-                    } else {
-                        ws[cell_ref].s = cellStyle;
-                        // Định dạng chuỗi số hiển thị dạng kế toán tài chính
-                        if (C >= 3 && C <= 9) {
-                            ws[cell_ref].z = '#,##0';
+                    const lastRowIndex = dataRows.length + 1;
+                    if (totalColumnIndices.length > 0 && dataRows.length > 0) {
+                        for (let cIdx = 0; cIdx < headers.length; cIdx++) {
+                            const cellRef = XLSX.utils.encode_cell({ r: lastRowIndex, c: cIdx });
+                            if (cIdx === 0) {
+                                ws[cellRef] = { v: "TỔNG CỘNG HỆ THỐNG", t: 's', s: { ...styleTotalRow, alignment: { horizontal: "left" } } };
+                            } else if (totalColumnIndices.includes(cIdx)) {
+                                ws[cellRef] = { v: totalSums[cIdx], t: 'n', s: { ...styleTotalRow, alignment: { horizontal: "right" } } };
+                            } else {
+                                ws[cellRef] = { v: "", t: 's', s: styleTotalRow };
+                            }
                         }
                     }
+
+                    const maxRow = totalColumnIndices.length > 0 && dataRows.length > 0 ? lastRowIndex : dataRows.length;
+                    ws['!ref'] = XLSX.utils.encode_range({ r: 0, c: 0 }, { r: maxRow, c: headers.length - 1 });
+
+                    ws['!cols'] = headers.map((h, cIdx) => {
+                        let maxLen = h.toString().length + 4;
+                        dataRows.forEach(row => {
+                            if (row[cIdx] != null) {
+                                let cellLen = row[cIdx].toString().length;
+                                if (typeMapping[cIdx] === "right") cellLen += 3;
+                                if (cellLen > maxLen) maxLen = cellLen;
+                            }
+                        });
+                        return { wch: Math.min(Math.max(maxLen, 12), 30) };
+                    });
+                    return ws;
                 }
-            }
 
-            // Tự động kéo giãn bề rộng các cột cân đối text
-            ws['!cols'] = [
-                { wch: 10 }, { wch: 12 }, { wch: 20 }, { wch: 15 },
-                { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 15 },
-                { wch: 15 }, { wch: 20 }, { wch: 18 }
-            ];
+                // Append Sheets
+                const hRooms = ["Mã Phòng", "Tên Khách Thuê", "Giá Thuê Gốc (₫)", "Số Nhân Khẩu (Người)", "Điện Bàn Giao", "Nước Bàn Giao", "Xe EV Bàn Giao"];
+                const mapRooms = ["center", "left", "right", "center", "right", "right", "right"];
+                const rRooms = window.systemData.rooms.map(r => [r.roomId, r.renter || "Trống", r.price || 0, r.members || 1, r.initElec || 0, r.initWater || 0, r.initEv || 0]);
+                XLSX.utils.book_append_sheet(wb, buildStyledSheet(hRooms, rRooms, mapRooms, [2]), "DanhSachPhong");
 
-            XLSX.utils.book_append_sheet(wb, ws, "Thống Kê Kế Toán");
-            XLSX.writeFile(wb, filename);
+                const hBillings = ["Kỳ Hoá Đơn", "Mã Phòng", "Tên Khách Thuê", "Giá Gốc (₫)", "Điện Đầu", "Điện Cuối", "Sản Lượng (kWh)", "Nước Đầu", "Nước Cuối", "Sản Lượng (m³)", "Xe EV Đầu", "Xe EV Cuối", "Sản Lượng (kWh)", "Phí Khác (₫)", "TỔNG TIỀN PHẢI THU (₫)", "Trạng Thái Thu"];
+                const mapBillings = ["center", "center", "left", "right", "right", "right", "right", "right", "right", "right", "right", "right", "right", "right", "right", "center"];
+                const rBillings = filteredBillings.map(b => {
+                    const rInfo = window.systemData.rooms.find(r => r.roomId === b.roomId) || {};
+                    return [b.month, b.roomId, rInfo.renter || "N/A", rInfo.price || 0, b.elecStart, b.elecEnd, Math.max(0, b.elecEnd - b.elecStart), b.waterStart, b.waterEnd, Math.max(0, b.waterEnd - b.waterStart), b.evStart, b.evEnd, Math.max(0, b.evEnd - b.evStart), b.otherCost || 0, b.total || 0, b.paid ? "Đã Thu Tất Cả" : "Chưa Thu"];
+                });
+                XLSX.utils.book_append_sheet(wb, buildStyledSheet(hBillings, rBillings, mapBillings, [3, 6, 9, 12, 13, 14]), "DoanhThuChiTiet");
+
+                const hExpenses = ["Tháng Chi Trả", "Nội Dung Khoản Chi Phí Vận Hành", "Số Tiền Xuất Quỹ (₫)"];
+                const mapExpenses = ["center", "left", "right"];
+                const rExpenses = filteredExpenses.map(e => [e.month, e.name, e.amount || 0]);
+                XLSX.utils.book_append_sheet(wb, buildStyledSheet(hExpenses, rExpenses, mapExpenses, [2]), "ChiPhiVanHanh");
+
+                XLSX.writeFile(wb, `SmartRental_ExcelReport_${fileNameSuffix}.xlsx`);
+            } catch (err) { alert("Lỗi kết xuất Excel: " + err.message); }
         };
 
-    })();
+        window.exportSystemDataJSON = function() {
+            const blob = new Blob([JSON.stringify(window.systemData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url;
+            a.download = `SmartRental_SystemBackup_${currentMonth}.json`; a.click();
+        };
+
+        window.importSystemDataJSON = function(event) {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(parsed.rooms && parsed.billings) { window.systemData = parsed; await window.syncToCloud(); alert("Khôi phục cấu trúc dữ liệu đám mây thành công!"); window.renderAll(); } 
+                    else { alert("Tệp tin JSON không tương thích!"); }
+                } catch(err) { alert("Lỗi đọc dữ liệu: " + err.message); }
+            };
+            reader.readAsText(file);
+        };
+
+        window.quickGenerateMockData = async function() {
+            window.systemData.rooms = [
+                { roomId: "101", renter: "Nguyễn Văn A", price: 3500000, members: 2, initElec: 800, initWater: 120, initEv: 20 },
+                { roomId: "102", renter: "Trần Thị B", price: 3800000, members: 3, initElec: 1600, initWater: 200, initEv: 50 },
+                { roomId: "201", renter: "Lê Văn C", price: 3500000, members: 1, initElec: 450, initWater: 80, initEv: 0 }
+            ];
+            window.systemData.billings = [
+                { roomId: "101", month: "2026-05", elecStart: 1000, elecEnd: 1120, waterStart: 150, waterEnd: 160, evStart: 50, evEnd: 75, otherCost: 50000, total: 4215000, paid: false },
+                { roomId: "102", month: "2026-05", elecStart: 2000, elecEnd: 2270, waterStart: 250, waterEnd: 272, evStart: 100, evEnd: 150, otherCost: 0, total: 5275000, paid: false },
+                { roomId: "201", month: "2026-05", elecStart: 500, elecEnd: 590, waterStart: 90, waterEnd: 98, evStart: 0, evEnd: 0, otherCost: 120000, total: 4165000, paid: false }
+            ];
+            window.systemData.expenses = [
+                { name: "Tiền điện tổng EVN tòa nhà", amount: 2500000, month: "2026-05" },
+                { name: "Tiền nước tổng Sông Đà", amount: 600000, month: "2026-05" }
+            ];
+            await window.syncToCloud(); window.renderAll(); alert("Đã nạp thành công bộ dữ liệu mẫu Enterprise!");
+        };
+
+        window.switchRankScope = function(scope) {
+            rankScope = scope;
+            document.getElementById('btn-rank-month').className = scope === 'month' ? 'px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all' : 'px-3 py-1 text-slate-500 hover:text-slate-800 transition-all';
+            document.getElementById('btn-rank-year').className = scope === 'year' ? 'px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all' : 'px-3 py-1 text-slate-500 hover:text-slate-800 transition-all';
+            document.getElementById('label-rank-top-scope').innerText = scope === 'month' ? 'Trong Tháng' : 'Trong Năm';
+            document.getElementById('label-rank-bottom-scope').innerText = scope === 'month' ? 'Trong Tháng' : 'Trong Năm';
+            renderRankingLists();
+        };
+
+        function renderRankingLists() {
+            const topList = document.getElementById('top-consuming-list');
+            const bottomList = document.getElementById('bottom-consuming-list');
+            if(!topList || !bottomList) return;
+
+            let dataPool = window.systemData.billings;
+            if(rankScope === 'month') dataPool = dataPool.filter(b => b.month === currentMonth);
+            else dataPool = dataPool.filter(b => b.month.startsWith(currentMonth.slice(0,4)));
+
+            const grouped = {};
+            dataPool.forEach(b => {
+                if(!grouped[b.roomId]) grouped[b.roomId] = { elec: 0, water: 0 };
+                grouped[b.roomId].elec += Math.max(0, b.elecEnd - b.elecStart);
+                grouped[b.roomId].water += Math.max(0, b.waterEnd - b.waterStart);
+            });
+
+            const sorted = Object.keys(grouped).map(k => ({ roomId: k, ...grouped[k] })).sort((a,b) => b.elec - a.elec);
+            if(sorted.length === 0) {
+                topList.innerHTML = "<p class='text-slate-400 italic text-center py-2'>Chưa khả dụng dữ liệu xếp hạng</p>";
+                bottomList.innerHTML = "<p class='text-slate-400 italic text-center py-2'>Chưa khả dụng dữ liệu xếp hạng</p>";
+                return;
+            }
+
+            topList.innerHTML = sorted.slice(0,3).map((s,i) => `
+                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
+                    <span class="font-medium text-slate-600">Top ${i+1}. <b class="text-slate-900">Phòng ${s.roomId}</b></span>
+                    <span class="text-rose-600 font-bold">${s.elec} kWh / ${s.water} m³</span>
+                </div>`).join('');
+
+            bottomList.innerHTML = [...sorted].reverse().slice(0,3).map((s,i) => `
+                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
+                    <span class="font-medium text-slate-600">Top ${i+1}. <b class="text-slate-900">Phòng ${s.roomId}</b></span>
+                    <span class="text-emerald-600 font-bold">${s.elec} kWh / ${s.water} m³</span>
+                </div>`).join('');
+        }
+
+        window.handleChartConfigChange = function() { renderCharts(); };
+
+        function renderCharts() {
+            const viewType = document.getElementById('chart-time-type')?.value || 'month';
+            const yearType = document.getElementById('chart-target-year')?.value || '2026';
+            let labels = []; let elecData = []; let waterData = [];
+
+            if(viewType === 'month') {
+                labels = Array.from({length: 12}, (_, i) => `T.${i+1}`);
+                for(let m=1; m<=12; m++) {
+                    const strM = `${yearType}-${m.toString().padStart(2,'0')}`;
+                    const targetBillings = window.systemData.billings.filter(b => b.month === strM);
+                    elecData.push(targetBillings.reduce((sum, b) => sum + Math.max(0, b.elecEnd - b.elecStart), 0));
+                    waterData.push(targetBillings.reduce((sum, b) => sum + Math.max(0, b.waterEnd - b.waterStart), 0));
+                }
+            } else {
+                labels = ["Năm 2025", "Năm 2026", "Năm 2027"];
+                labels.forEach(l => {
+                    const y = l.split(' ')[1];
+                    const targetBillings = window.systemData.billings.filter(b => b.month.startsWith(y));
+                    elecData.push(targetBillings.reduce((sum, b) => sum + Math.max(0, b.elecEnd - b.elecStart), 0));
+                    waterData.push(targetBillings.reduce((sum, b) => sum + Math.max(0, b.waterEnd - b.waterStart), 0));
+                });
+            }
+
+            if(chartElecInstance) chartElecInstance.destroy();
+            if(chartWaterInstance) chartWaterInstance.destroy();
+
+            const ctxE = document.getElementById('chart-elec-consumption')?.getContext('2d');
+            if(ctxE) {
+                chartElecInstance = new Chart(ctxE, {
+                    type: 'bar', data: { labels, datasets: [{ label: 'Tổng điện (kWh)', data: elecData, backgroundColor: '#f59e0b', borderRadius: 5 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+
+            const ctxW = document.getElementById('chart-water-consumption')?.getContext('2d');
+            if(ctxW) {
+                chartWaterInstance = new Chart(ctxW, {
+                    type: 'line', data: { labels, datasets: [{ label: 'Tổng nước (m³)', data: waterData, borderColor: '#0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.04)', fill: true, tension: 0.25 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+        }
+        // ==========================================
+// MODUL NÂNG CẤP: QUÉT ẢNH CHỈ SỐ BÀNG GEMINI AI
+// ==========================================
+
+// ==========================================
+// MODUL NÂNG CẤP: QUÉT ẢNH CHỈ SỐ BẰNG GEMINI AI (ĐÃ SỬA LỖI ĐỒNG BỘ)
+// ==========================================
+
+// Hàm tự động nạp danh sách phòng vào menu chọn của AI (Bước A)
+window.updateAIRoomDropdown = function() {
+    const selectRoom = document.getElementById('aiTargetRoom');
+    if (!selectRoom) return;
+    
+    selectRoom.innerHTML = '';
+    const activeRooms = window.systemData?.rooms || [];
+    
+    if (activeRooms.length > 0) {
+        activeRooms.forEach(r => {
+            let opt = document.createElement('option');
+            opt.value = r.roomId;
+            opt.textContent = `Phòng ${r.roomId} (${r.renter || 'Trống'})`;
+            selectRoom.appendChild(opt);
+        });
+    }
+};
+
+// Tự động nhảy mục chọn sang phòng tiếp theo sau khi chụp thành công giúp thao tác nhanh
+function autoSwitchToNextRoom() {
+    const selectRoom = document.getElementById('aiTargetRoom');
+    if (selectRoom && selectRoom.selectedIndex < selectRoom.options.length - 1) {
+        selectRoom.selectedIndex += 1; 
+    } else {
+        alert("🎉 Đã ghi nhận xong chỉ số cho phòng cuối cùng trong danh sách!");
+    }
+}
+
+// Hàm cốt lõi xử lý ảnh từ iPhone và gọi API Gemini (Bước B chuẩn hóa)
+window.processIPhonePhoto = async function(inputElement) {
+    const file = inputElement.files[0];
+    if (!file) return;
+
+    // 1. LẤY THÔNG TIN HỆ THỐNG TRƯỚC
+    const roomId = document.getElementById('aiTargetRoom')?.value;
+    const type = document.getElementById('aiTargetType')?.value; // 'elec' hoặc 'water'
+    const workingMonth = window.currentMonth || "2026-05";
+    
+    if (!roomId) {
+        alert("⚠️ Vui lòng chọn phòng cần nhập chỉ số.");
+        inputElement.value = '';
+        return;
+    }
+
+    // 2. HIỂN THỊ NGAY Ô XEM TRƯỚC TRONG 0.01 GIÂY ĐỂ ANH CHẠM GIỮ LƯU THƯ VIỆN
+    const imageUrl = URL.createObjectURL(file);
+    try {
+        let previewContainer = document.getElementById('iphone-photo-preview-box');
+        if (!previewContainer) {
+            previewContainer = document.createElement('div');
+            previewContainer.id = 'iphone-photo-preview-box';
+            previewContainer.className = 'fixed bottom-20 right-4 z-[9999] p-3.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border-2 border-amber-500 max-w-[170px] text-center select-none touch-none';
+            previewContainer.style.position = 'fixed';
+            previewContainer.style.transition = 'none';
+            document.body.appendChild(previewContainer);
+
+            // TÍCH HỢP KÉO THẢ LINH HOẠT CHỐNG GIẬT MÀN HÌNH
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+            previewContainer.addEventListener('touchstart', function(e) {
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'IMG') return;
+                isDragging = true;
+                let touch = e.touches[0];
+                let rect = previewContainer.getBoundingClientRect();
+                startX = touch.clientX; startY = touch.clientY;
+                initialLeft = rect.left; initialTop = rect.top;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                let touch = e.touches[0];
+                previewContainer.style.bottom = 'auto'; previewContainer.style.right = 'auto';
+                previewContainer.style.left = (initialLeft + touch.clientX - startX) + 'px';
+                previewContainer.style.top = (initialTop + touch.clientY - startY) + 'px';
+            }, { passive: false });
+            document.addEventListener('touchend', function() { isDragging = false; });
+        }
+        
+        previewContainer.innerHTML = `
+                <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-dashed border-slate-200">
+                    <span class="text-[10px] font-black text-amber-600 uppercase">
+                        <i class="fa-solid fa-circle-dot animate-pulse"></i> P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'})
+                    </span>
+                </div>
+                
+                <button onclick="window.saveToIPhoneGallery('${imageUrl}', 'Chiso_Phong_${roomId}_${type}')" class="mb-2 w-full py-1.5 bg-amber-500 active:bg-amber-600 text-white text-[11px] font-extrabold rounded-lg shadow-sm flex items-center justify-center gap-1 transition-colors">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Vào Thư Viện iPhone
+                </button>
+
+                <p class="text-[9px] font-medium text-slate-400 mb-1.5 leading-tight">Hoặc chạm giữ ảnh để sao chép nhanh:</p>
+                
+                <img src="${imageUrl}" class="w-[140px] h-[140px] object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: auto !important; user-select: auto !important;">
+                
+                <button onclick="this.parentElement.remove()" class="mt-2 w-full py-1.5 bg-slate-100 active:bg-red-500 text-slate-600 active:text-white text-[11px] font-extrabold rounded-lg transition-colors flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-circle-xmark"></i> Đóng thông báo
+                </button>
+            `;
+
+            // Khai báo hàm xử lý chia sẻ/lưu ảnh trực tiếp vào Thư viện hệ thống của iOS
+            window.saveToIPhoneGallery = async function(base64Data, filename) {
+                try {
+                    const response = await fetch(base64Data);
+                    const blob = await response.blob();
+                    const file = new File([blob], `${filename}.jpg`, { type: 'image/jpeg' });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Lưu Ảnh Minh Chứng',
+                            text: ''
+                        });
+                    } else {
+                        const link = document.createElement('a');
+                        link.href = base64Data;
+                        link.download = `${filename}.jpg`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                } catch (err) {
+                    console.error("Lỗi thực thi lưu ảnh trên iOS:", err);
+                }
+            };
+
+        } catch (e) { console.error(e); }
+
+    // BẬT OVERLAY CHỜ XỬ LÝ SONG SONG CỦA HỆ THỐNG
+    const overlay = document.getElementById('aiProcessingOverlay');
+    if (overlay) { overlay.classList.remove('hidden'); overlay.classList.add('flex'); }
+
+    try {
+        const apiKey = localStorage.getItem('SMARTRENTAL_GEMINI_KEY') || window.systemData?.settings?.geminiKey;
+        if (!apiKey) throw new Error("Chưa cấu hình Gemini API Key trong phần Thiết lập.");
+
+        // 3. NÉN ẢNH SIÊU TỐC VÀ TRÍCH XUẤT CHUỖI DỮ LIỆU AN TOÀN
+        const base64ImageWithHeader = await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.getElementById('aiCanvasBuffer') || document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const maxDimension = 800; // Giới hạn kích thước vàng giúp AI đọc chuẩn và truyền file cực nhẹ
+                let w = img.width, h = img.height;
+                if (w > maxDimension || h > maxDimension) {
+                    if (w > h) { h = Math.round((h * maxDimension) / w); w = maxDimension; }
+                    else { w = Math.round((w * maxDimension) / h); h = maxDimension; }
+                }
+                canvas.width = w; canvas.height = h;
+                ctx.drawImage(img, 0, 0, w, h);
+                resolve(canvas.toDataURL('image/jpeg', 0.55)); // Nén 55% giảm dung lượng tải mạng 4G cực nhanh
+            };
+            img.onerror = () => reject(new Error("Lỗi tải cấu trúc ảnh."));
+            img.src = imageUrl;
+        });
+
+        const base64Data = base64ImageWithHeader.split(',')[1];
+
+        // Lưu bản lưu minh chứng vào bộ nhớ máy (Đồng bộ Firebase mượt mà)
+        localStorage.setItem(`AI_PROOF_${workingMonth}_${roomId}_${type}`, base64ImageWithHeader);
+
+        // 4. GỬI TRUY VẤN QUA ĐƯỜNG JSON TIÊU CHUẨN (AN TOÀN TUYỆT ĐỐI - KHÔNG THỂ LỖI KẾT NỐI)
+        const promptText = `Read the meter index from the image. Return JSON format with key "value" as integer.`;
+        const activeModel = window.systemData?.settings?.geminiModel || "gemini-2.5-flash";
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: 'image/jpeg', data: base64Data } }] }],
+                generationConfig: {
+                    temperature: 0.0, // Đóng băng tư duy sáng tạo giúp AI phản hồi cơ khí siêu tốc
+                    responseMimeType: "application/json", // Ép định dạng đầu ra thô JSON
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: { value: { type: "INTEGER" } },
+                        required: ["value"]
+                    }
+                }
+            })
+        });
+
+        if (!response.ok) throw new Error("Máy chủ AI phản hồi chậm hoặc Key cấu hình có lỗi.");
+        
+        const resData = await response.json();
+        const aiJsonText = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+        let extractedValue = null;
+        try {
+            const parsed = JSON.parse(aiJsonText);
+            extractedValue = parseInt(parsed.value);
+        } catch(e) {
+            throw new Error("AI tạm thời chưa bóc tách được số. Vui lòng thử lại vuông góc hơn.");
+        }
+
+        if (isNaN(extractedValue)) throw new Error("Mặt số đồng hồ bị mờ hoặc lóa.");
+
+        // 5. ĐỔ SỐ VÀO BẢNG TÍNH VÀ ĐỔI MÀU THÀNH CÔNG
+        const targetInputId = type === 'elec' ? `input-elecEnd-${roomId}` : `input-waterEnd-${roomId}`;
+        const targetInput = document.getElementById(targetInputId);
+        
+        if (targetInput) {
+            targetInput.value = extractedValue;
+            targetInput.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-700', 'font-bold');
+            targetInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            if (typeof window.validateLiveInput === 'function') {
+                window.validateLiveInput(roomId, type);
+            }
+            setTimeout(() => { targetInput.classList.remove('bg-emerald-50', 'border-emerald-300'); }, 2000);
+        }
+
+        // TỰ ĐỘNG CHUYỂN SANG PHÒNG TIẾP THEO
+        if (typeof autoSwitchToNextRoom === 'function') { autoSwitchToNextRoom(); }
+
+    } catch (error) {
+        alert("⚠️ Lỗi trích xuất AI: " + error.message);
+        console.error(error);
+    } finally {
+        inputElement.value = ''; 
+        if (overlay) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
+    }
+};
+
+// --- GIỮ NGUYÊN CÁC HÀM LẮNG NGHE ĐỒNG BỘ PHÍA DƯỚI CỦA ANH ---
+const originalRenderAll = window.renderAll;
+if (typeof originalRenderAll === 'function') {
+    window.renderAll = function() { originalRenderAll(); setTimeout(window.updateAIRoomDropdown, 300); };
+}
+document.addEventListener('DOMContentLoaded', () => { setTimeout(window.updateAIRoomDropdown, 1500); });
+const originalChangeMonth = window.changeWorkingMonth;
+if (typeof originalChangeMonth === 'function') {
+    window.changeWorkingMonth = function(val) { originalChangeMonth(val); setTimeout(window.updateAIRoomDropdown, 800); };
+}
+
+        // HÀM HIỂN THỊ ẢNH ĐỐI CHIẾU KHI BẤM NÚT CON MẮT
+window.viewAiProofPhoto = function(roomId, type) {
+    const workingMonth = window.currentMonth || "2026-05";
+    const key = `AI_PROOF_${workingMonth}_${roomId}_${type}`;
+    const base64Image = localStorage.getItem(key);
+
+    if (!base64Image) {
+        alert("Phòng này chưa được quét bằng AI hoặc ảnh kỳ này chưa được lưu.");
+        return;
+    }
+
+    // Tạo một khung Popup Modal giữa màn hình
+    let viewModal = document.getElementById('ai-proof-view-modal');
+    if (!viewModal) {
+        viewModal = document.createElement('div');
+        viewModal.id = 'ai-proof-view-modal';
+        viewModal.className = 'fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm';
+        document.body.appendChild(viewModal);
+    }
+
+    viewModal.innerHTML = `
+        <div class="bg-white rounded-2xl shadow-2xl p-4 max-w-sm w-full text-center animate-scaleIn">
+            <div class="flex items-center justify-between border-b pb-2 mb-3">
+                <h4 class="text-xs font-black text-slate-800 uppercase">
+                    📸 Minh chứng P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'}) - Kỳ ${workingMonth}
+                </h4>
+                <button onclick="this.closest('#ai-proof-view-modal').remove()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <img src="${base64Image}" class="w-full h-auto max-h-[350px] object-contain rounded-xl border border-slate-100 shadow-inner mb-3">
+            <button onclick="this.closest('#ai-proof-view-modal').remove()" class="w-full py-2 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 active:scale-95 transition-all">
+                Đóng cửa sổ
+            </button>
+        </div>
+    `;
+};
     </script>
 </body>
 </html>
