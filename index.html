@@ -269,7 +269,7 @@
         
         <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/10 transition-all select-none transform active:scale-95">
             <i class="fa-solid fa-camera text-sm"></i> Chụp Ảnh Quét Số
-            <input type="file" id="iphone-camera-input" accept="image/*" class="hidden" onchange="processIPhonePhoto(this)">
+            <input type="file" id="iphone-camera-input" accept="image/*" capture="environment" class="hidden" onchange="processIPhonePhoto(this)">
         </label>
     </div>
 
@@ -1678,8 +1678,15 @@ window.processIPhonePhoto = async function(inputElement) {
             <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-dashed border-slate-200">
                 <span class="text-[10px] font-black text-amber-600 uppercase"><i class="fa-solid fa-circle-dot animate-pulse"></i> P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'})</span>
             </div>
-            <p class="text-[9px] font-medium text-slate-500 mb-1.5 leading-tight">Chạm giữ ảnh 1 giây để<br><span class="text-amber-600 font-bold">Lưu vào Thư Viện Máy</span></p>
-            <img src="${imageUrl}" class="w-[140px] h-[140px] object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: none;">
+            
+            <a href="${imageUrl}" download="Chiso_Phong_${roomId}_${type}.jpg" class="mb-2 w-full py-1.5 bg-amber-500 active:bg-amber-600 text-white text-[11px] font-extrabold rounded-lg shadow-sm flex items-center justify-center gap-1 transition-colors">
+                <i class="fa-solid fa-download"></i> Tải ảnh về iPhone
+            </a>
+
+            <p class="text-[9px] font-medium text-slate-500 mb-1.5 leading-tight">Hoặc chạm giữ ảnh dưới đây để<br><span class="text-amber-600 font-bold">Lưu vào Thư Viện Máy</span></p>
+            
+            <img src="${imageUrl}" class="w-[140px] h-[140px] object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: auto !important; user-select: auto !important;">
+            
             <button onclick="this.parentElement.remove()" class="mt-2 w-full py-1.5 bg-slate-100 active:bg-red-500 text-slate-600 active:text-white text-[11px] font-extrabold rounded-lg transition-colors flex items-center justify-center gap-1">
                 <i class="fa-solid fa-circle-xmark"></i> Đóng thông báo
             </button>
