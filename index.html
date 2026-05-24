@@ -1675,23 +1675,52 @@ window.processIPhonePhoto = async function(inputElement) {
         }
         
         previewContainer.innerHTML = `
-            <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-dashed border-slate-200">
-                <span class="text-[10px] font-black text-amber-600 uppercase"><i class="fa-solid fa-circle-dot animate-pulse"></i> P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'})</span>
-            </div>
-            
-            <a href="${imageUrl}" download="Chiso_Phong_${roomId}_${type}.jpg" class="mb-2 w-full py-1.5 bg-amber-500 active:bg-amber-600 text-white text-[11px] font-extrabold rounded-lg shadow-sm flex items-center justify-center gap-1 transition-colors">
-                <i class="fa-solid fa-download"></i> Tải ảnh về iPhone
-            </a>
+                <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-dashed border-slate-200">
+                    <span class="text-[10px] font-black text-amber-600 uppercase">
+                        <i class="fa-solid fa-circle-dot animate-pulse"></i> P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'})
+                    </span>
+                </div>
+                
+                <button onclick="window.saveToIPhoneGallery('${imageUrl}', 'Chiso_Phong_${roomId}_${type}')" class="mb-2 w-full py-1.5 bg-amber-500 active:bg-amber-600 text-white text-[11px] font-extrabold rounded-lg shadow-sm flex items-center justify-center gap-1 transition-colors">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Vào Thư Viện iPhone
+                </button>
 
-            <p class="text-[9px] font-medium text-slate-500 mb-1.5 leading-tight">Hoặc chạm giữ ảnh dưới đây để<br><span class="text-amber-600 font-bold">Lưu vào Thư Viện Máy</span></p>
-            
-            <img src="${imageUrl}" class="w-[140px] h-[140px] object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: auto !important; user-select: auto !important;">
-            
-            <button onclick="this.parentElement.remove()" class="mt-2 w-full py-1.5 bg-slate-100 active:bg-red-500 text-slate-600 active:text-white text-[11px] font-extrabold rounded-lg transition-colors flex items-center justify-center gap-1">
-                <i class="fa-solid fa-circle-xmark"></i> Đóng thông báo
-            </button>
-        `;
-    } catch (e) { console.error(e); }
+                <p class="text-[9px] font-medium text-slate-400 mb-1.5 leading-tight">Hoặc chạm giữ ảnh để sao chép nhanh:</p>
+                
+                <img src="${imageUrl}" class="w-[140px] h-[140px] object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: auto !important; user-select: auto !important;">
+                
+                <button onclick="this.parentElement.remove()" class="mt-2 w-full py-1.5 bg-slate-100 active:bg-red-500 text-slate-600 active:text-white text-[11px] font-extrabold rounded-lg transition-colors flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-circle-xmark"></i> Đóng thông báo
+                </button>
+            `;
+
+            // Khai báo hàm xử lý chia sẻ/lưu ảnh trực tiếp vào Thư viện hệ thống của iOS
+            window.saveToIPhoneGallery = async function(base64Data, filename) {
+                try {
+                    const response = await fetch(base64Data);
+                    const blob = await response.blob();
+                    const file = new File([blob], `${filename}.jpg`, { type: 'image/jpeg' });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Lưu Ảnh Minh Chứng',
+                            text: ''
+                        });
+                    } else {
+                        const link = document.createElement('a');
+                        link.href = base64Data;
+                        link.download = `${filename}.jpg`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                } catch (err) {
+                    console.error("Lỗi thực thi lưu ảnh trên iOS:", err);
+                }
+            };
+
+        } catch (e) { console.error(e); }
 
     // BẬT OVERLAY CHỜ XỬ LÝ SONG SONG CỦA HỆ THỐNG
     const overlay = document.getElementById('aiProcessingOverlay');
