@@ -33,6 +33,22 @@
             #invoice-print-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
             .no-print { display: none !important; }
         }
+@media (max-width: 1023px) {
+    /* Ép kích thước chữ ô nhập liệu tối thiểu 16px để iOS không tự zoom màn hình */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+    /* Ẩn thanh cuộn mặc định của iOS để giao diện sạch sẽ */
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+    /* Tạo khoảng trống ở đáy để không bị đè bởi thanh điều hướng bottom */
+    body {
+        padding-bottom: 70px;
+    }
+}
+
+        
     </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-800 min-h-screen flex flex-col antialiased">
@@ -94,31 +110,54 @@
             </div>
         </header>
 
-        <div class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 no-print">
-            
-            <aside class="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 pb-2 lg:pb-0 scrollbar-none">
-                <button onclick="window.switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
-                    <i class="fa-solid fa-grid-2 text-sm w-5 text-center"></i> Bảng Tổng Quan
-                </button>
-                <button onclick="window.switchTab('input')" id="btn-tab-input" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
-                    <i class="fa-solid fa-bolt-lightning text-sm w-5 text-center"></i> Chỉ Số Điện Nước
-                </button>
-                <button onclick="window.switchTab('expenses')" id="btn-tab-expenses" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
-                    <i class="fa-solid fa-wallet text-sm w-5 text-center"></i> Chi Phí Vận Hành
-                </button>
-                <button onclick="window.switchTab('summary')" id="btn-tab-summary" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
-                    <i class="fa-solid fa-file-invoice text-sm w-5 text-center"></i> Bảng Thu Doanh Số
-                </button>
-                <button onclick="window.switchTab('saved-invoices')" id="btn-tab-saved-invoices" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
-                    <i class="fa-solid fa-clock-history text-sm w-5 text-center"></i> Lưu Trữ Lịch Sử
-                </button>
-                <button onclick="window.switchTab('rooms')" id="btn-tab-rooms" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
-                    <i class="fa-solid fa-door-closed text-sm w-5 text-center"></i> Cơ Sở Phòng Trọ
-                </button>
-                <button onclick="window.switchTab('settings')" id="btn-tab-settings" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
-                    <i class="fa-solid fa-sliders-h text-sm w-5 text-center"></i> Thiết Lập Định Giá
-                </button>
-            </aside>
+       <div class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 no-print">
+    
+    <aside class="hidden lg:flex w-full lg:w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r border-slate-100 pr-2 scrollbar-none">
+        <button onclick="window.switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
+            <i class="fa-solid fa-grid-2 text-sm w-5 text-center"></i> Bảng Tổng Quan
+        </button>
+        <button onclick="window.switchTab('input')" id="btn-tab-input" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+            <i class="fa-solid fa-bolt-lightning text-sm w-5 text-center"></i> Chỉ Số Điện Nước
+        </button>
+        <button onclick="window.switchTab('expenses')" id="btn-tab-expenses" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+            <i class="fa-solid fa-wallet text-sm w-5 text-center"></i> Chi Phí Vận Hành
+        </button>
+        <button onclick="window.switchTab('summary')" id="btn-tab-summary" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+            <i class="fa-solid fa-file-invoice text-sm w-5 text-center"></i> Bảng Thu Doanh Số
+        </button>
+        <button onclick="window.switchTab('saved-invoices')" id="btn-tab-saved-invoices" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+            <i class="fa-solid fa-clock-history text-sm w-5 text-center"></i> Lưu Trữ Lịch Sử
+        </button>
+        <button onclick="window.switchTab('rooms')" id="btn-tab-rooms" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+            <i class="fa-solid fa-door-closed text-sm w-5 text-center"></i> Cơ Sở Phòng Trọ
+        </button>
+        <button onclick="window.switchTab('settings')" id="btn-tab-settings" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+            <i class="fa-solid fa-sliders-h text-sm w-5 text-center"></i> Thiết Lập Định Giá
+        </button>
+    </aside>
+
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-800 z-[100] px-2 py-1.5 flex items-center justify-around shadow-xl no-print">
+        <button onclick="window.switchTab('dashboard')" class="mobile-tab-btn flex flex-col items-center justify-center py-1 text-indigo-400 w-14" id="m-btn-tab-dashboard">
+            <i class="fa-solid fa-grid-2 text-base"></i>
+            <span class="text-[9px] mt-1 font-semibold">Tổng quan</span>
+        </button>
+        <button onclick="window.switchTab('input')" class="mobile-tab-btn flex flex-col items-center justify-center py-1 text-slate-400 active:text-indigo-400 w-14" id="m-btn-tab-input">
+            <i class="fa-solid fa-bolt-lightning text-base"></i>
+            <span class="text-[9px] mt-1 font-semibold">Ghi số</span>
+        </button>
+        <button onclick="window.switchTab('summary')" class="mobile-tab-btn flex flex-col items-center justify-center py-1 text-slate-400 active:text-indigo-400 w-14" id="m-btn-tab-summary">
+            <i class="fa-solid fa-file-invoice text-base"></i>
+            <span class="text-[9px] mt-1 font-semibold">Phiếu thu</span>
+        </button>
+        <button onclick="window.switchTab('rooms')" class="mobile-tab-btn flex flex-col items-center justify-center py-1 text-slate-400 active:text-indigo-400 w-14" id="m-btn-tab-rooms">
+            <i class="fa-solid fa-door-closed text-base"></i>
+            <span class="text-[9px] mt-1 font-semibold">Cơ sở</span>
+        </button>
+        <button onclick="window.switchTab('settings')" class="mobile-tab-btn flex flex-col items-center justify-center py-1 text-slate-400 active:text-indigo-400 w-14" id="m-btn-tab-settings">
+            <i class="fa-solid fa-sliders-h text-base"></i>
+            <span class="text-[9px] mt-1 font-semibold">Cấu hình</span>
+        </button>
+    </div>
 
             <main class="flex-grow bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 flex flex-col justify-start min-h-[620px] transition-all duration-300">
                 
@@ -744,6 +783,16 @@
             document.getElementById(`btn-tab-${tabId}`)?.classList.remove('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
             document.getElementById(`btn-tab-${tabId}`)?.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-md', 'shadow-indigo-600/10');
             if(tabId === 'dashboard') renderCharts();
+           // --- CẬP NHẬT TRẠNG THÁI ACTIVE CHO MENU BOTTOM IPHONE ---
+document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+    btn.classList.remove('text-indigo-400');
+    btn.classList.add('text-slate-400');
+});
+const activeMobileBtn = document.getElementById(`m-btn-tab-${tabId}`);
+if (activeMobileBtn) {
+    activeMobileBtn.classList.remove('text-slate-400');
+    activeMobileBtn.classList.add('text-indigo-400'); 
+    }
         };
 
         window.validateLiveInput = function(roomId, type) {
