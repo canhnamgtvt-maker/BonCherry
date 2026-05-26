@@ -336,24 +336,27 @@
 </div>
                         
                     </div>
-                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px] tracking-wider">
-                                    <th class="p-3.5 w-20">Mã Phòng</th>
-                                    <th class="p-3.5 bg-slate-100/50 w-14 text-center">N.Khẩu</th>
-                                    <th class="p-3.5 bg-amber-50/40 w-24 border-l border-slate-200">Điện Đầu Kỳ</th>
-                                    <th class="p-3.5 bg-amber-50/70 w-24">Điện Cuối Kỳ</th>
-                                    <th class="p-3.5 bg-sky-50/40 w-24 border-l border-slate-200">Nước Đầu Kỳ</th>
-                                    <th class="p-3.5 bg-sky-50/70 w-24">Nước Cuối Kỳ</th>
-                                    <th class="p-3.5 bg-teal-50/40 w-24 border-l border-slate-200">Xe EV Đầu</th>
-                                    <th class="p-3.5 bg-teal-50/70 w-24">Xe EV Cuối</th>
-                                    <th class="p-3.5 bg-rose-50/30 text-rose-800 w-32 font-bold border-l border-slate-200 text-right">Phụ thu khác (₫)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="batch-input-tbody" class="divide-y divide-slate-150 text-slate-700"></tbody>
-                        </table>
-                    </div>
+                    <div class="hidden md:block overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
+    <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
+        <thead>
+            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                <th class="p-3 w-20 text-center">Mã Phòng</th>
+                <th class="p-3 w-40">Khách Thuê</th>
+                <th class="p-3 bg-amber-50/50 text-amber-800 text-center w-28">Điện Đầu Kỳ</th>
+                <th class="p-3 bg-amber-50 text-amber-900 text-center w-36">Điện Cuối Kỳ *</th>
+                <th class="p-3 bg-sky-50/50 text-sky-800 text-center w-28">Nước Đầu Kỳ</th>
+                <th class="p-3 bg-sky-50 text-sky-900 text-center w-36">Nước Cuối Kỳ *</th>
+                <th class="p-3 text-center w-40">Phụ Thu Phát Sinh (₫)</th>
+                <th class="p-3 text-center w-24">Trạng Thái</th>
+            </tr>
+        </thead>
+        <tbody id="batch-input-tbody" class="divide-y divide-slate-100">
+            </tbody>
+    </table>
+</div>
+
+<div class="block md:hidden space-y-4" id="batch-input-mobile-cards">
+    </div>
                     <div class="flex justify-end pt-2">
                         <button onclick="window.saveBatchInput()" class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 flex items-center gap-2 transition-all">
                             <i class="fa-solid fa-calculator-combined text-xs"></i> Tính Toán Chi Phí & Đồng Bộ Hệ Thống
@@ -390,25 +393,30 @@
                         <h2 class="text-lg font-bold text-slate-900">Bảng Tổng Hợp Doanh Thu & Phiếu Thu Tiền Nhà</h2>
                         <p class="text-xs text-slate-400 font-medium">Báo cáo trực quan doanh thu tổng thể các danh mục</p>
                     </div>
-                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="w-full text-left text-xs min-w-[1000px] border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-500 tracking-wider">
-                                    <th class="p-3.5 w-16 text-center">Phòng</th>
-                                    <th class="p-3.5 text-right">Tiền Gốc</th>
-                                    <th class="p-3.5 text-right">Tiền Điện</th>
-                                    <th class="p-3.5 text-right">Tiền Nước</th>
-                                    <th class="p-3.5 text-right">Sạc Xe EV</th>
-                                    <th class="p-3.5 text-right">Thu Rác</th>
-                                    <th class="p-3.5 text-right text-rose-600">Phí Khác</th>
-                                    <th class="p-3.5 text-right font-bold text-indigo-900 bg-indigo-50/40">TỔNG HÓA ĐƠN</th>
-                                    <th class="p-3.5 text-center w-32">Trạng Thái Thu</th>
-                                    <th class="p-3.5 text-center w-36">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="summary-table-tbody" class="divide-y divide-slate-150 text-slate-700"></tbody>
-                        </table>
-                    </div>
+                    <div class="hidden md:block overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white mb-6">
+    <table class="w-full text-left text-xs border-collapse min-w-[1200px]">
+        <thead>
+            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                <th class="p-3 text-center w-16">Phòng</th>
+                <th class="p-3 w-32">Khách Thuê</th>
+                <th class="p-3 text-right w-24">Tiền Phòng</th>
+                <th class="p-3 text-right w-28">Tiền Điện</th>
+                <th class="p-3 text-right w-28">Tiền Nước</th>
+                <th class="p-3 text-right w-24">Dịch Vụ Fix</th>
+                <th class="p-3 text-right w-24">Phụ Thu</th>
+                <th class="p-3 bg-indigo-50 text-indigo-900 text-right font-black w-32">Tổng Tiền Thu</th>
+                <th class="p-3 text-center w-24">Hóa Đơn</th>
+                <th class="p-3 text-center w-36">Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody id="summary-tbody" class="divide-y divide-slate-100">
+            </tbody>
+    </table>
+</div>
+
+<div class="block md:hidden space-y-4 mb-6" id="summary-mobile-cards">
+    </div>
+                    
                 </div>
 
                 <div id="tab-saved-invoices" class="tab-content hidden flex flex-col gap-4">
@@ -442,8 +450,8 @@
                             <i class="fa-solid fa-plus-circle"></i> Thêm Phòng Mới
                         </button>
                     </div>
-                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5"></div>
-                </div>
+                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-4">
+    </div>
 
                 <div id="tab-settings" class="tab-content hidden flex flex-col gap-6">
                     <div>
@@ -836,82 +844,144 @@ if (activeMobileBtn) {
             }
         }
 
-        function renderBatchInputTable() {
+        // --- ĐOẠN MÃ THAY THẾ MỚI ĐÃ TỐI ƯU CHO IPHONE & IPAD ---
+function renderBatchInput() {
     const tbody = document.getElementById('batch-input-tbody');
-    if(!tbody) return;
-    tbody.innerHTML = window.systemData.rooms.map(room => {
-        // Tìm hóa đơn hiện tại của tháng đang chọn
-        const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
-        
-        // ---- BỔ SUNG LOGIC TỰ ĐỘNG TÍNH TOÁN VÀ KẾ THỪA TỪ THÁNG TRƯỚC ----
-        const [year, month] = currentMonth.split('-').map(Number);
-        
-        let prevMonthStr = "";
-        if (month === 1) {
-            prevMonthStr = `${year - 1}-12`;
-        } else {
-            prevMonthStr = `${year}-${String(month - 1).padStart(2, '0')}`;
+    const mobileContainer = document.getElementById('batch-input-mobile-cards'); // Khối chứa trên iPhone
+    
+    if (tbody) tbody.innerHTML = '';
+    if (mobileContainer) mobileContainer.innerHTML = '';
+
+    rooms.forEach(room => {
+        // --- GIỮ NGUYÊN: Xử lý hiển thị Bảng trên PC / iPad ---
+        if (tbody) {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition-colors";
+            
+            const isCompleted = room.newElec !== null && room.newWater !== null;
+            const statusBadge = isCompleted 
+                ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Đã Ghi</span>`
+                : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200/60"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Chờ Số</span>`;
+
+            tr.innerHTML = `
+                <td class="p-3 text-center font-bold text-slate-700">${room.id}</td>
+                <td class="p-3 font-semibold text-slate-800">${room.tenantName || 'Trống'}</td>
+                <td class="p-3 bg-amber-50/30 text-center font-medium text-slate-500">${room.oldElec}</td>
+                <td class="p-3 bg-amber-50">
+                    <div class="flex items-center gap-1">
+                        <input type="number" value="${room.newElec !== null ? room.newElec : ''}" 
+                            onchange="updateReading('${room.id}', 'newElec', this.value)"
+                            class="w-full bg-white border border-amber-200 rounded-lg p-1.5 text-center font-bold text-slate-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                        <button onclick="triggerIPhoneCamera('${room.id}', 'elec')" class="p-1.5 text-amber-600 hover:bg-amber-100 rounded-lg" title="Chụp ảnh quét số">
+                            <i class="fa-solid fa-camera"></i>
+                        </button>
+                    </div>
+                </td>
+                <td class="p-3 bg-sky-50/30 text-center font-medium text-slate-500">${room.oldWater}</td>
+                <td class="p-3 bg-sky-50">
+                    <div class="flex items-center gap-1">
+                        <input type="number" value="${room.newWater !== null ? room.newWater : ''}" 
+                            onchange="updateReading('${room.id}', 'newWater', this.value)"
+                            class="w-full bg-white border border-sky-200 rounded-lg p-1.5 text-center font-bold text-slate-800 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                        <button onclick="triggerIPhoneCamera('${room.id}', 'water')" class="p-1.5 text-sky-600 hover:bg-sky-100 rounded-lg" title="Chụp ảnh quét số">
+                            <i class="fa-solid fa-camera"></i>
+                        </button>
+                    </div>
+                </td>
+                <td class="p-3">
+                    <input type="number" value="${room.otherFee || 0}" 
+                        onchange="updateReading('${room.id}', 'otherFee', this.value)"
+                        class="w-full bg-white border border-slate-200 rounded-lg p-1.5 text-right font-medium text-slate-800 outline-none focus:border-indigo-500">
+                </td>
+                <td class="p-3 text-center">${statusBadge}</td>
+            `;
+            tbody.appendChild(tr);
         }
 
-        const prevBilling = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === prevMonthStr);
+        // --- BỔ SUNG MỚI: Xử lý hiển thị dạng THẺ CARD trên màn hình iPhone ---
+        if (mobileContainer) {
+            const isCompleted = room.newElec !== null && room.newWater !== null;
+            const statusCardColor = isCompleted ? 'border-emerald-200 bg-emerald-50/10' : 'border-slate-200 bg-white';
+            const statusBadgeMobile = isCompleted
+                ? `<span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">Đã ghi số</span>`
+                : `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md animate-pulse">Chờ số</span>`;
 
-        const eStart = billing.elecStart !== undefined ? billing.elecStart : ((prevBilling && prevBilling.elecEnd !== undefined) ? prevBilling.elecEnd : (room.initElec || 0));
-        const eEnd = billing.elecEnd || 0;
-        
-        const wStart = billing.waterStart !== undefined ? billing.waterStart : ((prevBilling && prevBilling.waterEnd !== undefined) ? prevBilling.waterEnd : (room.initWater || 0));
-        const wEnd = billing.waterEnd || 0;
-        
-        const evStart = billing.evStart !== undefined ? billing.evStart : ((prevBilling && prevBilling.evEnd !== undefined) ? prevBilling.evEnd : (room.initEv || 0));
-        const evEnd = billing.evEnd || 0;
-        // ---- KẾT THÚC LOGIC BỔ SUNG ----
+            const cardHtml = `
+                <div class="rounded-2xl p-4 border shadow-sm space-y-3.5 transition-all ${statusCardColor}">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-extrabold text-slate-900 bg-slate-100 px-3 py-1 rounded-xl">Phòng ${room.id}</span>
+                            ${statusBadgeMobile}
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider">Khách thuê</span>
+                            <span class="text-xs font-bold text-slate-700">${room.tenantName || 'Trống'}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 bg-amber-50/40 p-3 rounded-xl border border-amber-100/50">
+                        <div>
+                            <label class="block text-[10px] font-bold text-amber-700 uppercase mb-1">Điện Đầu kỳ</label>
+                            <input type="number" readonly value="${room.oldElec}" class="w-full bg-slate-100/80 border border-slate-200/40 rounded-lg p-2 text-xs font-bold text-slate-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-amber-800 uppercase mb-1">Điện Cuối kỳ *</label>
+                            <div class="relative flex items-center">
+                                <input type="number" inputmode="numeric" pattern="[0-9]*" 
+                                    value="${room.newElec !== null ? room.newElec : ''}" 
+                                    onchange="updateReading('${room.id}', 'newElec', this.value)"
+                                    placeholder="Nhập số" 
+                                    class="w-full bg-white border border-amber-300 rounded-lg p-2 pr-8 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-amber-500/20">
+                                <button onclick="triggerIPhoneCamera('${room.id}', 'elec')" class="absolute right-1 text-amber-600 p-1.5 active:scale-95">
+                                    <i class="fa-solid fa-camera text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-        // Kiểm tra xem phòng này có ảnh quét AI trong máy không để làm sáng nút mắt
-        const workingMonth = window.currentMonth || "2026-05";
-        const hasElecProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`) ? 'text-amber-500 scale-110 font-bold' : 'text-slate-300 hover:text-amber-500';
-        const hasWaterProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`) ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300 hover:text-sky-500';
+                    <div class="grid grid-cols-2 gap-3 bg-sky-50/40 p-3 rounded-xl border border-sky-100/50">
+                        <div>
+                            <label class="block text-[10px] font-bold text-sky-700 uppercase mb-1">Nước Đầu kỳ</label>
+                            <input type="number" readonly value="${room.oldWater}" class="w-full bg-slate-100/80 border border-slate-200/40 rounded-lg p-2 text-xs font-bold text-slate-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-sky-800 uppercase mb-1">Nước Cuối kỳ *</label>
+                            <div class="relative flex items-center">
+                                <input type="number" inputmode="numeric" pattern="[0-9]*" 
+                                    value="${room.newWater !== null ? room.newWater : ''}" 
+                                    onchange="updateReading('${room.id}', 'newWater', this.value)"
+                                    placeholder="Nhập số" 
+                                    class="w-full bg-white border border-sky-300 rounded-lg p-2 pr-8 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-sky-500/20">
+                                <button onclick="triggerIPhoneCamera('${room.id}', 'water')" class="absolute right-1 text-sky-600 p-1.5 active:scale-95">
+                                    <i class="fa-solid fa-camera text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-        return `<tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">${room.members || 1}</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-${room.roomId}" value="${eStart}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${eEnd < eStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
-                    <input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto('${room.roomId}', 'elec')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasElecProof}" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">Phụ thu phát sinh trong kỳ (₫)</label>
+                        <input type="number" inputmode="numeric" pattern="[0-9]*" 
+                            value="${room.otherFee || 0}" 
+                            onchange="updateReading('${room.id}', 'otherFee', this.value)"
+                            class="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs font-bold text-slate-800 outline-none focus:border-indigo-500">
+                    </div>
                 </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${wEnd < wStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
-                    <input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto('${room.roomId}', 'water')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasWaterProof}" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-${room.roomId}" value="${evStart}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${evEnd < evStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr>`;
-    }).join('');
+            `;
+            mobileContainer.insertAdjacentHTML('beforeend', cardHtml);
+        }
+    });
+}
+
+// Hàm bổ trợ giúp kích hoạt nút chụp ảnh quét AI Camera trên di động
+function triggerIPhoneCamera(roomId, type) {
+    // Gọi trực tiếp cơ chế kích hoạt camera ẩn của anh
+    currentRoomId = roomId;
+    currentScanType = type;
+    const cameraInput = document.getElementById('iphone-camera-input');
+    if (cameraInput) {
+        cameraInput.click();
+    }
 }
 
         window.saveBatchInput = async function() {
