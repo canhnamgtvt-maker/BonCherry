@@ -857,7 +857,6 @@ function renderBatchInputTable() {
     if (!window.systemData.rooms || window.systemData.rooms.length === 0) return;
 
     window.systemData.rooms.forEach(room => {
-        // Tìm kiếm bản ghi hóa đơn hiện tại của tháng này để lấy số liệu cũ/mới nếu có
         const billing = window.systemData.billings.find(b => b && b.roomId === room.roomId && b.month === currentMonth) || {};
         
         const elecStart = billing.elecStart !== undefined ? billing.elecStart : (room.elecStart || 0);
@@ -866,29 +865,48 @@ function renderBatchInputTable() {
         const waterEnd = billing.waterEnd !== undefined ? billing.waterEnd : '';
         const otherCost = billing.otherCost !== undefined ? billing.otherCost : 0;
         
+        // Khôi phục link ảnh minh chứng từ dữ liệu gốc của anh
+        const elecProof = billing.elecProof || '';
+        const waterProof = billing.waterProof || '';
+        
         const isCompleted = elecEnd !== '' && waterEnd !== '';
         const statusBadge = isCompleted 
             ? `<span class="bg-emerald-50 text-emerald-600 px-2 py-1 rounded border border-emerald-100 text-[10px] font-bold">Đã Ghi</span>`
             : `<span class="bg-amber-50 text-amber-600 px-2 py-1 rounded border border-amber-100 text-[10px] font-bold animate-pulse">Chờ Số</span>`;
 
-        // 1. KẾT XUẤT CHO BẢNG MÁY TÍNH VÀ IPAD NGANG
+        // Lấy mã HTML nút ảnh minh chứng (nếu có ảnh thì hiện nút xanh, chưa có hiện nút xám)
+        const elecProofBtn = elecProof 
+            ? `<button onclick="viewProof('${room.roomId}', 'elec', '${elecProof}')" class="text-emerald-500 hover:text-emerald-700 ml-1" title="Xem ảnh điện"><i class="fa-solid fa-image-check"></i></button>`
+            : `<span class="text-slate-300 ml-1"><i class="fa-solid fa-image"></i></span>`;
+            
+        const waterProofBtn = waterProof 
+            ? `<button onclick="viewProof('${room.roomId}', 'water', '${waterProof}')" class="text-emerald-500 hover:text-emerald-700 ml-1" title="Xem ảnh nước"><i class="fa-solid fa-image-check"></i></button>`
+            : `<span class="text-slate-300 ml-1"><i class="fa-solid fa-image"></i></span>`;
+
+        // 1. KẾT XUẤT CHO BẢNG MÁY TÍNH VÀ IPAD
         if (tbody) {
             const tr = document.createElement('tr');
             tr.className = "hover:bg-slate-50/50 transition-all";
             tr.innerHTML = `
                 <td class="p-3 font-bold text-slate-900 text-center">P.${room.roomId}</td>
-                <td class="p-3 font-medium">${room.renter || 'Trống'}</td>
+                <td class="p-3 font-semibold text-slate-700">${room.renter || 'Trống'}</td>
                 <td class="p-3 text-center text-slate-400 font-semibold bg-amber-50/20">
                     <input type="number" id="input-elecStart-${room.roomId}" value="${elecStart}" class="w-full bg-transparent text-center border-none outline-none font-bold text-slate-400" readonly>
                 </td>
                 <td class="p-3 bg-amber-50">
-                    <input type="number" id="input-elecEnd-${room.roomId}" value="${elecEnd}" placeholder="Nhập số cuối" class="w-full bg-white border border-amber-200 rounded-lg p-1.5 text-center font-black text-slate-800 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all">
+                    <div class="flex items-center justify-between gap-1">
+                        <input type="number" id="input-elecEnd-${room.roomId}" value="${elecEnd}" placeholder="Nhập số cuối" class="w-full bg-white border border-amber-200 rounded-lg p-1.5 text-center font-black text-slate-800 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all">
+                        ${elecProofBtn}
+                    </div>
                 </td>
                 <td class="p-3 text-center text-slate-400 font-semibold bg-sky-50/20">
                     <input type="number" id="input-waterStart-${room.roomId}" value="${waterStart}" class="w-full bg-transparent text-center border-none outline-none font-bold text-slate-400" readonly>
                 </td>
                 <td class="p-3 bg-sky-50">
-                    <input type="number" id="input-waterEnd-${room.roomId}" value="${waterEnd}" placeholder="Nhập số cuối" class="w-full bg-white border border-sky-200 rounded-lg p-1.5 text-center font-black text-slate-800 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all">
+                    <div class="flex items-center justify-between gap-1">
+                        <input type="number" id="input-waterEnd-${room.roomId}" value="${waterEnd}" placeholder="Nhập số cuối" class="w-full bg-white border border-sky-200 rounded-lg p-1.5 text-center font-black text-slate-800 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all">
+                        ${waterProofBtn}
+                    </div>
                 </td>
                 <td class="p-3">
                     <input type="number" id="input-otherCost-${room.roomId}" value="${otherCost}" class="w-full bg-white border border-slate-200 rounded-lg p-1.5 text-right font-bold text-slate-700 outline-none focus:border-indigo-500">
@@ -898,7 +916,7 @@ function renderBatchInputTable() {
             tbody.appendChild(tr);
         }
 
-        // 2. KẾT XUẤT CHO CARD DI ĐỘNG IPHONE (ĐỒNG BỘ ID GỐC CHUẨN XÁC VỚI HÀM LƯU)
+        // 2. KẾT XUẤT CHO CARD DI ĐỘNG IPHONE (ĐỒNG BỘ 100% ID GỐC)
         if (mobileContainer) {
             const statusCardColor = isCompleted ? 'border-emerald-200 bg-emerald-50/10' : 'border-slate-200 bg-white';
             const statusBadgeMobile = isCompleted
@@ -925,11 +943,14 @@ function renderBatchInputTable() {
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-amber-800 uppercase mb-1">Điện Cuối kỳ *</label>
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" 
-                                value="${elecEnd}" 
-                                onchange="document.getElementById('input-elecEnd-${room.roomId}').value = this.value"
-                                placeholder="Nhập số" 
-                                class="w-full bg-white border border-amber-300 rounded-lg p-2 text-xs font-bold text-slate-800 outline-none focus:border-amber-500">
+                            <div class="flex items-center gap-1 bg-white border border-amber-300 rounded-lg p-1">
+                                <input type="number" inputmode="numeric" pattern="[0-9]*" 
+                                    value="${elecEnd}" 
+                                    onchange="document.getElementById('input-elecEnd-${room.roomId}').value = this.value"
+                                    placeholder="Nhập số" 
+                                    class="w-full bg-transparent border-none text-xs font-bold text-slate-800 outline-none">
+                                ${elecProofBtn}
+                            </div>
                         </div>
                     </div>
 
@@ -940,11 +961,14 @@ function renderBatchInputTable() {
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-sky-800 uppercase mb-1">Nước Cuối kỳ *</label>
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" 
-                                value="${waterEnd}" 
-                                onchange="document.getElementById('input-waterEnd-${room.roomId}').value = this.value"
-                                placeholder="Nhập số" 
-                                class="w-full bg-white border border-sky-300 rounded-lg p-2 text-xs font-bold text-slate-800 outline-none focus:border-sky-500">
+                            <div class="flex items-center gap-1 bg-white border border-sky-300 rounded-lg p-1">
+                                <input type="number" inputmode="numeric" pattern="[0-9]*" 
+                                    value="${waterEnd}" 
+                                    onchange="document.getElementById('input-waterEnd-${room.roomId}').value = this.value"
+                                    placeholder="Nhập số" 
+                                    class="w-full bg-transparent border-none text-xs font-bold text-slate-800 outline-none">
+                                ${waterProofBtn}
+                            </div>
                         </div>
                     </div>
 
@@ -961,7 +985,6 @@ function renderBatchInputTable() {
         }
     });
 }
-// Đổi tên tham chiếu hàm để đồng bộ hệ thống của anh
 window.renderBatchInputTable = renderBatchInputTable;
 
         window.saveBatchInput = async function() {
