@@ -1,50 +1,290 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- saved from url=(0065)file:///C:/Users/ADMIN/Downloads/SmartRental_iOS_Optimized_1.html -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+    <script src="./SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp_files/saved_resource"></script>
+    <link rel="stylesheet" href="./SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp_files/all.min.css">
+    <script src="./SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp_files/chart.js.download"></script>
+    <script src="./SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp_files/xlsx.bundle.js.download"></script>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp_files/css2" rel="stylesheet">
     
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
     <style>
+        /* ===== BASE ===== */
         body { 
             font-family: 'Inter', sans-serif; 
             letter-spacing: -0.01em;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior: none;
         }
         h1, h2, h3, h4, h5, h6, .heading-font {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        /* Custom thanh cuộn tinh tế kiểu hiện đại */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
+
+        /* ===== iOS SAFE AREA ===== */
+        #app-header {
+            padding-top: env(safe-area-inset-top);
+            padding-left: max(env(safe-area-inset-left), 1rem);
+            padding-right: max(env(safe-area-inset-right), 1rem);
+        }
+        #bottom-nav {
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        #main-content-area {
+            padding-bottom: calc(72px + env(safe-area-inset-bottom));
+        }
+
+        /* ===== BOTTOM NAV (mobile only) ===== */
+        #bottom-nav {
+            display: none;
+        }
+        @media (max-width: 1023px) {
+            #bottom-nav { display: flex; }
+            #sidebar-desktop { display: none !important; }
+            #main-content-area { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+        }
+        @media (min-width: 1024px) {
+            #bottom-nav { display: none !important; }
+            #sidebar-desktop { display: flex !important; }
+        }
+
+        /* ===== TOUCH TARGETS ===== */
+        button, input[type="button"], input[type="submit"], label[for], select {
+            min-height: 44px;
+        }
+        .touch-target { min-height: 44px; min-width: 44px; }
+
+        /* ===== MOBILE TABLE CARDS ===== */
+        @media (max-width: 767px) {
+            .mobile-card-table thead { display: none; }
+            .mobile-card-table tbody tr {
+                display: block;
+                background: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 16px;
+                margin-bottom: 12px;
+                padding: 12px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            }
+            .mobile-card-table tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 7px 4px;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 13px;
+            }
+            .mobile-card-table tbody td:last-child { border-bottom: none; }
+            .mobile-card-table tbody td::before {
+                content: attr(data-label);
+                font-size: 11px;
+                font-weight: 700;
+                color: #94a3b8;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                min-width: 90px;
+                flex-shrink: 0;
+            }
+        }
+
+        /* ===== BATCH INPUT TABLE - mobile card layout ===== */
+        @media (max-width: 767px) {
+            .batch-input-card { display: block !important; }
+            .batch-input-row-desktop { display: none !important; }
+        }
+        @media (min-width: 768px) {
+            .batch-input-card { display: none !important; }
+        }
+
+        /* ===== MODAL FULLSCREEN ON MOBILE ===== */
+        @media (max-width: 639px) {
+            #roomModal > div,
+            #expenseModal > div,
+            #invoiceDetailModal > div {
+                max-width: 100% !important;
+                width: 100% !important;
+                border-radius: 20px 20px 0 0 !important;
+                margin-top: auto !important;
+                max-height: 92vh !important;
+            }
+            #roomModal,
+            #expenseModal,
+            #invoiceDetailModal {
+                align-items: flex-end !important;
+            }
+        }
+
+        /* ===== INPUT FIELDS iOS ===== */
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="password"],
+        input[type="month"],
+        select, textarea {
+            font-size: 16px !important; /* Prevents iOS zoom */
+        }
+
+        /* ===== ACTIVE STATES ===== */
+        button:active { opacity: 0.75; transform: scale(0.97); transition: all 0.1s; }
+        .tab-btn-bottom:active { opacity: 0.7; }
+
+        /* ===== HEADER COMPACT ON MOBILE ===== */
+        @media (max-width: 639px) {
+            #header-title-full { display: none; }
+            #header-title-short { display: block !important; }
+            #header-month-label { display: none; }
+        }
+
+        /* ===== DASHBOARD METRICS - 2 cols on mobile ===== */
+        @media (max-width: 639px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            .metrics-grid > div { padding: 12px !important; }
+        }
+
+        /* ===== CHARTS - taller on mobile ===== */
+        @media (max-width: 639px) {
+            .chart-container { height: 200px !important; }
+            .charts-grid { grid-template-columns: 1fr !important; }
+        }
+
+        /* ===== SUMMARY TABLE MOBILE ===== */
+        @media (max-width: 767px) {
+            #summary-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        }
+
+        /* ===== SCROLLABLE AREAS ===== */
+        .ios-scroll {
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
+        }
+
+        /* ===== SIDEBAR SCROLL ===== */
+        #sidebar-desktop {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ===== ANIMATION ===== */
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .tab-content:not(.hidden) { animation: slideUp 0.2s ease-out; }
+
+        /* ===== BOTTOM NAV ITEM ===== */
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            flex: 1;
+            padding: 8px 4px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            transition: color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 56px;
+        }
+        .bottom-nav-item.active { color: #6366f1; }
+        .bottom-nav-item i { font-size: 18px; }
+        .bottom-nav-item span { font-size: 9px; line-height: 1.2; text-align: center; }
+
+        /* ===== FLOATING AI BUTTON on mobile ===== */
+        @media (max-width: 1023px) {
+            .ai-scan-section { 
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background: white;
+                border-radius: 0 0 16px 16px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                margin: -1rem -1rem 1rem;
+                padding: 12px 16px;
+            }
+        }
+
         @media print {
             body * { visibility: hidden; }
             #invoice-print-area, #invoice-print-area * { visibility: visible; }
             #invoice-print-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
             .no-print { display: none !important; }
+            #bottom-nav { display: none !important; }
         }
+
+        /* Batch input cards for mobile */
+        .batch-room-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .batch-field-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .batch-field-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+        .batch-field-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .batch-field-input:focus {
+            border-color: #6366f1;
+            background: white;
+        }
+        .batch-field-elec { border-color: #fbbf24 !important; }
+        .batch-field-water { border-color: #38bdf8 !important; }
+        .batch-field-ev { border-color: #34d399 !important; }
+        .batch-field-error { border-color: #f87171 !important; background: #fff1f2; color: #dc2626; }
     </style>
-</head>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.inset-y-0{top:0px;bottom:0px}.bottom-0{bottom:0px}.left-0{left:0px}.right-0{right:0px}.top-0{top:0px}.z-50{z-index:50}.z-\[150\]{z-index:150}.z-\[160\]{z-index:160}.z-\[200\]{z-index:200}.z-\[250\]{z-index:250}.z-\[300\]{z-index:300}.z-\[999\]{z-index:999}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-2\.5{margin-bottom:0.625rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mr-1\.5{margin-right:0.375rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-1{height:0.25rem}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-14{height:3.5rem}.h-2{height:0.5rem}.h-2\.5{height:0.625rem}.h-52{height:13rem}.h-9{height:2.25rem}.max-h-\[90vh\]{max-height:90vh}.min-h-0{min-height:0px}.min-h-screen{min-height:100vh}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-14{width:3.5rem}.w-16{width:4rem}.w-2{width:0.5rem}.w-2\.5{width:0.625rem}.w-20{width:5rem}.w-24{width:6rem}.w-28{width:7rem}.w-32{width:8rem}.w-36{width:9rem}.w-48{width:12rem}.w-5{width:1.25rem}.w-64{width:16rem}.w-9{width:2.25rem}.w-full{width:100%}.min-w-\[400px\]{min-width:400px}.min-w-\[900px\]{min-width:900px}.max-w-2xl{max-width:42rem}.max-w-7xl{max-width:80rem}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.flex-grow{flex-grow:1}.border-collapse{border-collapse:collapse}.translate-y-full{--tw-translate-y:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-100{--tw-scale-x:1;--tw-scale-y:1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}@keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-3\.5{gap:0.875rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-x-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.375rem * var(--tw-space-x-reverse));margin-left:calc(0.375rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.625rem * var(--tw-space-x-reverse));margin-left:calc(0.625rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-0 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0px * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0px * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-amber-100\/40 > :not([hidden]) ~ :not([hidden]){border-color:rgb(254 243 199 / 0.4)}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.rounded-t-2xl{border-top-left-radius:1rem;border-top-right-radius:1rem}.border{border-width:1px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-none{border-style:none}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-amber-200\/50{border-color:rgb(253 230 138 / 0.5)}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.border-emerald-100{--tw-border-opacity:1;border-color:rgb(209 250 229 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-100\/80{border-color:rgb(241 245 249 / 0.8)}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-200\/60{border-color:rgb(226 232 240 / 0.6)}.border-slate-200\/80{border-color:rgb(226 232 240 / 0.8)}.border-slate-50{--tw-border-opacity:1;border-color:rgb(248 250 252 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-slate-700\/50{border-color:rgb(51 65 85 / 0.5)}.border-slate-700\/60{border-color:rgb(51 65 85 / 0.6)}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-t-transparent{border-top-color:transparent}.bg-\[\#f8fafc\]{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-50\/10{background-color:rgb(255 251 235 / 0.1)}.bg-amber-50\/40{background-color:rgb(255 251 235 / 0.4)}.bg-amber-50\/50{background-color:rgb(255 251 235 / 0.5)}.bg-amber-50\/70{background-color:rgb(255 251 235 / 0.7)}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-50\/30{background-color:rgb(236 253 245 / 0.3)}.bg-emerald-50\/40{background-color:rgb(236 253 245 / 0.4)}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50\/40{background-color:rgb(238 242 255 / 0.4)}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-rose-50{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.bg-rose-50\/30{background-color:rgb(255 241 242 / 0.3)}.bg-rose-600{--tw-bg-opacity:1;background-color:rgb(225 29 72 / var(--tw-bg-opacity, 1))}.bg-sky-50\/40{background-color:rgb(240 249 255 / 0.4)}.bg-sky-50\/70{background-color:rgb(240 249 255 / 0.7)}.bg-sky-500{--tw-bg-opacity:1;background-color:rgb(14 165 233 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-100\/50{background-color:rgb(241 245 249 / 0.5)}.bg-slate-200\/70{background-color:rgb(226 232 240 / 0.7)}.bg-slate-300{--tw-bg-opacity:1;background-color:rgb(203 213 225 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-50\/30{background-color:rgb(248 250 252 / 0.3)}.bg-slate-50\/40{background-color:rgb(248 250 252 / 0.4)}.bg-slate-50\/50{background-color:rgb(248 250 252 / 0.5)}.bg-slate-50\/80{background-color:rgb(248 250 252 / 0.8)}.bg-slate-700{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-800\/80{background-color:rgb(30 41 59 / 0.8)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/50{background-color:rgb(15 23 42 / 0.5)}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-slate-900\/70{background-color:rgb(15 23 42 / 0.7)}.bg-teal-50\/40{background-color:rgb(240 253 250 / 0.4)}.bg-teal-50\/70{background-color:rgb(240 253 250 / 0.7)}.bg-teal-600{--tw-bg-opacity:1;background-color:rgb(13 148 136 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/95{background-color:rgb(255 255 255 / 0.95)}.bg-gradient-to-b{background-image:linear-gradient(to bottom, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-amber-500{--tw-gradient-from:#f59e0b var(--tw-gradient-from-position);--tw-gradient-to:rgb(245 158 11 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-50\/50{--tw-gradient-from:rgb(238 242 255 / 0.5) var(--tw-gradient-from-position);--tw-gradient-to:rgb(238 242 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-600{--tw-gradient-from:#4f46e5 var(--tw-gradient-from-position);--tw-gradient-to:rgb(79 70 229 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-white{--tw-gradient-from:#fff var(--tw-gradient-from-position);--tw-gradient-to:rgb(255 255 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-orange-500{--tw-gradient-to:#f97316 var(--tw-gradient-to-position)}.to-slate-300{--tw-gradient-to:#cbd5e1 var(--tw-gradient-to-position)}.to-violet-500{--tw-gradient-to:#8b5cf6 var(--tw-gradient-to-position)}.to-violet-600{--tw-gradient-to:#7c3aed var(--tw-gradient-to-position)}.to-white{--tw-gradient-to:#fff var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.p-0\.5{padding:0.125rem}.p-1{padding:0.25rem}.p-1\.5{padding:0.375rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-2{padding-bottom:0.5rem}.pb-2\.5{padding-bottom:0.625rem}.pb-3{padding-bottom:0.75rem}.pb-3\.5{padding-bottom:0.875rem}.pb-4{padding-bottom:1rem}.pb-6{padding-bottom:1.5rem}.pl-10{padding-left:2.5rem}.pl-3\.5{padding-left:0.875rem}.pr-4{padding-right:1rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.pt-6{padding-top:1.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252 / var(--tw-text-opacity, 1))}.text-indigo-300\/80{color:rgb(165 180 252 / 0.8)}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-indigo-900{--tw-text-opacity:1;color:rgb(49 46 129 / var(--tw-text-opacity, 1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.text-rose-800{--tw-text-opacity:1;color:rgb(159 18 57 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_-4px_24px_rgba\(0\2c 0\2c 0\2c 0\.08\)\]{--tw-shadow:0 -4px 24px rgba(0,0,0,0.08);--tw-shadow-colored:0 -4px 24px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-emerald-600\/10{--tw-shadow-color:rgb(5 150 105 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-200{--tw-shadow-color:#c7d2fe;--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-500\/20{--tw-shadow-color:rgb(99 102 241 / 0.2);--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-600\/10{--tw-shadow-color:rgb(79 70 229 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-orange-500\/10{--tw-shadow-color:rgb(249 115 22 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-teal-600\/10{--tw-shadow-color:rgb(13 148 136 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.outline-none{outline:2px solid transparent;outline-offset:2px}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-200{transition-duration:200ms}.duration-300{transition-duration:300ms}.hover\:bg-amber-600:hover{--tw-bg-opacity:1;background-color:rgb(217 119 6 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-500\/20:hover{background-color:rgb(244 63 94 / 0.2)}.hover\:bg-rose-700:hover{--tw-bg-opacity:1;background-color:rgb(190 18 60 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.hover\:bg-teal-700:hover{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.hover\:from-amber-600:hover{--tw-gradient-from:#d97706 var(--tw-gradient-from-position);--tw-gradient-to:rgb(217 119 6 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.hover\:from-indigo-700:hover{--tw-gradient-from:#4338ca var(--tw-gradient-from-position);--tw-gradient-to:rgb(67 56 202 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.hover\:to-orange-600:hover{--tw-gradient-to:#ea580c var(--tw-gradient-to-position)}.hover\:to-violet-700:hover{--tw-gradient-to:#6d28d9 var(--tw-gradient-to-position)}.hover\:text-rose-400:hover{--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.focus\:border-amber-500:focus{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.focus\:border-indigo-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.focus\:bg-white:focus{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.focus\:ring-0:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-4:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-amber-500\/10:focus{--tw-ring-color:rgb(245 158 11 / 0.1)}.focus\:ring-indigo-500\/10:focus{--tw-ring-color:rgb(99 102 241 / 0.1)}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width: 640px){.sm\:block{display:block}.sm\:hidden{display:none}.sm\:h-10{height:2.5rem}.sm\:h-60{height:15rem}.sm\:w-10{width:2.5rem}.sm\:w-auto{width:auto}.sm\:max-w-md{max-width:28rem}.sm\:flex-none{flex:none}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-center{align-items:center}.sm\:gap-2\.5{gap:0.625rem}.sm\:gap-4{gap:1rem}.sm\:gap-6{gap:1.5rem}.sm\:space-x-3 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.75rem * var(--tw-space-x-reverse));margin-left:calc(0.75rem * calc(1 - var(--tw-space-x-reverse)))}.sm\:p-2{padding:0.5rem}.sm\:p-6{padding:1.5rem}.sm\:px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-2{padding-top:0.5rem;padding-bottom:0.5rem}.sm\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}.sm\:text-\[10px\]{font-size:10px}.sm\:text-base{font-size:1rem;line-height:1.5rem}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:items-center{align-items:center}}@media (min-width: 1024px){.lg\:flex{display:flex}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:flex-row{flex-direction:row}.lg\:px-8{padding-left:2rem;padding-right:2rem}}</style></head>
 <body class="bg-[#f8fafc] text-slate-800 min-h-screen flex flex-col antialiased">
 
-    <div id="loginModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-100/80 transform scale-100 transition-all">
+    <div id="loginModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300" style="display: flex;">
+        <div class="bg-white w-full max-w-sm sm:max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-100/80 transform scale-100 transition-all">
             <div class="p-8 pb-6 text-center bg-gradient-to-b from-indigo-50/50 to-white border-b border-slate-50">
                 <div class="w-14 h-14 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-200">
                     <i class="fa-solid fa-layer-group text-white text-xl"></i>
                 </div>
                 <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">SmartRental Enterprise</h2>
-                <p class="text-slate-500 text-xs mt-1.5 font-medium">Nền tảng Quản trị & Điện toán Chỉ số Năng lượng</p>
+                <p class="text-slate-500 text-xs mt-1.5 font-medium">Nền tảng Quản trị &amp; Điện toán Chỉ số Năng lượng</p>
             </div>
             <div class="p-8 pt-6">
                 <div class="space-y-4">
@@ -71,56 +311,105 @@
     </div>
 
     <div id="mainApp" class="hidden flex flex-col flex-grow">
-        <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 no-print border-b border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-                <div class="flex items-center space-x-3.5">
-                    <div class="bg-gradient-to-tr from-indigo-500 to-violet-500 p-2 rounded-xl shadow-md shadow-indigo-500/20">
-                        <i class="fa-solid fa-chart-network text-lg text-white"></i>
+        <header id="app-header" class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 no-print border-b border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between" style="min-height:56px;">
+                <div class="flex items-center space-x-2.5">
+                    <div class="bg-gradient-to-tr from-indigo-500 to-violet-500 p-1.5 sm:p-2 rounded-xl shadow-md shadow-indigo-500/20 flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10">
+                        <i class="fa-solid fa-chart-network text-base text-white"></i>
                     </div>
                     <div>
-                        <span class="font-extrabold text-base tracking-tight block bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">SmartRental Analytics</span>
-                        <span class="text-[10px] text-indigo-300/80 font-bold tracking-wider uppercase block">v3.0 Enterprise Edition</span>
+                        <span id="header-title-full" class="font-extrabold text-sm sm:text-base tracking-tight block bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">SmartRental Analytics</span>
+                        <span id="header-title-short" class="hidden font-extrabold text-sm tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">SmartRental</span>
+                        <span class="text-[9px] sm:text-[10px] text-indigo-300/80 font-bold tracking-wider uppercase block">v3.0 Enterprise</span>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-2 bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60 backdrop-blur-sm shadow-inner">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-300">Kỳ đối soát:</span>
-                        <input type="month" id="global-month" onchange="window.changeWorkingMonth(this.value)" class="bg-transparent text-white font-bold outline-none border-none text-xs cursor-pointer focus:ring-0">
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <div class="flex items-center space-x-1.5 bg-slate-800/80 px-2.5 sm:px-3.5 py-2 rounded-xl border border-slate-700/60 backdrop-blur-sm shadow-inner">
+                        <span id="header-month-label" class="text-[10px] font-bold uppercase tracking-wider text-indigo-300 hidden sm:block">Kỳ:</span>
+                        <i class="fa-solid fa-calendar-day text-indigo-300 text-xs sm:hidden"></i>
+                        <input type="month" id="global-month" onchange="window.changeWorkingMonth(this.value)" class="bg-transparent text-white font-bold outline-none border-none text-xs cursor-pointer focus:ring-0 min-h-0" style="min-height:0;font-size:13px;">
                     </div>
-                    <button onclick="window.handleLogout()" class="w-9 h-9 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-xl transition-all border border-slate-700/50 flex items-center justify-center" title="Đăng xuất">
+                    <button onclick="window.handleLogout()" class="w-10 h-10 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-xl transition-all border border-slate-700/50 flex items-center justify-center touch-target" title="Đăng xuất">
                         <i class="fa-solid fa-power-off text-sm"></i>
                     </button>
                 </div>
             </div>
         </header>
 
-        <div class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 no-print">
+        <!-- BOTTOM NAV (mobile/tablet) -->
+        <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200/80 no-print shadow-[0_-4px_24px_rgba(0,0,0,0.08)]" style="display:none;">
+            <div class="flex">
+                <button onclick="window.switchTab(&#39;dashboard&#39;)" id="btn-bnav-dashboard" class="bottom-nav-item active">
+                    <i class="fa-solid fa-grid-2"></i>
+                    <span>Tổng Quan</span>
+                </button>
+                <button onclick="window.switchTab(&#39;input&#39;)" id="btn-bnav-input" class="bottom-nav-item">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                    <span>Điện Nước</span>
+                </button>
+                <button onclick="window.switchTab(&#39;summary&#39;)" id="btn-bnav-summary" class="bottom-nav-item">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Doanh Thu</span>
+                </button>
+                <button onclick="window.switchTab(&#39;rooms&#39;)" id="btn-bnav-rooms" class="bottom-nav-item">
+                    <i class="fa-solid fa-door-closed"></i>
+                    <span>Phòng Trọ</span>
+                </button>
+                <button onclick="window.showMoreMenu()" id="btn-bnav-more" class="bottom-nav-item">
+                    <i class="fa-solid fa-ellipsis"></i>
+                    <span>Khác</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- MORE MENU (slides up on mobile) -->
+        <div id="more-menu-overlay" class="fixed inset-0 z-[150] hidden" onclick="window.hideMoreMenu()"></div>
+        <div id="more-menu" class="fixed bottom-0 left-0 right-0 z-[160] bg-white rounded-t-2xl shadow-2xl transform translate-y-full transition-transform duration-300 no-print" style="padding-bottom: env(safe-area-inset-bottom);">
+            <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto mt-3 mb-2"></div>
+            <div class="px-4 pb-4 space-y-2">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2 py-1">Chức năng khác</p>
+                <button onclick="window.switchTab(&#39;expenses&#39;); window.hideMoreMenu();" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100 text-left transition-all">
+                    <div class="w-9 h-9 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center"><i class="fa-solid fa-wallet text-sm"></i></div>
+                    <div><p class="font-bold text-slate-800 text-sm">Chi Phí Vận Hành</p><p class="text-xs text-slate-400">Hạch toán phí tháng</p></div>
+                </button>
+                <button onclick="window.switchTab(&#39;saved-invoices&#39;); window.hideMoreMenu();" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100 text-left transition-all">
+                    <div class="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center"><i class="fa-solid fa-clock-history text-sm"></i></div>
+                    <div><p class="font-bold text-slate-800 text-sm">Lưu Trữ Lịch Sử</p><p class="text-xs text-slate-400">Hóa đơn đã chốt</p></div>
+                </button>
+                <button onclick="window.switchTab(&#39;settings&#39;); window.hideMoreMenu();" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100 text-left transition-all">
+                    <div class="w-9 h-9 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center"><i class="fa-solid fa-sliders-h text-sm"></i></div>
+                    <div><p class="font-bold text-slate-800 text-sm">Thiết Lập Định Giá</p><p class="text-xs text-slate-400">Cấu hình biểu phí &amp; AI</p></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="main-content-area" class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col lg:flex-row gap-4 sm:gap-6 no-print">
             
-            <aside class="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 pb-2 lg:pb-0 scrollbar-none">
-                <button onclick="window.switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
+            <aside id="sidebar-desktop" class="hidden lg:flex w-64 shrink-0 flex-col gap-1">
+                <button onclick="window.switchTab(&#39;dashboard&#39;)" id="btn-tab-dashboard" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
                     <i class="fa-solid fa-grid-2 text-sm w-5 text-center"></i> Bảng Tổng Quan
                 </button>
-                <button onclick="window.switchTab('input')" id="btn-tab-input" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab(&#39;input&#39;)" id="btn-tab-input" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-bolt-lightning text-sm w-5 text-center"></i> Chỉ Số Điện Nước
                 </button>
-                <button onclick="window.switchTab('expenses')" id="btn-tab-expenses" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab(&#39;expenses&#39;)" id="btn-tab-expenses" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-wallet text-sm w-5 text-center"></i> Chi Phí Vận Hành
                 </button>
-                <button onclick="window.switchTab('summary')" id="btn-tab-summary" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab(&#39;summary&#39;)" id="btn-tab-summary" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-file-invoice text-sm w-5 text-center"></i> Bảng Thu Doanh Số
                 </button>
-                <button onclick="window.switchTab('saved-invoices')" id="btn-tab-saved-invoices" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab(&#39;saved-invoices&#39;)" id="btn-tab-saved-invoices" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-clock-history text-sm w-5 text-center"></i> Lưu Trữ Lịch Sử
                 </button>
-                <button onclick="window.switchTab('rooms')" id="btn-tab-rooms" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab(&#39;rooms&#39;)" id="btn-tab-rooms" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-door-closed text-sm w-5 text-center"></i> Cơ Sở Phòng Trọ
                 </button>
-                <button onclick="window.switchTab('settings')" id="btn-tab-settings" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab(&#39;settings&#39;)" id="btn-tab-settings" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-sliders-h text-sm w-5 text-center"></i> Thiết Lập Định Giá
                 </button>
             </aside>
 
-            <main class="flex-grow bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 flex flex-col justify-start min-h-[620px] transition-all duration-300">
+            <main class="flex-grow bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6 flex flex-col justify-start transition-all duration-300 ios-scroll">
                 
                 <div id="tab-dashboard" class="tab-content flex flex-col gap-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-3">
@@ -128,12 +417,12 @@
                             <h2 class="text-xl font-bold tracking-tight text-slate-900">Báo Cáo Phân Tích Thực Thể</h2>
                             <p class="text-slate-400 text-xs font-medium">Chu kỳ tài chính hoạt động: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                         </div>
-                        <button onclick="window.quickGenerateMockData()" class="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl border border-slate-200 flex items-center gap-2 transition-all shadow-sm">
+                        <button onclick="window.quickGenerateMockData()" class="px-3.5 py-2.5 sm:py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl border border-slate-200 flex items-center gap-2 transition-all shadow-sm touch-target">
                             <i class="fa-solid fa-database text-indigo-500"></i> Khởi tạo dữ liệu kiểm thử nhanh
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="metrics-grid grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         <div class="bg-slate-50/50 border border-slate-200/60 p-4 rounded-xl flex items-center gap-3.5 shadow-sm">
                             <div class="w-11 h-11 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg shadow-sm"><i class="fa-solid fa-hand-holding-dollar"></i></div>
                             <div>
@@ -185,14 +474,14 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="charts-grid grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         <div class="p-4 border border-slate-100 bg-slate-50/40 rounded-xl">
                             <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Tổng số điện tiêu thụ (kWh)</h3>
-                            <div class="relative h-60 flex justify-center items-center"><canvas id="chart-elec-consumption"></canvas></div>
+                            <div class="chart-container relative h-52 sm:h-60 flex justify-center items-center"><canvas id="chart-elec-consumption"></canvas></div>
                         </div>
                         <div class="p-4 border border-slate-100 bg-slate-50/40 rounded-xl">
                             <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-500"></span>Tổng số nước sinh hoạt (m³)</h3>
-                            <div class="relative h-60 flex justify-center items-center"><canvas id="chart-water-consumption"></canvas></div>
+                            <div class="chart-container relative h-52 sm:h-60 flex justify-center items-center"><canvas id="chart-water-consumption"></canvas></div>
                         </div>
                     </div>
 
@@ -203,8 +492,8 @@
                                 <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Bảng Đối Soát Cường Độ Năng Lượng</span>
                             </div>
                             <div class="flex bg-slate-200/70 p-0.5 rounded-lg text-[10px] font-bold">
-                                <button id="btn-rank-month" onclick="window.switchRankScope('month')" class="px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all">Trong tháng hiện tại</button>
-                                <button id="btn-rank-year" onclick="window.switchRankScope('year')" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-all">Lũy kế cả năm</button>
+                                <button id="btn-rank-month" onclick="window.switchRankScope(&#39;month&#39;)" class="px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all">Trong tháng hiện tại</button>
+                                <button id="btn-rank-year" onclick="window.switchRankScope(&#39;year&#39;)" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-all">Lũy kế cả năm</button>
                             </div>
                         </div>
                         
@@ -232,13 +521,13 @@
                             <span id="unpaid-debt-count" class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">0 phòng nợ</span>
                         </h3>
                         <div class="overflow-x-auto rounded-lg border border-amber-200/50 bg-white">
-                            <table class="w-full text-left text-xs min-w-[500px] border-collapse">
+                            <table class="mobile-card-table w-full text-left text-xs min-w-[400px] border-collapse">
                                 <thead>
                                     <tr class="border-b border-amber-200 text-amber-900 font-bold bg-amber-50/50">
                                         <th class="p-3">Chu kỳ kỳ thu</th>
                                         <th class="p-3">Mã Phòng</th>
-                                        <th class="p-3">Khách Thuê Hiện Tại</th>
-                                        <th class="p-3 text-right">Tổng Tiền Hóa Đơn</th>
+                                        <th class="p-3">Khách Thuê</th>
+                                        <th class="p-3 text-right">Tổng Tiền</th>
                                         <th class="p-3 text-center">Trạng Thái</th>
                                     </tr>
                                 </thead>
@@ -250,7 +539,7 @@
 
                 <div id="tab-input" class="tab-content hidden flex flex-col gap-4">
                     <div class="border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-900">Khấu Trừ & Ghi Nhận Chỉ Số Định Kỳ</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Khấu Trừ &amp; Ghi Nhận Chỉ Số Định Kỳ</h2>
                         <p class="text-xs text-slate-400 font-medium">Chu kỳ hạch toán áp dụng: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                     </div>
                     <div class="bg-indigo-50/40 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 font-medium flex items-center gap-2.5 shadow-sm">
@@ -297,8 +586,9 @@
 </div>
                         
                     </div>
-                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
+                    <div id="batch-input-mobile" class="sm:hidden space-y-0"></div>
+                    <div id="batch-input-desktop" class="hidden sm:block overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
+                        <table class="w-full text-left text-xs border-collapse min-w-[900px]">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px] tracking-wider">
                                     <th class="p-3.5 w-20">Mã Phòng</th>
@@ -315,9 +605,9 @@
                             <tbody id="batch-input-tbody" class="divide-y divide-slate-150 text-slate-700"></tbody>
                         </table>
                     </div>
-                    <div class="flex justify-end pt-2">
-                        <button onclick="window.saveBatchInput()" class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-calculator-combined text-xs"></i> Tính Toán Chi Phí & Đồng Bộ Hệ Thống
+                    <div class="flex justify-end pt-3">
+                        <button onclick="window.saveBatchInput()" class="w-full sm:w-auto px-5 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-sm rounded-2xl shadow-md shadow-indigo-600/10 flex items-center justify-center gap-2 transition-all touch-target">
+                            <i class="fa-solid fa-calculator-combined"></i> Tính Toán &amp; Đồng Bộ Hệ Thống
                         </button>
                     </div>
                 </div>
@@ -328,12 +618,12 @@
                             <h2 class="text-lg font-bold text-slate-900">Hạch Toán Chi Phí Đầu Vào Tòa Nhà</h2>
                             <p class="text-xs text-slate-400 font-medium">Các khoản phí vận hành phát sinh trong tháng <span class="working-month-txt font-bold text-indigo-600"></span></p>
                         </div>
-                        <button onclick="window.openExpenseModal()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
-                            <i class="fa-solid fa-plus-circle"></i> Thêm Khoản Chi Mới
+                        <button onclick="window.openExpenseModal()" class="px-4 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all touch-target">
+                            <i class="fa-solid fa-plus-circle"></i> Thêm Chi Mới
                         </button>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="w-full text-left text-xs border-collapse">
+                        <table class="mobile-card-table w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-500 tracking-wider">
                                     <th class="p-3.5">Tên Khoản Mục Chi Phí Vận Hành</th>
@@ -348,11 +638,11 @@
 
                 <div id="tab-summary" class="tab-content hidden flex flex-col gap-4">
                     <div class="border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-900">Bảng Tổng Hợp Doanh Thu & Phiếu Thu Tiền Nhà</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Bảng Tổng Hợp Doanh Thu &amp; Phiếu Thu Tiền Nhà</h2>
                         <p class="text-xs text-slate-400 font-medium">Báo cáo trực quan doanh thu tổng thể các danh mục</p>
                     </div>
-                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="w-full text-left text-xs min-w-[1000px] border-collapse">
+                    <div id="summary-table-wrapper" class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white -webkit-overflow-scrolling-touch">
+                        <table class="w-full text-left text-xs min-w-[900px] border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-500 tracking-wider">
                                     <th class="p-3.5 w-16 text-center">Phòng</th>
@@ -378,7 +668,7 @@
                         <p class="text-xs text-slate-400 font-medium">Đóng băng dữ liệu đối soát tài chính khi khách đã trả hoặc đổi phòng.</p>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="w-full text-left text-xs border-collapse">
+                        <table class="mobile-card-table w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-500 tracking-wider">
                                     <th class="p-3.5">Chu Kỳ Đối Soát Chốt</th>
@@ -399,11 +689,11 @@
                             <h2 class="text-lg font-bold text-slate-900">Quản Lý Thực Thể Cơ Sở Phòng Trọ</h2>
                             <p class="text-xs text-slate-400 font-medium">Thiết lập thông tin khách thuê và chỉ số cấu hình bàn giao gốc</p>
                         </div>
-                        <button onclick="window.openRoomModal()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
+                        <button onclick="window.openRoomModal()" class="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all touch-target">
                             <i class="fa-solid fa-plus-circle"></i> Thêm Phòng Mới
                         </button>
                     </div>
-                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5"></div>
+                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"></div>
                 </div>
 
                 <div id="tab-settings" class="tab-content hidden flex flex-col gap-6">
@@ -411,14 +701,14 @@
                         <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2.5 text-emerald-700 flex items-center gap-1.5"><i class="fa-solid fa-file-excel text-xl"></i>Kết Xuất Báo Cáo Tài Chính Thẩm Mỹ Cao Cấp</h2>
                         <div class="bg-emerald-50/30 border border-emerald-100 p-5 rounded-2xl mt-4">
                             <p class="text-xs text-emerald-800 font-medium mb-4">Hệ thống hỗ trợ xuất xuất dữ liệu tự động ra bảng tính Excel (.xlsx). Các tệp tin được **định cấu trúc ô dữ liệu nghiêm ngặt, tự động đổ màu tiêu đề, căn biên kẻ bảng kế toán và chốt dòng tổng cộng** đồng bộ.</p>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                                <button onclick="window.exportToExcel('month')" class="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/10 transition-all flex items-center justify-center gap-2">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <button onclick="window.exportToExcel(&#39;month&#39;)" class="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/10 transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-calendar-day text-sm"></i> Xuất Excel Tháng (<span class="working-month-txt"></span>)
                                 </button>
-                                <button onclick="window.exportToExcel('year')" class="px-4 py-3.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-md shadow-teal-600/10 transition-all flex items-center justify-center gap-2">
+                                <button onclick="window.exportToExcel(&#39;year&#39;)" class="px-4 py-3.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-md shadow-teal-600/10 transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-calendar-days text-sm"></i> Xuất Excel Cả Năm Hiện Tại
                                 </button>
-                                <button onclick="window.exportToExcel('all')" class="px-4 py-3.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                                <button onclick="window.exportToExcel(&#39;all&#39;)" class="px-4 py-3.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-server text-sm"></i> Xuất Toàn Bộ Hệ Thống Dữ Liệu
                                 </button>
                             </div>
@@ -427,7 +717,7 @@
 
                     <div>
                         <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2.5">Đơn Giá Cấu Hình Dịch Vụ Mặc Định</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mt-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Đơn Giá Điện Tiêu Thụ (VND/kWh)</label>
                                 <input type="number" id="setting-elec-flat" class="w-full px-3.5 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
@@ -512,7 +802,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-slate-500 mb-1.5">Mã Số Phòng *</label>
-                        <input type="text" id="modal-room-id" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium text-sm">
+                        <input type="text" id="modal-room-id" class="w-full px-3 py-3 border rounded-xl outline-none focus:border-indigo-500 bg-slate-50/30 font-medium" style="font-size:16px;">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-500 mb-1.5">Tên Khách Hàng Thuê *</label>
@@ -581,10 +871,10 @@
                 <button onclick="window.closeInvoiceDetailModal()" class="text-slate-400 hover:text-slate-600 transition-all"><i class="fa-solid fa-times text-lg"></i></button>
             </div>
             <div id="invoice-modal-content" class="overflow-y-auto flex-grow p-1"></div>
-            <div class="flex justify-end gap-2.5 mt-6 pt-4 border-t border-slate-100">
-                <button onclick="window.closeInvoiceDetailModal()" class="px-4 py-2.5 bg-slate-100 text-slate-500 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all">Đóng cửa sổ</button>
-                <button onclick="window.triggerPrintInvoice()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-indigo-600/10 transition-all">
-                    <i class="fa-solid fa-print"></i> Thực Hiện In / Xuất PDF File
+            <div class="flex justify-end gap-2 sm:gap-2.5 mt-4 pt-4 border-t border-slate-100">
+                <button onclick="window.closeInvoiceDetailModal()" class="flex-1 sm:flex-none px-4 py-3.5 bg-slate-100 text-slate-500 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all touch-target">Đóng</button>
+                <button onclick="window.triggerPrintInvoice()" class="flex-1 sm:flex-none px-5 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/10 transition-all touch-target">
+                    <i class="fa-solid fa-print"></i> In / Xuất PDF
                 </button>
             </div>
         </div>
@@ -645,6 +935,7 @@
         const auth = getAuth(app);
 
         let currentMonth = "2026-05";
+        window.currentMonth = currentMonth;
         let rankScope = "month";
         window.systemData = { 
             rooms: [], 
@@ -708,6 +999,7 @@
         window.renderAll = function() {
             renderDashboardMetrics();
             renderBatchInputTable();
+            renderMobileBatchCards();
             renderExpenseTable();
             renderSummaryReport();
             renderSavedInvoicesTable();
@@ -730,6 +1022,7 @@
 
         window.changeWorkingMonth = function(val) {
             currentMonth = val;
+            window.currentMonth = val;
             updateMonthText();
             window.renderAll();
         };
@@ -737,13 +1030,32 @@
         window.switchTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
+            // Desktop sidebar
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-md', 'shadow-indigo-600/10');
                 btn.classList.add('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
             });
             document.getElementById(`btn-tab-${tabId}`)?.classList.remove('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
             document.getElementById(`btn-tab-${tabId}`)?.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-md', 'shadow-indigo-600/10');
+            // Bottom nav
+            const bnavMap = { 'dashboard': 'dashboard', 'input': 'input', 'summary': 'summary', 'rooms': 'rooms', 'expenses': 'more', 'saved-invoices': 'more', 'settings': 'more' };
+            document.querySelectorAll('.bottom-nav-item').forEach(btn => btn.classList.remove('active'));
+            const activeBnavId = `btn-bnav-${bnavMap[tabId] || tabId}`;
+            document.getElementById(activeBnavId)?.classList.add('active');
+            // Scroll top on mobile
+            if (window.innerWidth < 1024) { window.scrollTo({ top: 0, behavior: 'smooth' }); }
             if(tabId === 'dashboard') renderCharts();
+            // Re-render mobile batch cards if switching to input
+            if(tabId === 'input') { setTimeout(renderMobileBatchCards, 100); }
+        };
+
+        window.showMoreMenu = function() {
+            document.getElementById('more-menu-overlay').classList.remove('hidden');
+            document.getElementById('more-menu').style.transform = 'translateY(0)';
+        };
+        window.hideMoreMenu = function() {
+            document.getElementById('more-menu-overlay').classList.add('hidden');
+            document.getElementById('more-menu').style.transform = 'translateY(100%)';
         };
 
         window.validateLiveInput = function(roomId, type) {
@@ -777,17 +1089,18 @@
                 tbody.innerHTML = unpaidList.map(b => {
                     const roomObj = window.systemData.rooms.find(r => r.roomId === b.roomId) || {};
                     return `<tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-all">
-                        <td class="p-3 font-medium text-slate-400">${b.month}</td>
-                        <td class="p-3 font-bold text-slate-900">Phòng ${b.roomId}</td>
-                        <td class="p-3 font-medium">${roomObj.renter || 'N/A'}</td>
-                        <td class="p-3 text-right font-bold text-rose-600">${b.total.toLocaleString()} ₫</td>
-                        <td class="p-3 text-center"><span class="bg-rose-50 text-rose-600 px-2.5 py-1 rounded-lg text-[10px] font-bold border border-rose-100">Chưa đối soát</span></td>
+                        <td class="p-3 font-medium text-slate-400" data-label="Chu kỳ">${b.month}</td>
+                        <td class="p-3 font-bold text-slate-900" data-label="Phòng">Phòng ${b.roomId}</td>
+                        <td class="p-3 font-medium" data-label="Khách thuê">${roomObj.renter || 'N/A'}</td>
+                        <td class="p-3 text-right font-bold text-rose-600" data-label="Tổng tiền">${b.total.toLocaleString()} ₫</td>
+                        <td class="p-3 text-center" data-label="Trạng thái"><span class="bg-rose-50 text-rose-600 px-2.5 py-1 rounded-lg text-[10px] font-bold border border-rose-100">Chưa đối soát</span></td>
                     </tr>`;
                 }).join('');
             }
         }
 
         function renderBatchInputTable() {
+    renderMobileBatchCards();
     const tbody = document.getElementById('batch-input-tbody');
     if(!tbody) return;
     tbody.innerHTML = window.systemData.rooms.map(room => {
@@ -865,6 +1178,85 @@
     }).join('');
 }
 
+        // MOBILE CARD RENDERER for batch input
+        function renderMobileBatchCards() {
+            const mobileDiv = document.getElementById('batch-input-mobile');
+            if (!mobileDiv) return;
+            mobileDiv.innerHTML = window.systemData.rooms.map(room => {
+                const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
+                const [year, month] = currentMonth.split('-').map(Number);
+                let prevMonthStr = month === 1 ? `${year-1}-12` : `${year}-${String(month-1).padStart(2,'0')}`;
+                const prevBilling = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === prevMonthStr);
+                const eStart = billing.elecStart !== undefined ? billing.elecStart : ((prevBilling?.elecEnd !== undefined) ? prevBilling.elecEnd : (room.initElec || 0));
+                const eEnd = billing.elecEnd || 0;
+                const wStart = billing.waterStart !== undefined ? billing.waterStart : ((prevBilling?.waterEnd !== undefined) ? prevBilling.waterEnd : (room.initWater || 0));
+                const wEnd = billing.waterEnd || 0;
+                const evStart = billing.evStart !== undefined ? billing.evStart : ((prevBilling?.evEnd !== undefined) ? prevBilling.evEnd : (room.initEv || 0));
+                const evEnd = billing.evEnd || 0;
+                const workingMonth = window.currentMonth || currentMonth;
+                const hasElecProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`);
+                const hasWaterProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`);
+                return `<div class="batch-room-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-9 h-9 bg-indigo-50 text-indigo-700 rounded-xl flex items-center justify-center font-extrabold text-sm">P</div>
+                            <div>
+                                <div class="font-extrabold text-slate-900 text-base">Phòng ${room.roomId}</div>
+                                <div class="text-xs text-slate-400 font-medium">${room.members || 1} nhân khẩu · ${(room.price||0).toLocaleString()}₫</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            ${hasElecProof ? `<button onclick="window.viewAiProofPhoto('${room.roomId}','elec')" class="w-8 h-8 bg-amber-50 text-amber-500 rounded-lg flex items-center justify-center touch-target"><i class="fa-solid fa-eye text-xs"></i></button>` : ''}
+                            ${hasWaterProof ? `<button onclick="window.viewAiProofPhoto('${room.roomId}','water')" class="w-8 h-8 bg-sky-50 text-sky-500 rounded-lg flex items-center justify-center touch-target"><i class="fa-solid fa-eye text-xs"></i></button>` : ''}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <div class="batch-field-label text-amber-600">⚡ Điện đầu kỳ</div>
+                            <input type="number" id="mc-input-elecStart-${room.roomId}" value="${eStart}" oninput="syncBatchInput('${room.roomId}','elec','Start',this.value)" class="batch-field-input batch-field-elec" inputmode="numeric">
+                        </div>
+                        <div>
+                            <div class="batch-field-label text-amber-600">⚡ Điện cuối kỳ</div>
+                            <input type="number" id="mc-input-elecEnd-${room.roomId}" value="${eEnd}" oninput="syncBatchInput('${room.roomId}','elec','End',this.value)" class="batch-field-input batch-field-elec ${eEnd < eStart && eEnd > 0 ? 'batch-field-error' : ''}" inputmode="numeric">
+                        </div>
+                        <div>
+                            <div class="batch-field-label text-sky-600">💧 Nước đầu kỳ</div>
+                            <input type="number" id="mc-input-waterStart-${room.roomId}" value="${wStart}" oninput="syncBatchInput('${room.roomId}','water','Start',this.value)" class="batch-field-input batch-field-water" inputmode="numeric">
+                        </div>
+                        <div>
+                            <div class="batch-field-label text-sky-600">💧 Nước cuối kỳ</div>
+                            <input type="number" id="mc-input-waterEnd-${room.roomId}" value="${wEnd}" oninput="syncBatchInput('${room.roomId}','water','End',this.value)" class="batch-field-input batch-field-water ${wEnd < wStart && wEnd > 0 ? 'batch-field-error' : ''}" inputmode="numeric">
+                        </div>
+                        <div>
+                            <div class="batch-field-label text-teal-600">🔋 EV đầu kỳ</div>
+                            <input type="number" id="mc-input-evStart-${room.roomId}" value="${evStart}" oninput="syncBatchInput('${room.roomId}','ev','Start',this.value)" class="batch-field-input batch-field-ev" inputmode="numeric">
+                        </div>
+                        <div>
+                            <div class="batch-field-label text-teal-600">🔋 EV cuối kỳ</div>
+                            <input type="number" id="mc-input-evEnd-${room.roomId}" value="${evEnd}" oninput="syncBatchInput('${room.roomId}','ev','End',this.value)" class="batch-field-input batch-field-ev ${evEnd < evStart && evEnd > 0 ? 'batch-field-error' : ''}" inputmode="numeric">
+                        </div>
+                        <div class="col-span-2">
+                            <div class="batch-field-label text-rose-600">Phụ thu khác (₫)</div>
+                            <input type="number" id="mc-input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" oninput="syncBatchInput('${room.roomId}','other','Cost',this.value)" class="batch-field-input" inputmode="numeric" style="border-color:#fca5a5;">
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Sync from mobile card inputs to desktop table inputs (and vice versa) for saveBatchInput to work
+        function syncBatchInput(roomId, type, startEnd, val) {
+            // Update the corresponding desktop input so saveBatchInput reads correctly
+            let desktopId;
+            if (type === 'other') desktopId = `input-otherCost-${roomId}`;
+            else desktopId = `input-${type}${startEnd}-${roomId}`;
+            const desktopInput = document.getElementById(desktopId);
+            if (desktopInput) desktopInput.value = val;
+            if (type !== 'other') {
+                window.validateLiveInput(roomId, type === 'ev' ? 'ev' : type);
+            }
+        }
+
         window.saveBatchInput = async function() {
             const settings = window.systemData.settings;
             let hasError = false;
@@ -930,9 +1322,9 @@
             if(!tbody) return;
             const currentExpenses = window.systemData.expenses.filter(e => e && e.month === currentMonth);
             tbody.innerHTML = currentExpenses.map((e, index) => `<tr class="hover:bg-slate-50/50 transition-all">
-                <td class="p-3.5 font-semibold text-slate-800">${e.name}</td>
-                <td class="p-3.5 text-right font-bold text-rose-600">${e.amount.toLocaleString()} ₫</td>
-                <td class="p-3.5 text-center"><button onclick="window.deleteExpense(${window.systemData.expenses.indexOf(e)})" class="text-slate-400 hover:text-rose-600 transition-all"><i class="fa-solid fa-trash-can"></i></button></td>
+                <td class="p-3.5 font-semibold text-slate-800" data-label="Khoản mục">${e.name}</td>
+                <td class="p-3.5 text-right font-bold text-rose-600" data-label="Số tiền">${e.amount.toLocaleString()} ₫</td>
+                <td class="p-3.5 text-center" data-label="Thao tác"><button onclick="window.deleteExpense(${window.systemData.expenses.indexOf(e)})" class="w-10 h-10 text-slate-400 hover:text-rose-600 transition-all touch-target inline-flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button></td>
             </tr>`).join('');
         }
 
@@ -1180,12 +1572,12 @@
             tbody.innerHTML = window.systemData.savedInvoices.map((inv, index) => {
                 const safeJsonStr = encodeURIComponent(JSON.stringify(inv));
                 return `<tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail('${inv.roomId}', '${inv.month}', '${safeJsonStr}')">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs">${inv.month}</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs">Phòng ${inv.roomId}</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs">${inv.renter}</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs">${inv.total.toLocaleString()} ₫</td>
-                    <td class="p-3 text-center no-print" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(${index})" class="text-slate-400 hover:text-rose-600 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">${inv.month}</td>
+                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng ${inv.roomId}</td>
+                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách">${inv.renter}</td>
+                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">${inv.total.toLocaleString()} ₫</td>
+                    <td class="p-3 text-center no-print" data-label="Hủy khóa" onclick="event.stopPropagation();">
+                        <button onclick="window.deleteSavedInvoice(${index})" class="w-10 h-10 text-slate-400 hover:text-rose-600 touch-target inline-flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 </tr>`;
             }).join('');
@@ -1212,9 +1604,9 @@
                         <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">${room.renter || 'Trống'}</b></p>
                         <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">${(room.price || 0).toLocaleString()} ₫</b></p>
                     </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(${index})" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(${index})" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
+                    <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-slate-100 text-xs font-bold">
+                        <button onclick="window.editRoom(${index})" class="flex-1 py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-all touch-target">Hiệu chỉnh</button>
+                        <button onclick="window.deleteRoom(${index})" class="py-3 px-4 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-xl transition-all touch-target"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -1821,13 +2213,42 @@ window.processIPhonePhoto = async function(inputElement) {
 // --- GIỮ NGUYÊN CÁC HÀM LẮNG NGHE ĐỒNG BỘ PHÍA DƯỚI CỦA ANH ---
 const originalRenderAll = window.renderAll;
 if (typeof originalRenderAll === 'function') {
-    window.renderAll = function() { originalRenderAll(); setTimeout(window.updateAIRoomDropdown, 300); };
+    window.renderAll = function() { 
+        originalRenderAll(); 
+        setTimeout(window.updateAIRoomDropdown, 300);
+        // Re-render mobile batch cards after any full render
+        if (typeof renderMobileBatchCards === 'function') setTimeout(renderMobileBatchCards, 150);
+    };
 }
-document.addEventListener('DOMContentLoaded', () => { setTimeout(window.updateAIRoomDropdown, 1500); });
+document.addEventListener('DOMContentLoaded', () => { 
+    setTimeout(window.updateAIRoomDropdown, 1500); 
+    // Show bottom nav on mobile after load
+    setTimeout(() => {
+        if (window.innerWidth < 1024) {
+            const bn = document.getElementById('bottom-nav');
+            if (bn) bn.style.display = 'flex';
+        }
+    }, 500);
+});
 const originalChangeMonth = window.changeWorkingMonth;
 if (typeof originalChangeMonth === 'function') {
     window.changeWorkingMonth = function(val) { originalChangeMonth(val); setTimeout(window.updateAIRoomDropdown, 800); };
 }
+
+// Show bottom nav immediately based on screen size
+(function() {
+    function checkBottomNav() {
+        const bn = document.getElementById('bottom-nav');
+        if (!bn) return;
+        if (window.innerWidth < 1024) {
+            bn.style.display = 'flex';
+        } else {
+            bn.style.display = 'none';
+        }
+    }
+    checkBottomNav();
+    window.addEventListener('resize', checkBottomNav);
+})();
 
         // HÀM HIỂN THỊ ẢNH ĐỐI CHIẾU KHI BẤM NÚT CON MẮT
 window.viewAiProofPhoto = function(roomId, type) {
@@ -1867,5 +2288,6 @@ window.viewAiProofPhoto = function(roomId, type) {
     `;
 };
     </script>
-</body>
-</html>
+
+
+</body></html>
