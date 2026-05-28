@@ -33,6 +33,51 @@
             #invoice-print-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
             .no-print { display: none !important; }
         }
+/* --- BỔ SUNG TỐI ƯU MOBILE & IPAD --- */
+        /* Tạo gia tốc cuộn mượt mà chuẩn iOS */
+        * { -webkit-overflow-scrolling: touch; }
+        
+        @media (max-width: 1024px) {
+            /* Cố định cột Mã Phòng khi vuốt ngang bảng tính */
+            #batch-input-tbody td:first-child,
+            #summary-table-tbody td:first-child {
+                position: sticky;
+                left: 0;
+                z-index: 10;
+                background-color: #ffffff; /* Tránh đè chữ khi cuộn */
+                box-shadow: 2px 0 4px -2px rgba(0,0,0,0.1);
+            }
+            /* Cố định tiêu đề bảng */
+            th:first-child {
+                position: sticky;
+                left: 0;
+                z-index: 20;
+                background-color: #f8fafc;
+                box-shadow: 2px 0 4px -2px rgba(0,0,0,0.1);
+            }
+            
+            /* Tăng kích thước vùng chạm (Touch Target) chuẩn Apple HIG */
+            input[type="number"], select {
+                font-size: 16px !important; /* Ngăn iPhone tự động zoom màn hình khi bấm vào ô nhập liệu */
+                min-height: 44px;
+            }
+            
+            button {
+                min-height: 40px;
+            }
+
+            /* Tràn viền thanh menu trên iPhone để vuốt ngang dễ hơn */
+            aside {
+                margin-left: -16px;
+                margin-right: -16px;
+                padding-left: 16px;
+                padding-right: 16px;
+                scroll-snap-type: x mandatory;
+            }
+            .tab-btn {
+                scroll-snap-align: start;
+            }
+        } 
     </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-800 min-h-screen flex flex-col antialiased">
@@ -72,27 +117,27 @@
 
     <div id="mainApp" class="hidden flex flex-col flex-grow">
         <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 no-print border-b border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-                <div class="flex items-center space-x-3.5">
-                    <div class="bg-gradient-to-tr from-indigo-500 to-violet-500 p-2 rounded-xl shadow-md shadow-indigo-500/20">
-                        <i class="fa-solid fa-chart-network text-lg text-white"></i>
-                    </div>
-                    <div>
-                        <span class="font-extrabold text-base tracking-tight block bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">SmartRental Analytics</span>
-                        <span class="text-[10px] text-indigo-300/80 font-bold tracking-wider uppercase block">v3.0 Enterprise Edition</span>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-2 bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60 backdrop-blur-sm shadow-inner">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-300">Kỳ đối soát:</span>
-                        <input type="month" id="global-month" onchange="window.changeWorkingMonth(this.value)" class="bg-transparent text-white font-bold outline-none border-none text-xs cursor-pointer focus:ring-0">
-                    </div>
-                    <button onclick="window.handleLogout()" class="w-9 h-9 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-xl transition-all border border-slate-700/50 flex items-center justify-center" title="Đăng xuất">
-                        <i class="fa-solid fa-power-off text-sm"></i>
-                    </button>
-                </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-2">
+        <div class="flex items-center space-x-2.5 truncate">
+            <div class="bg-gradient-to-tr from-indigo-500 to-violet-500 p-1.5 sm:p-2 rounded-xl shadow-md shrink-0">
+                <i class="fa-solid fa-chart-network text-base sm:text-lg text-white"></i>
             </div>
-        </header>
+            <div class="truncate">
+                <span class="font-extrabold text-sm sm:text-base tracking-tight block bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent truncate">SmartRental Analytics</span>
+                <span class="text-[9px] sm:text-[10px] text-indigo-300/80 font-bold tracking-wider uppercase block truncate">v3.0 Enterprise</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
+            <div class="flex items-center space-x-1.5 bg-slate-800/80 px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-xl border border-slate-700/60 backdrop-blur-sm">
+                <span class="hidden sm:inline-block text-[11px] font-bold uppercase tracking-wider text-indigo-300">Kỳ:</span>
+                <input type="month" id="global-month" onchange="window.changeWorkingMonth(this.value)" class="bg-transparent text-white font-bold outline-none border-none text-xs cursor-pointer focus:ring-0 w-[90px] sm:w-auto p-0">
+            </div>
+            <button onclick="window.handleLogout()" class="w-8 h-8 sm:w-9 sm:h-9 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 rounded-xl transition-all border border-slate-700/50 flex items-center justify-center shrink-0" title="Đăng xuất">
+                <i class="fa-solid fa-power-off text-xs sm:text-sm"></i>
+            </button>
+        </div>
+    </div>
+</header>
 
         <div class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 no-print">
             
@@ -257,33 +302,35 @@
                         <i class="fa-solid fa-shield-exclamation text-indigo-500 text-sm"></i> 
                         <span><b>Cơ chế An toàn Dữ liệu:</b> Chỉ số đầu kỳ kế thừa tự động. Hệ thống sẽ khóa và báo lỗi nếu chỉ số cuối kỳ nhập ngược <b>(nhỏ hơn đầu kỳ)</b>.</span>
                    
-<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm my-2">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                <span class="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-                Quét Chỉ Số Bằng Gemini AI (Tối ưu cho iPhone)
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">Ảnh chụp tự động lưu vào Thư viện iPhone và trích xuất số chính xác bằng AI.</p>
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm my-2">
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+                <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                    <span class="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse shrink-0"></span>
+                    Quét Chỉ Số Bằng AI Engine
+                </h3>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Hỗ trợ trích xuất số liệu tự động trên iPhone/iPad.</p>
+            </div>
+            
+            <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm sm:text-xs rounded-xl shadow-md transition-all select-none w-full sm:w-auto active:scale-95">
+                <i class="fa-solid fa-camera text-base sm:text-sm"></i> Mở Camera Quét Số
+                <input type="file" id="iphone-camera-input" accept="image/*" capture="environment" class="hidden" onchange="processIPhonePhoto(this)">
+            </label>
         </div>
-        
-        <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/10 transition-all select-none transform active:scale-95">
-            <i class="fa-solid fa-camera text-sm"></i> Chụp Ảnh Quét Số
-            <input type="file" id="iphone-camera-input" accept="image/*" capture="environment" class="hidden" onchange="processIPhonePhoto(this)">
-        </label>
-    </div>
 
-    <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-100 max-w-xl">
-        <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phòng đang nhắm chụp</label>
-            <select id="aiTargetRoom" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all"></select>
-        </div>
-        <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Loại chỉ số đo</label>
-            <select id="aiTargetType" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all">
-                <option value="elec">Chỉ số ĐIỆN (kWh)</option>
-                <option value="water">Chỉ số NƯỚC (m³)</option>
-            </select>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phòng đang nhắm chụp</label>
+                <select id="aiTargetRoom" class="w-full px-3 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all"></select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Loại chỉ số đo</label>
+                <select id="aiTargetType" class="w-full px-3 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all">
+                    <option value="elec">Chỉ số ĐIỆN (kWh)</option>
+                    <option value="water">Chỉ số NƯỚC (m³)</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>
