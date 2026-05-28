@@ -248,13 +248,13 @@
             
             <aside class="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 pb-2 lg:pb-0 scrollbar-none">
                 <button onclick="window.switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
-                    <i class="fa-solid fa-grid-2 text-sm w-5 text-center"></i> Bảng Tổng Quan
+                    <i class="fa-solid fa-grid-2 text-sm w-5 text-center"></i> Tổng Quan
                 </button>
                 <button onclick="window.switchTab('input')" id="btn-tab-input" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-bolt-lightning text-sm w-5 text-center"></i> Chỉ Số
                 </button>
                 <button onclick="window.switchTab('expenses')" id="btn-tab-expenses" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
-                    <i class="fa-solid fa-wallet text-sm w-5 text-center"></i> Chi Phí Vận Hành
+                    <i class="fa-solid fa-wallet text-sm w-5 text-center"></i> Vận Hành
                 </button>
                 <button onclick="window.switchTab('summary')" id="btn-tab-summary" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-file-invoice text-sm w-5 text-center"></i> Tính chi phí
@@ -275,7 +275,7 @@
                 <div id="tab-dashboard" class="tab-content flex flex-col gap-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-3">
                         <div>
-                            <h2 class="text-xl font-bold tracking-tight text-slate-900">Báo Cáo Phân Tích Thực Thể</h2>
+                            <h2 class="text-xl font-bold tracking-tight text-slate-900">Báo Cáo Phân Tích</h2>
                             <p class="text-slate-400 text-xs font-medium">Chu kỳ tài chính hoạt động: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                         </div>
                         <button onclick="window.quickGenerateMockData()" class="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl border border-slate-200 flex items-center gap-2 transition-all shadow-sm">
@@ -324,7 +324,7 @@
                         </div>
                         <div class="flex items-center gap-2.5 text-xs">
                             <select id="chart-time-type" onchange="window.handleChartConfigChange()" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 font-bold text-white outline-none cursor-pointer text-xs">
-                                <option value="month">Từng tháng trong năm</option>
+                                <option value="month">Tháng</option>
                                 <option value="year">Tổng hợp qua các năm</option>
                             </select>
                             <select id="chart-target-year" onchange="window.handleChartConfigChange()" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 font-bold text-white outline-none cursor-pointer text-xs">
@@ -350,7 +350,7 @@
                         <div class="bg-slate-50/80 p-3.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-ranking-star text-indigo-500 text-xs"></i>
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Bảng Đối Soát Cường Độ Năng Lượng</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Top Tiêu Thụ</span>
                             </div>
                             <div class="flex bg-slate-200/70 p-0.5 rounded-lg text-[10px] font-bold">
                                 <button id="btn-rank-month" onclick="window.switchRankScope('month')" class="px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all">Trong tháng hiện tại</button>
@@ -361,14 +361,14 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-white">
                             <div class="p-4 border border-slate-100 bg-slate-50/30 rounded-xl">
                                 <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-3 flex justify-between items-center border-b border-slate-100 pb-2">
-                                    <span class="text-rose-600"><i class="fa-solid fa-trending-up mr-1.5"></i>Top Tiêu Thụ Cao Nhất</span>
+                                    <span class="text-rose-600"><i class="fa-solid fa-trending-up mr-1.5"></i>Cao Nhất</span>
                                     <span id="label-rank-top-scope" class="text-[9px] bg-rose-50 text-rose-600 px-2 py-0.5 rounded font-bold">Trong Tháng</span>
                                 </h3>
                                 <div id="top-consuming-list" class="text-xs space-y-2 text-slate-700"></div>
                             </div>
                             <div class="p-4 border border-slate-100 bg-slate-50/30 rounded-xl">
                                 <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-3 flex justify-between items-center border-b border-slate-100 pb-2">
-                                    <span class="text-emerald-600"><i class="fa-solid fa-trending-down mr-1.5"></i>Top Tiết Kiệm Tối Ưu</span>
+                                    <span class="text-emerald-600"><i class="fa-solid fa-trending-down mr-1.5"></i>Thấp nhất</span>
                                     <span id="label-rank-bottom-scope" class="text-[9px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-bold">Trong Tháng</span>
                                 </h3>
                                 <div id="bottom-consuming-list" class="text-xs space-y-2 text-slate-700"></div>
@@ -378,7 +378,7 @@
 
                     <div class="p-4 border border-amber-200 bg-amber-50/10 rounded-xl">
                         <h3 class="font-bold text-amber-900 text-xs uppercase tracking-wider mb-3 flex items-center justify-between">
-                            <span><i class="fa-solid fa-receipt mr-1.5 text-amber-600"></i>Danh Sách Tồn Đọng Công Nợ</span>
+                            <span><i class="fa-solid fa-receipt mr-1.5 text-amber-600"></i>Danh Sách Công Nợ</span>
                             <span id="unpaid-debt-count" class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">0 phòng nợ</span>
                         </h3>
                         <div class="overflow-x-auto rounded-lg border border-amber-200/50 bg-white">
@@ -400,7 +400,7 @@
 
                 <div id="tab-input" class="tab-content hidden flex flex-col gap-4">
                     <div class="border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-900">Khấu Trừ & Ghi Nhận Chỉ Số Định Kỳ</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Ghi Nhận Chỉ Số Định Kỳ</h2>
                         <p class="text-xs text-slate-400 font-medium">Chu kỳ hạch toán áp dụng: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                     </div>
                     <div class="bg-indigo-50/40 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 font-medium flex items-center gap-2.5 shadow-sm">
@@ -477,7 +477,7 @@
                 <div id="tab-expenses" class="tab-content hidden flex flex-col gap-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <div>
-                            <h2 class="text-lg font-bold text-slate-900">Hạch Toán Chi Phí Đầu Vào Tòa Nhà</h2>
+                            <h2 class="text-lg font-bold text-slate-900">Kinh phí đã chi </h2>
                             <p class="text-xs text-slate-400 font-medium">Các khoản phí vận hành phát sinh trong tháng <span class="working-month-txt font-bold text-indigo-600"></span></p>
                         </div>
                         <button onclick="window.openExpenseModal()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
