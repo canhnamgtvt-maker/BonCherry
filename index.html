@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a"> ```
     <title>SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -37,6 +40,28 @@
         /* Tạo gia tốc cuộn mượt mà chuẩn iOS */
         * { -webkit-overflow-scrolling: touch; }
         
+        /* Triệt tiêu khối màu xám chớp lên khi chạm ngón tay vào nút bấm trên Safari */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ngăn người dùng vô tình bôi đen (copy) các text giao diện khi đang vuốt */
+        header, aside, .tab-btn, button, th {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Các ô nhập liệu hoặc bảng dữ liệu vẫn cho phép copy bình thường */
+        td, input, p, h2, h3, h4 {
+            user-select: auto;
+            -webkit-user-select: auto;
+        }
+
+        @keyframes slideUpSheet {
+            from { transform: translateY(100%); opacity: 0.5; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         @media (max-width: 1024px) {
             /* Cố định cột Mã Phòng khi vuốt ngang bảng tính */
             #batch-input-tbody td:first-child,
@@ -54,6 +79,17 @@
                 z-index: 20;
                 background-color: #f8fafc;
                 box-shadow: 2px 0 4px -2px rgba(0,0,0,0.1);
+            }
+
+            /* Tạo viền đổ bóng 3D cho cột Mã Phòng cố định (Đã chuyển vào trong @media) */
+            #batch-input-tbody td:first-child::after,
+            #summary-table-tbody td:first-child::after,
+            th:first-child::after {
+                content: '';
+                position: absolute;
+                top: 0; right: -6px; bottom: 0; width: 6px;
+                background: linear-gradient(to right, rgba(0,0,0,0.06), transparent);
+                pointer-events: none; /* Không ảnh hưởng đến thao tác vuốt */
             }
             
             /* Tăng kích thước vùng chạm (Touch Target) */
@@ -127,6 +163,24 @@
                 font-size: 10px !important;
                 font-weight: 700;
                 letter-spacing: -0.2px;
+            }
+
+            /* ========================================================== */
+            /* BIẾN MODAL THÀNH BOTTOM SHEET TRƯỢT TỪ DƯỚI LÊN            */
+            /* ========================================================== */
+            #roomModal, #expenseModal, #invoiceDetailModal {
+                align-items: flex-end !important; /* Đẩy cửa sổ xuống sát đáy */
+                padding: 0 !important;
+            }
+            
+            #roomModal > div, #expenseModal > div, #invoiceDetailModal > div {
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 24px 24px 0 0 !important; /* Chỉ bo tròn 2 góc trên */
+                margin: 0 !important;
+                padding-bottom: calc(24px + env(safe-area-inset-bottom)) !important; /* Nâng nút bấm khỏi viền màn hình */
+                animation: slideUpSheet 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+                border: none !important;
             }
         }
     </style>
