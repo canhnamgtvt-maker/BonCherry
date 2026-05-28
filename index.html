@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)file:///C:/Users/ADMIN/Downloads/SmartRental_iOS_Final.html -->
-<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartRental Analytics Pro - Hệ Thống Quản Trị Lưu Trú Cao Cấp</title>
-    <script src="./Nhà trọ 111_files/saved_resource"></script>
-    <link rel="stylesheet" href="./Nhà trọ 111_files/all.min.css">
-    <script src="./Nhà trọ 111_files/chart.js.download"></script>
-    <script src="./Nhà trọ 111_files/xlsx.bundle.js.download"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-    <link href="./Nhà trọ 111_files/css2" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         body { 
@@ -34,185 +32,19 @@
             #invoice-print-area, #invoice-print-area * { visibility: visible; }
             #invoice-print-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
             .no-print { display: none !important; }
-            #ios-bottom-nav { display: none !important; }
-        }
-
-        /* ===================== iOS OPTIMIZATIONS ===================== */
-
-        /* Ngăn Safari tự zoom khi focus input */
-        input, select, textarea { font-size: 16px !important; }
-
-        /* Safe area cho notch/Dynamic Island */
-        header { padding-top: env(safe-area-inset-top); }
-        #ios-bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
-
-        /* Tắt highlight xanh khi tap */
-        * { -webkit-tap-highlight-color: transparent; }
-
-        /* ===== BOTTOM NAV - chỉ hiện trên mobile/tablet ===== */
-        #ios-bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(255,255,255,0.97);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid #e2e8f0;
-            z-index: 999;
-            box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
-        }
-        .ib-row { display: flex; }
-        .ib-btn {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 3px;
-            padding: 9px 4px; border: none; background: none;
-            color: #94a3b8; cursor: pointer; min-height: 54px;
-            font-family: inherit; transition: color 0.15s;
-        }
-        .ib-btn.on { color: #6366f1; }
-        .ib-btn i { font-size: 19px; }
-        .ib-btn span { font-size: 9px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
-
-        /* More sheet */
-        #ios-more-bg {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.45); z-index: 1000;
-        }
-        #ios-more-sheet {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #fff; border-radius: 20px 20px 0 0;
-            z-index: 1001; padding: 14px 16px;
-            padding-bottom: calc(14px + env(safe-area-inset-bottom));
-            transform: translateY(100%);
-            transition: transform 0.26s cubic-bezier(0.32,0.72,0,1);
-        }
-        #ios-more-sheet.show { transform: translateY(0); }
-        .ms-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 13px 12px; border-radius: 14px;
-            background: #f8fafc; margin-bottom: 8px;
-            border: none; width: 100%; text-align: left;
-            cursor: pointer; font-family: inherit;
-        }
-        .ms-icon {
-            width: 36px; height: 36px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px; flex-shrink: 0;
-        }
-        .ms-title { font-weight: 800; font-size: 14px; color: #1e293b; }
-        .ms-sub { font-size: 11px; color: #94a3b8; }
-
-        @media (max-width: 1023px) {
-            /* Hiện bottom nav */
-            #ios-bottom-nav { display: block; }
-            /* Ẩn sidebar gốc */
-            aside { display: none !important; }
-            /* Padding để content không bị che bởi bottom nav */
-            .flex-grow.max-w-7xl { padding-bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
-            /* Main không cần min-height cứng */
-            main { min-height: unset !important; }
-        }
-        @media (min-width: 1024px) {
-            #ios-bottom-nav { display: none !important; }
-            aside { display: flex !important; }
-        }
-
-        /* ===== MOBILE: card layout cho bảng dữ liệu ===== */
-        @media (max-width: 767px) {
-            .mob-card thead { display: none; }
-            .mob-card tbody tr {
-                display: block;
-                border: 1.5px solid #e2e8f0;
-                border-radius: 14px;
-                margin-bottom: 10px;
-                padding: 10px 12px;
-                background: #fff;
-            }
-            .mob-card tbody td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 5px 0;
-                border: none !important;
-                font-size: 13px;
-                border-bottom: 1px solid #f1f5f9 !important;
-            }
-            .mob-card tbody td:last-child { border-bottom: none !important; }
-            .mob-card tbody td::before {
-                content: attr(data-label);
-                font-size: 10px; font-weight: 800;
-                color: #94a3b8; text-transform: uppercase;
-                letter-spacing: 0.05em; min-width: 80px; flex-shrink: 0;
-            }
-        }
-
-        /* ===== MOBILE: batch input cards ===== */
-        #mob-batch { display: none; }
-        @media (max-width: 767px) {
-            #mob-batch { display: block; }
-            #desk-batch { display: none !important; }
-        }
-        .mbc { background:#fff; border:1.5px solid #e2e8f0; border-radius:16px; padding:14px; margin-bottom:10px; }
-        .mbc-title { font-weight:900; font-size:15px; color:#1e293b; }
-        .mbc-sub { font-size:11px; color:#94a3b8; font-weight:600; margin-top:2px; }
-        .mbc-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
-        .mbc-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; margin-bottom:3px; }
-        .mbc-input {
-            width:100%; border:1.5px solid #e2e8f0; border-radius:10px;
-            padding:10px 10px; font-size:16px !important; font-weight:700;
-            color:#1e293b; background:#f8fafc; outline:none;
-            -webkit-appearance:none; box-sizing:border-box;
-        }
-        .mbc-input:focus { border-color:#6366f1; background:#fff; }
-        .mbc-elec { border-color:#fbbf24 !important; }
-        .mbc-water { border-color:#38bdf8 !important; }
-        .mbc-ev { border-color:#34d399 !important; }
-        .mbc-other { border-color:#fca5a5 !important; }
-        .mbc-err { border-color:#f87171 !important; background:#fff1f2; color:#dc2626; }
-
-        /* ===== MOBILE: modal bottom sheet ===== */
-        @media (max-width: 639px) {
-            #roomModal, #expenseModal, #invoiceDetailModal {
-                align-items: flex-end !important;
-            }
-            #roomModal > div, #expenseModal > div, #invoiceDetailModal > div {
-                max-width: 100% !important;
-                width: 100% !important;
-                border-radius: 20px 20px 0 0 !important;
-                max-height: 90vh !important;
-                overflow-y: auto;
-                margin: 0 !important;
-            }
-        }
-
-        /* ===== MOBILE: metrics 2-col ===== */
-        @media (max-width: 479px) {
-            .sm\:grid-cols-2 { grid-template-columns: repeat(2,1fr) !important; }
-        }
-
-        /* ===== MOBILE: button sizes ===== */
-        @media (max-width: 1023px) {
-            button.tab-btn { display: none; } /* Ẩn sidebar buttons trên mobile */
-        }
-
-        /* AI preview float - tránh bottom nav */
-        @media (max-width: 1023px) {
-            #iphone-photo-preview-box {
-                bottom: calc(70px + env(safe-area-inset-bottom)) !important;
-            }
         }
     </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.inset-y-0{top:0px;bottom:0px}.left-0{left:0px}.top-0{top:0px}.right-1\.5{right:0.375rem}.z-50{z-index:50}.z-\[200\]{z-index:200}.z-\[250\]{z-index:250}.z-\[300\]{z-index:300}.z-\[999\]{z-index:999}.z-10{z-index:10}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2\.5{margin-bottom:0.625rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mr-1\.5{margin-right:0.375rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mr-1{margin-right:0.25rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-11{height:2.75rem}.h-12{height:3rem}.h-14{height:3.5rem}.h-16{height:4rem}.h-2{height:0.5rem}.h-2\.5{height:0.625rem}.h-60{height:15rem}.h-9{height:2.25rem}.max-h-\[90vh\]{max-height:90vh}.min-h-\[620px\]{min-height:620px}.min-h-screen{min-height:100vh}.w-11{width:2.75rem}.w-12{width:3rem}.w-14{width:3.5rem}.w-16{width:4rem}.w-2{width:0.5rem}.w-2\.5{width:0.625rem}.w-20{width:5rem}.w-24{width:6rem}.w-28{width:7rem}.w-32{width:8rem}.w-36{width:9rem}.w-48{width:12rem}.w-5{width:1.25rem}.w-9{width:2.25rem}.w-full{width:100%}.w-4{width:1rem}.min-w-\[1000px\]{min-width:1000px}.min-w-\[1050px\]{min-width:1050px}.min-w-\[140px\]{min-width:140px}.min-w-\[500px\]{min-width:500px}.max-w-2xl{max-width:42rem}.max-w-7xl{max-width:80rem}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.shrink-0{flex-shrink:0}.flex-grow{flex-grow:1}.border-collapse{border-collapse:collapse}.scale-100{--tw-scale-x:1;--tw-scale-y:1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}@keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.flex-row{flex-direction:row}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-3\.5{gap:0.875rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-3\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.875rem * var(--tw-space-x-reverse));margin-left:calc(0.875rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-amber-100\/40 > :not([hidden]) ~ :not([hidden]){border-color:rgb(254 243 199 / 0.4)}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-none{border-style:none}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-amber-200\/50{border-color:rgb(253 230 138 / 0.5)}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.border-emerald-100{--tw-border-opacity:1;border-color:rgb(209 250 229 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-100\/80{border-color:rgb(241 245 249 / 0.8)}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-200\/60{border-color:rgb(226 232 240 / 0.6)}.border-slate-200\/80{border-color:rgb(226 232 240 / 0.8)}.border-slate-50{--tw-border-opacity:1;border-color:rgb(248 250 252 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-slate-700\/50{border-color:rgb(51 65 85 / 0.5)}.border-slate-700\/60{border-color:rgb(51 65 85 / 0.6)}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-rose-100{--tw-border-opacity:1;border-color:rgb(255 228 230 / var(--tw-border-opacity, 1))}.border-rose-200{--tw-border-opacity:1;border-color:rgb(254 205 211 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.border-t-transparent{border-top-color:transparent}.bg-\[\#f8fafc\]{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-50\/10{background-color:rgb(255 251 235 / 0.1)}.bg-amber-50\/40{background-color:rgb(255 251 235 / 0.4)}.bg-amber-50\/50{background-color:rgb(255 251 235 / 0.5)}.bg-amber-50\/70{background-color:rgb(255 251 235 / 0.7)}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-50\/30{background-color:rgb(236 253 245 / 0.3)}.bg-emerald-50\/40{background-color:rgb(236 253 245 / 0.4)}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50\/40{background-color:rgb(238 242 255 / 0.4)}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-rose-50{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.bg-rose-50\/30{background-color:rgb(255 241 242 / 0.3)}.bg-rose-600{--tw-bg-opacity:1;background-color:rgb(225 29 72 / var(--tw-bg-opacity, 1))}.bg-sky-50\/40{background-color:rgb(240 249 255 / 0.4)}.bg-sky-50\/70{background-color:rgb(240 249 255 / 0.7)}.bg-sky-500{--tw-bg-opacity:1;background-color:rgb(14 165 233 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-100\/50{background-color:rgb(241 245 249 / 0.5)}.bg-slate-200\/70{background-color:rgb(226 232 240 / 0.7)}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-50\/30{background-color:rgb(248 250 252 / 0.3)}.bg-slate-50\/40{background-color:rgb(248 250 252 / 0.4)}.bg-slate-50\/50{background-color:rgb(248 250 252 / 0.5)}.bg-slate-50\/80{background-color:rgb(248 250 252 / 0.8)}.bg-slate-700{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-800\/80{background-color:rgb(30 41 59 / 0.8)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/50{background-color:rgb(15 23 42 / 0.5)}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-slate-900\/70{background-color:rgb(15 23 42 / 0.7)}.bg-teal-50\/40{background-color:rgb(240 253 250 / 0.4)}.bg-teal-50\/70{background-color:rgb(240 253 250 / 0.7)}.bg-teal-600{--tw-bg-opacity:1;background-color:rgb(13 148 136 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-amber-50\/20{background-color:rgb(255 251 235 / 0.2)}.bg-indigo-50\/30{background-color:rgb(238 242 255 / 0.3)}.bg-rose-50\/20{background-color:rgb(255 241 242 / 0.2)}.bg-sky-50\/20{background-color:rgb(240 249 255 / 0.2)}.bg-teal-50\/20{background-color:rgb(240 253 250 / 0.2)}.bg-gradient-to-b{background-image:linear-gradient(to bottom, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-amber-500{--tw-gradient-from:#f59e0b var(--tw-gradient-from-position);--tw-gradient-to:rgb(245 158 11 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-50\/50{--tw-gradient-from:rgb(238 242 255 / 0.5) var(--tw-gradient-from-position);--tw-gradient-to:rgb(238 242 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-600{--tw-gradient-from:#4f46e5 var(--tw-gradient-from-position);--tw-gradient-to:rgb(79 70 229 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-white{--tw-gradient-from:#fff var(--tw-gradient-from-position);--tw-gradient-to:rgb(255 255 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-orange-500{--tw-gradient-to:#f97316 var(--tw-gradient-to-position)}.to-slate-300{--tw-gradient-to:#cbd5e1 var(--tw-gradient-to-position)}.to-violet-500{--tw-gradient-to:#8b5cf6 var(--tw-gradient-to-position)}.to-violet-600{--tw-gradient-to:#7c3aed var(--tw-gradient-to-position)}.to-white{--tw-gradient-to:#fff var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.p-0\.5{padding:0.125rem}.p-1{padding:0.25rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.p-2\.5{padding:0.625rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.pb-2{padding-bottom:0.5rem}.pb-2\.5{padding-bottom:0.625rem}.pb-3{padding-bottom:0.75rem}.pb-3\.5{padding-bottom:0.875rem}.pb-4{padding-bottom:1rem}.pb-6{padding-bottom:1.5rem}.pl-10{padding-left:2.5rem}.pl-3\.5{padding-left:0.875rem}.pr-4{padding-right:1rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.pt-6{padding-top:1.5rem}.pr-6{padding-right:1.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-normal{font-weight:400}.uppercase{text-transform:uppercase}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252 / var(--tw-text-opacity, 1))}.text-indigo-300\/80{color:rgb(165 180 252 / 0.8)}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-indigo-900{--tw-text-opacity:1;color:rgb(49 46 129 / var(--tw-text-opacity, 1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.text-rose-800{--tw-text-opacity:1;color:rgb(159 18 57 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9 / var(--tw-text-opacity, 1))}.text-amber-950{--tw-text-opacity:1;color:rgb(69 26 3 / var(--tw-text-opacity, 1))}.text-sky-950{--tw-text-opacity:1;color:rgb(8 47 73 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-teal-950{--tw-text-opacity:1;color:rgb(4 47 46 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-emerald-600\/10{--tw-shadow-color:rgb(5 150 105 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-200{--tw-shadow-color:#c7d2fe;--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-500\/20{--tw-shadow-color:rgb(99 102 241 / 0.2);--tw-shadow:var(--tw-shadow-colored)}.shadow-indigo-600\/10{--tw-shadow-color:rgb(79 70 229 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-orange-500\/10{--tw-shadow-color:rgb(249 115 22 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-teal-600\/10{--tw-shadow-color:rgb(13 148 136 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.outline-none{outline:2px solid transparent;outline-offset:2px}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-200{transition-duration:200ms}.duration-300{transition-duration:300ms}.hover\:border-rose-200:hover{--tw-border-opacity:1;border-color:rgb(254 205 211 / var(--tw-border-opacity, 1))}.hover\:bg-amber-600:hover{--tw-bg-opacity:1;background-color:rgb(217 119 6 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-500\/20:hover{background-color:rgb(244 63 94 / 0.2)}.hover\:bg-rose-700:hover{--tw-bg-opacity:1;background-color:rgb(190 18 60 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.hover\:bg-teal-700:hover{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-600:hover{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-50:hover{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-50\/50:hover{background-color:rgb(248 250 252 / 0.5)}.hover\:bg-slate-50\/70:hover{background-color:rgb(248 250 252 / 0.7)}.hover\:from-amber-600:hover{--tw-gradient-from:#d97706 var(--tw-gradient-from-position);--tw-gradient-to:rgb(217 119 6 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.hover\:from-indigo-700:hover{--tw-gradient-from:#4338ca var(--tw-gradient-from-position);--tw-gradient-to:rgb(67 56 202 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.hover\:to-orange-600:hover{--tw-gradient-to:#ea580c var(--tw-gradient-to-position)}.hover\:to-violet-700:hover{--tw-gradient-to:#6d28d9 var(--tw-gradient-to-position)}.hover\:text-rose-400:hover{--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.hover\:text-amber-500:hover{--tw-text-opacity:1;color:rgb(245 158 11 / var(--tw-text-opacity, 1))}.hover\:text-rose-600:hover{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.hover\:text-sky-500:hover{--tw-text-opacity:1;color:rgb(14 165 233 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:shadow-md:hover{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-amber-500:focus{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.focus\:border-indigo-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.focus\:bg-white:focus{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.focus\:ring-0:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-4:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-amber-500\/10:focus{--tw-ring-color:rgb(245 158 11 / 0.1)}.focus\:ring-indigo-500\/10:focus{--tw-ring-color:rgb(99 102 241 / 0.1)}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-center{align-items:center}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:items-center{align-items:center}}@media (min-width: 1024px){.lg\:w-64{width:16rem}.lg\:w-full{width:100%}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:flex-row{flex-direction:row}.lg\:flex-col{flex-direction:column}.lg\:overflow-visible{overflow:visible}.lg\:border-b-0{border-bottom-width:0px}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:pb-0{padding-bottom:0px}}</style></head>
+</head>
 <body class="bg-[#f8fafc] text-slate-800 min-h-screen flex flex-col antialiased">
 
-    <div id="loginModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300" style="display: none;">
+    <div id="loginModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-100/80 transform scale-100 transition-all">
             <div class="p-8 pb-6 text-center bg-gradient-to-b from-indigo-50/50 to-white border-b border-slate-50">
                 <div class="w-14 h-14 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-200">
                     <i class="fa-solid fa-layer-group text-white text-xl"></i>
                 </div>
                 <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">SmartRental Enterprise</h2>
-                <p class="text-slate-500 text-xs mt-1.5 font-medium">Nền tảng Quản trị &amp; Điện toán Chỉ số Năng lượng</p>
+                <p class="text-slate-500 text-xs mt-1.5 font-medium">Nền tảng Quản trị & Điện toán Chỉ số Năng lượng</p>
             </div>
             <div class="p-8 pt-6">
                 <div class="space-y-4">
@@ -238,7 +70,7 @@
         </div>
     </div>
 
-    <div id="mainApp" class="flex flex-col flex-grow">
+    <div id="mainApp" class="hidden flex flex-col flex-grow">
         <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 no-print border-b border-slate-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
                 <div class="flex items-center space-x-3.5">
@@ -264,37 +96,37 @@
 
         <div class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 no-print">
             
-            <aside id="ios-sidebar" class="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 pb-2 lg:pb-0 scrollbar-none">
-                <button onclick="window.switchTab(&#39;dashboard&#39;)" id="btn-tab-dashboard" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all duration-300 text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+            <aside class="w-full lg:w-64 shrink-0 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 pb-2 lg:pb-0 scrollbar-none">
+                <button onclick="window.switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10 transition-all duration-300">
                     <i class="fa-solid fa-grid-2 text-sm w-5 text-center"></i> Bảng Tổng Quan
                 </button>
-                <button onclick="window.switchTab(&#39;input&#39;)" id="btn-tab-input" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all duration-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+                <button onclick="window.switchTab('input')" id="btn-tab-input" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-bolt-lightning text-sm w-5 text-center"></i> Chỉ Số Điện Nước
                 </button>
-                <button onclick="window.switchTab(&#39;expenses&#39;)" id="btn-tab-expenses" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all duration-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+                <button onclick="window.switchTab('expenses')" id="btn-tab-expenses" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-wallet text-sm w-5 text-center"></i> Chi Phí Vận Hành
                 </button>
-                <button onclick="window.switchTab(&#39;summary&#39;)" id="btn-tab-summary" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all duration-200 bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/10">
+                <button onclick="window.switchTab('summary')" id="btn-tab-summary" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-file-invoice text-sm w-5 text-center"></i> Bảng Thu Doanh Số
                 </button>
-                <button onclick="window.switchTab(&#39;saved-invoices&#39;)" id="btn-tab-saved-invoices" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('saved-invoices')" id="btn-tab-saved-invoices" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-clock-history text-sm w-5 text-center"></i> Lưu Trữ Lịch Sử
                 </button>
-                <button onclick="window.switchTab(&#39;rooms&#39;)" id="btn-tab-rooms" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('rooms')" id="btn-tab-rooms" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-door-closed text-sm w-5 text-center"></i> Cơ Sở Phòng Trọ
                 </button>
-                <button onclick="window.switchTab(&#39;settings&#39;)" id="btn-tab-settings" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
+                <button onclick="window.switchTab('settings')" id="btn-tab-settings" class="tab-btn min-w-[140px] lg:w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200">
                     <i class="fa-solid fa-sliders-h text-sm w-5 text-center"></i> Thiết Lập Định Giá
                 </button>
             </aside>
 
             <main class="flex-grow bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 flex flex-col justify-start min-h-[620px] transition-all duration-300">
                 
-                <div id="tab-dashboard" class="tab-content flex flex-col gap-6 hidden">
+                <div id="tab-dashboard" class="tab-content flex flex-col gap-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-3">
                         <div>
                             <h2 class="text-xl font-bold tracking-tight text-slate-900">Báo Cáo Phân Tích Thực Thể</h2>
-                            <p class="text-slate-400 text-xs font-medium">Chu kỳ tài chính hoạt động: <span class="working-month-txt font-bold text-indigo-600">2026-05</span></p>
+                            <p class="text-slate-400 text-xs font-medium">Chu kỳ tài chính hoạt động: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                         </div>
                         <button onclick="window.quickGenerateMockData()" class="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl border border-slate-200 flex items-center gap-2 transition-all shadow-sm">
                             <i class="fa-solid fa-database text-indigo-500"></i> Khởi tạo dữ liệu kiểm thử nhanh
@@ -306,7 +138,7 @@
                             <div class="w-11 h-11 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg shadow-sm"><i class="fa-solid fa-hand-holding-dollar"></i></div>
                             <div>
                                 <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold block">Tổng thu dự kiến</span>
-                                <span id="metric-total-rev" class="text-lg font-bold text-slate-900 tracking-tight">27,180,000 ₫</span>
+                                <span id="metric-total-rev" class="text-lg font-bold text-slate-900 tracking-tight">0 ₫</span>
                             </div>
                         </div>
                         <div class="bg-slate-50/50 border border-slate-200/60 p-4 rounded-xl flex items-center gap-3.5 shadow-sm">
@@ -320,14 +152,14 @@
                             <div id="metric-variance-icon" class="w-11 h-11 text-emerald-600 rounded-xl flex items-center justify-center text-lg shadow-sm bg-emerald-50"><i class="fa-solid fa-chart-line-up"></i></div>
                             <div>
                                 <span class="text-[10px] uppercase tracking-wider font-bold block text-slate-400">Lợi nhuận ròng</span>
-                                <span id="metric-total-variance" class="text-lg font-bold text-slate-900 tracking-tight">27,180,000 ₫</span>
+                                <span id="metric-total-variance" class="text-lg font-bold text-slate-900 tracking-tight">0 ₫</span>
                             </div>
                         </div>
                         <div class="bg-slate-50/50 border border-slate-200/60 p-4 rounded-xl flex items-center gap-3.5 shadow-sm">
                             <div class="w-11 h-11 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-lg shadow-sm"><i class="fa-solid fa-hourglass-half"></i></div>
                             <div>
                                 <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold block">Công nợ tồn đọng</span>
-                                <span id="metric-pending-rev" class="text-lg font-bold text-slate-900 tracking-tight">9,210,000 ₫</span>
+                                <span id="metric-pending-rev" class="text-lg font-bold text-slate-900 tracking-tight">0 ₫</span>
                             </div>
                         </div>
                     </div>
@@ -356,11 +188,11 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="p-4 border border-slate-100 bg-slate-50/40 rounded-xl">
                             <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Tổng số điện tiêu thụ (kWh)</h3>
-                            <div class="relative h-60 flex justify-center items-center"><canvas id="chart-elec-consumption" width="697" height="420" style="display: block; box-sizing: border-box; height: 240px; width: 398.3px;"></canvas></div>
+                            <div class="relative h-60 flex justify-center items-center"><canvas id="chart-elec-consumption"></canvas></div>
                         </div>
                         <div class="p-4 border border-slate-100 bg-slate-50/40 rounded-xl">
                             <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-500"></span>Tổng số nước sinh hoạt (m³)</h3>
-                            <div class="relative h-60 flex justify-center items-center"><canvas id="chart-water-consumption" width="697" height="420" style="display: block; box-sizing: border-box; height: 240px; width: 398.3px;"></canvas></div>
+                            <div class="relative h-60 flex justify-center items-center"><canvas id="chart-water-consumption"></canvas></div>
                         </div>
                     </div>
 
@@ -371,8 +203,8 @@
                                 <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Bảng Đối Soát Cường Độ Năng Lượng</span>
                             </div>
                             <div class="flex bg-slate-200/70 p-0.5 rounded-lg text-[10px] font-bold">
-                                <button id="btn-rank-month" onclick="window.switchRankScope(&#39;month&#39;)" class="px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all">Trong tháng hiện tại</button>
-                                <button id="btn-rank-year" onclick="window.switchRankScope(&#39;year&#39;)" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-all">Lũy kế cả năm</button>
+                                <button id="btn-rank-month" onclick="window.switchRankScope('month')" class="px-3 py-1 bg-white text-indigo-600 rounded-md shadow-sm transition-all">Trong tháng hiện tại</button>
+                                <button id="btn-rank-year" onclick="window.switchRankScope('year')" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-all">Lũy kế cả năm</button>
                             </div>
                         </div>
                         
@@ -382,38 +214,14 @@
                                     <span class="text-rose-600"><i class="fa-solid fa-trending-up mr-1.5"></i>Top Tiêu Thụ Cao Nhất</span>
                                     <span id="label-rank-top-scope" class="text-[9px] bg-rose-50 text-rose-600 px-2 py-0.5 rounded font-bold">Trong Tháng</span>
                                 </h3>
-                                <div id="top-consuming-list" class="text-xs space-y-2 text-slate-700">
-                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
-                    <span class="font-medium text-slate-600">Top 1. <b class="text-slate-900">Phòng 101</b></span>
-                    <span class="text-rose-600 font-bold">1910 kWh / 15 m³</span>
-                </div>
-                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
-                    <span class="font-medium text-slate-600">Top 2. <b class="text-slate-900">Phòng 102</b></span>
-                    <span class="text-rose-600 font-bold">1670 kWh / 22 m³</span>
-                </div>
-                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
-                    <span class="font-medium text-slate-600">Top 3. <b class="text-slate-900">Phòng 103</b></span>
-                    <span class="text-rose-600 font-bold">700 kWh / 510 m³</span>
-                </div></div>
+                                <div id="top-consuming-list" class="text-xs space-y-2 text-slate-700"></div>
                             </div>
                             <div class="p-4 border border-slate-100 bg-slate-50/30 rounded-xl">
                                 <h3 class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-3 flex justify-between items-center border-b border-slate-100 pb-2">
                                     <span class="text-emerald-600"><i class="fa-solid fa-trending-down mr-1.5"></i>Top Tiết Kiệm Tối Ưu</span>
                                     <span id="label-rank-bottom-scope" class="text-[9px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-bold">Trong Tháng</span>
                                 </h3>
-                                <div id="bottom-consuming-list" class="text-xs space-y-2 text-slate-700">
-                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
-                    <span class="font-medium text-slate-600">Top 1. <b class="text-slate-900">Phòng 201</b></span>
-                    <span class="text-emerald-600 font-bold">360 kWh / 8 m³</span>
-                </div>
-                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
-                    <span class="font-medium text-slate-600">Top 2. <b class="text-slate-900">Phòng 103</b></span>
-                    <span class="text-emerald-600 font-bold">700 kWh / 510 m³</span>
-                </div>
-                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm">
-                    <span class="font-medium text-slate-600">Top 3. <b class="text-slate-900">Phòng 102</b></span>
-                    <span class="text-emerald-600 font-bold">1670 kWh / 22 m³</span>
-                </div></div>
+                                <div id="bottom-consuming-list" class="text-xs space-y-2 text-slate-700"></div>
                             </div>
                         </div>
                     </div>
@@ -421,7 +229,7 @@
                     <div class="p-4 border border-amber-200 bg-amber-50/10 rounded-xl">
                         <h3 class="font-bold text-amber-900 text-xs uppercase tracking-wider mb-3 flex items-center justify-between">
                             <span><i class="fa-solid fa-receipt mr-1.5 text-amber-600"></i>Danh Sách Tồn Đọng Công Nợ</span>
-                            <span id="unpaid-debt-count" class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">1 phòng nợ</span>
+                            <span id="unpaid-debt-count" class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">0 phòng nợ</span>
                         </h3>
                         <div class="overflow-x-auto rounded-lg border border-amber-200/50 bg-white">
                             <table class="w-full text-left text-xs min-w-[500px] border-collapse">
@@ -434,22 +242,16 @@
                                         <th class="p-3 text-center">Trạng Thái</th>
                                     </tr>
                                 </thead>
-                                <tbody id="unpaid-debts-list" class="divide-y divide-amber-100/40 text-slate-700"><tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-all">
-                        <td class="p-3 font-medium text-slate-400">2026-05</td>
-                        <td class="p-3 font-bold text-slate-900">Phòng 103</td>
-                        <td class="p-3 font-medium">N/A</td>
-                        <td class="p-3 text-right font-bold text-rose-600">9,210,000 ₫</td>
-                        <td class="p-3 text-center"><span class="bg-rose-50 text-rose-600 px-2.5 py-1 rounded-lg text-[10px] font-bold border border-rose-100">Chưa đối soát</span></td>
-                    </tr></tbody>
+                                <tbody id="unpaid-debts-list" class="divide-y divide-amber-100/40 text-slate-700"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <div id="tab-input" class="tab-content flex flex-col gap-4 hidden">
+                <div id="tab-input" class="tab-content hidden flex flex-col gap-4">
                     <div class="border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-900">Khấu Trừ &amp; Ghi Nhận Chỉ Số Định Kỳ</h2>
-                        <p class="text-xs text-slate-400 font-medium">Chu kỳ hạch toán áp dụng: <span class="working-month-txt font-bold text-indigo-600">2026-05</span></p>
+                        <h2 class="text-lg font-bold text-slate-900">Khấu Trừ & Ghi Nhận Chỉ Số Định Kỳ</h2>
+                        <p class="text-xs text-slate-400 font-medium">Chu kỳ hạch toán áp dụng: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                     </div>
                     <div class="bg-indigo-50/40 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 font-medium flex items-center gap-2.5 shadow-sm">
                         <i class="fa-solid fa-shield-exclamation text-indigo-500 text-sm"></i> 
@@ -474,7 +276,7 @@
     <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-100 max-w-xl">
         <div>
             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phòng đang nhắm chụp</label>
-            <select id="aiTargetRoom" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all"><option value="B101">Phòng B101 (Nhi)</option><option value="B102">Phòng B102 (Kim Anh)</option><option value="B103">Phòng B103 (Điểm)</option><option value="B104">Phòng B104 (Thuần)</option><option value="B201">Phòng B201 (Trung Quốc)</option><option value="B202">Phòng B202 (Dạy Tiếng Anh)</option><option value="B203">Phòng B203 (Thủy)</option><option value="B204">Phòng B204 (Bạn Kim Anh)</option><option value="C101">Phòng C101 (Cô Tốt)</option><option value="C102">Phòng C102 (Người mới)</option><option value="C103">Phòng C103 (Bán hàng Xiaomi)</option><option value="C104">Phòng C104 (Nhà Beo)</option></select>
+            <select id="aiTargetRoom" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all"></select>
         </div>
         <div>
             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Loại chỉ số đo</label>
@@ -495,10 +297,7 @@
 </div>
                         
                     </div>
-                    <!-- Mobile cards -->
-                    <div id="mob-batch"></div>
-                    <!-- Desktop table -->
-                    <div id="desk-batch" class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
                         <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px] tracking-wider">
@@ -513,508 +312,28 @@
                                     <th class="p-3.5 bg-rose-50/30 text-rose-800 w-32 font-bold border-l border-slate-200 text-right">Phụ thu khác (₫)</th>
                                 </tr>
                             </thead>
-                            <tbody id="batch-input-tbody" class="divide-y divide-slate-150 text-slate-700"><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B101</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B101" value="4243" oninput="window.validateLiveInput(&#39;B101&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B101" value="0" oninput="window.validateLiveInput(&#39;B101&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B101&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B101" value="116" oninput="window.validateLiveInput(&#39;B101&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B101" value="0" oninput="window.validateLiveInput(&#39;B101&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B101&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B101" value="0" oninput="window.validateLiveInput(&#39;B101&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B101" value="0" oninput="window.validateLiveInput(&#39;B101&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B101" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B102</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B102" value="6335" oninput="window.validateLiveInput(&#39;B102&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B102" value="0" oninput="window.validateLiveInput(&#39;B102&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B102&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B102" value="352" oninput="window.validateLiveInput(&#39;B102&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B102" value="0" oninput="window.validateLiveInput(&#39;B102&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B102&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B102" value="0" oninput="window.validateLiveInput(&#39;B102&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B102" value="0" oninput="window.validateLiveInput(&#39;B102&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B102" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B103</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">1</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B103" value="4578" oninput="window.validateLiveInput(&#39;B103&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B103" value="0" oninput="window.validateLiveInput(&#39;B103&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B103&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B103" value="275" oninput="window.validateLiveInput(&#39;B103&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B103" value="0" oninput="window.validateLiveInput(&#39;B103&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B103&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B103" value="0" oninput="window.validateLiveInput(&#39;B103&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B103" value="0" oninput="window.validateLiveInput(&#39;B103&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B103" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B104</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B104" value="7989" oninput="window.validateLiveInput(&#39;B104&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B104" value="0" oninput="window.validateLiveInput(&#39;B104&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B104&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B104" value="459" oninput="window.validateLiveInput(&#39;B104&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B104" value="0" oninput="window.validateLiveInput(&#39;B104&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B104&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B104" value="0" oninput="window.validateLiveInput(&#39;B104&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B104" value="0" oninput="window.validateLiveInput(&#39;B104&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B104" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B201</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B201" value="10821" oninput="window.validateLiveInput(&#39;B201&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B201" value="0" oninput="window.validateLiveInput(&#39;B201&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B201&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B201" value="158" oninput="window.validateLiveInput(&#39;B201&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B201" value="0" oninput="window.validateLiveInput(&#39;B201&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B201&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B201" value="0" oninput="window.validateLiveInput(&#39;B201&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B201" value="0" oninput="window.validateLiveInput(&#39;B201&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B201" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B202</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B202" value="6715" oninput="window.validateLiveInput(&#39;B202&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B202" value="0" oninput="window.validateLiveInput(&#39;B202&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B202&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B202" value="205" oninput="window.validateLiveInput(&#39;B202&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B202" value="0" oninput="window.validateLiveInput(&#39;B202&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B202&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B202" value="0" oninput="window.validateLiveInput(&#39;B202&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B202" value="0" oninput="window.validateLiveInput(&#39;B202&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B202" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B203</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">1</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B203" value="3548" oninput="window.validateLiveInput(&#39;B203&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B203" value="0" oninput="window.validateLiveInput(&#39;B203&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B203&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B203" value="225" oninput="window.validateLiveInput(&#39;B203&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B203" value="0" oninput="window.validateLiveInput(&#39;B203&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B203&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B203" value="4277" oninput="window.validateLiveInput(&#39;B203&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B203" value="0" oninput="window.validateLiveInput(&#39;B203&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B203" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng B204</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-B204" value="6240" oninput="window.validateLiveInput(&#39;B204&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-B204" value="0" oninput="window.validateLiveInput(&#39;B204&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B204&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-B204" value="148" oninput="window.validateLiveInput(&#39;B204&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-B204" value="0" oninput="window.validateLiveInput(&#39;B204&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;B204&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-B204" value="0" oninput="window.validateLiveInput(&#39;B204&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-B204" value="0" oninput="window.validateLiveInput(&#39;B204&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-B204" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng C101</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">1</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-C101" value="8933" oninput="window.validateLiveInput(&#39;C101&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-C101" value="0" oninput="window.validateLiveInput(&#39;C101&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C101&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-C101" value="354" oninput="window.validateLiveInput(&#39;C101&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-C101" value="0" oninput="window.validateLiveInput(&#39;C101&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C101&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-C101" value="0" oninput="window.validateLiveInput(&#39;C101&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-C101" value="0" oninput="window.validateLiveInput(&#39;C101&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-C101" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng C102</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">1</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-C102" value="7498" oninput="window.validateLiveInput(&#39;C102&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-C102" value="0" oninput="window.validateLiveInput(&#39;C102&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C102&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-C102" value="228" oninput="window.validateLiveInput(&#39;C102&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-C102" value="0" oninput="window.validateLiveInput(&#39;C102&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C102&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-C102" value="0" oninput="window.validateLiveInput(&#39;C102&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-C102" value="0" oninput="window.validateLiveInput(&#39;C102&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-C102" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng C103</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-C103" value="5627" oninput="window.validateLiveInput(&#39;C103&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-C103" value="0" oninput="window.validateLiveInput(&#39;C103&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C103&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-C103" value="235" oninput="window.validateLiveInput(&#39;C103&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-C103" value="0" oninput="window.validateLiveInput(&#39;C103&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C103&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-C103" value="0" oninput="window.validateLiveInput(&#39;C103&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-C103" value="0" oninput="window.validateLiveInput(&#39;C103&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-C103" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr><tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng C104</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">2</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-C104" value="9700" oninput="window.validateLiveInput(&#39;C104&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-elecEnd-C104" value="0" oninput="window.validateLiveInput(&#39;C104&#39;, &#39;elec&#39;)" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C104&#39;, &#39;elec&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-amber-500" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-C104" value="250" oninput="window.validateLiveInput(&#39;C104&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent bg-rose-50 border-rose-200 text-rose-600">
-                    <input type="number" id="input-waterEnd-C104" value="0" oninput="window.validateLiveInput(&#39;C104&#39;, &#39;water&#39;)" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto(&#39;C104&#39;, &#39;water&#39;)" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 text-slate-300 hover:text-sky-500" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-C104" value="0" oninput="window.validateLiveInput(&#39;C104&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-C104" value="0" oninput="window.validateLiveInput(&#39;C104&#39;, &#39;ev&#39;)" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-C104" value="0" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr></tbody>
+                            <tbody id="batch-input-tbody" class="divide-y divide-slate-150 text-slate-700"></tbody>
                         </table>
                     </div>
                     <div class="flex justify-end pt-2">
                         <button onclick="window.saveBatchInput()" class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/10 flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-calculator-combined text-xs"></i> Tính Toán Chi Phí &amp; Đồng Bộ Hệ Thống
+                            <i class="fa-solid fa-calculator-combined text-xs"></i> Tính Toán Chi Phí & Đồng Bộ Hệ Thống
                         </button>
                     </div>
                 </div>
 
-                <div id="tab-expenses" class="tab-content flex flex-col gap-4 hidden">
+                <div id="tab-expenses" class="tab-content hidden flex flex-col gap-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <div>
                             <h2 class="text-lg font-bold text-slate-900">Hạch Toán Chi Phí Đầu Vào Tòa Nhà</h2>
-                            <p class="text-xs text-slate-400 font-medium">Các khoản phí vận hành phát sinh trong tháng <span class="working-month-txt font-bold text-indigo-600">2026-05</span></p>
+                            <p class="text-xs text-slate-400 font-medium">Các khoản phí vận hành phát sinh trong tháng <span class="working-month-txt font-bold text-indigo-600"></span></p>
                         </div>
                         <button onclick="window.openExpenseModal()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all">
                             <i class="fa-solid fa-plus-circle"></i> Thêm Khoản Chi Mới
                         </button>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="mob-card w-full text-left text-xs border-collapse">
+                        <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-500 tracking-wider">
                                     <th class="p-3.5">Tên Khoản Mục Chi Phí Vận Hành</th>
@@ -1027,9 +346,9 @@
                     </div>
                 </div>
 
-                <div id="tab-summary" class="tab-content flex flex-col gap-4">
+                <div id="tab-summary" class="tab-content hidden flex flex-col gap-4">
                     <div class="border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-900">Bảng Tổng Hợp Doanh Thu &amp; Phiếu Thu Tiền Nhà</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Bảng Tổng Hợp Doanh Thu & Phiếu Thu Tiền Nhà</h2>
                         <p class="text-xs text-slate-400 font-medium">Báo cáo trực quan doanh thu tổng thể các danh mục</p>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
@@ -1048,295 +367,7 @@
                                     <th class="p-3.5 text-center w-36">Thao tác</th>
                                 </tr>
                             </thead>
-                            <tbody id="summary-table-tbody" class="divide-y divide-slate-150 text-slate-700"><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B101</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,700,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B101&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B101&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B101&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B102</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,800,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B102&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B102&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B102&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B103</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,800,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">10,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B103&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B103&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B103&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B104</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,800,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B104&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B104&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B104&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B201</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">2,300,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B201&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B201&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B201&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B202</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,700,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B202&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B202&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B202&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B203</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,700,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">10,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B203&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B203&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B203&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.B204</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,700,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;B204&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;B204&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;B204&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.C101</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,800,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">10,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;C101&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;C101&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;C101&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.C102</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,800,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">10,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;C102&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;C102&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;C102&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.C103</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,800,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;C103&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;C103&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;C103&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr><tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="p-3.5 font-bold text-slate-900 text-center">P.C104</td>
-                    <td class="p-3.5 text-right font-medium text-slate-600">1,800,000</td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 m³)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">0 <span class="text-[9px] text-slate-400 block font-normal">(0 kWh)</span></td>
-                    <td class="p-3.5 text-right text-slate-500">20,000</td>
-                    <td class="p-3.5 text-right text-rose-600 font-semibold">0</td>
-                    <td class="p-3.5 text-right font-extrabold text-indigo-900 bg-indigo-50/30">0 ₫</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="window.togglePaidStatus(&#39;C104&#39;)" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all bg-amber-50 border-amber-200 text-amber-700">
-                            <i class="fa-solid fa-spinner mr-1"></i>Chưa thu
-                        </button>
-                    </td>
-                    <td class="p-3.5 text-center no-print">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.viewInvoiceDetail(&#39;C104&#39;, &#39;2026-05&#39;)" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 text-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> In/PDF
-                            </button>
-                            <button onclick="window.lockInvoice(&#39;C104&#39;)" class="px-2 py-1 bg-slate-100 hover:bg-slate-800 border border-slate-200 text-slate-600 hover:text-white rounded-lg text-[11px] font-semibold transition-all" title="Khóa bảo lưu lịch sử">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr></tbody>
+                            <tbody id="summary-table-tbody" class="divide-y divide-slate-150 text-slate-700"></tbody>
                         </table>
                     </div>
                 </div>
@@ -1347,7 +378,7 @@
                         <p class="text-xs text-slate-400 font-medium">Đóng băng dữ liệu đối soát tài chính khi khách đã trả hoặc đổi phòng.</p>
                     </div>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
-                        <table class="mob-card w-full text-left text-xs border-collapse">
+                        <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-500 tracking-wider">
                                     <th class="p-3.5">Chu Kỳ Đối Soát Chốt</th>
@@ -1357,103 +388,7 @@
                                     <th class="p-3.5 text-center w-28 no-print">Hủy khóa</th>
                                 </tr>
                             </thead>
-                            <tbody id="saved-invoices-tbody" class="divide-y divide-slate-150 text-slate-700 cursor-pointer"><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B102&#39;, &#39;2026-04&#39;, &#39;%7B%22roomId%22%3A%22B102%22%2C%22total%22%3A2089000%2C%22renter%22%3A%22Kim%20Anh%22%2C%22details%22%3A%7B%22waterEnd%22%3A352%2C%22elecStart%22%3A6281%2C%22roomId%22%3A%22B102%22%2C%22paid%22%3Atrue%2C%22waterStart%22%3A348%2C%22evEnd%22%3A0%2C%22otherCost%22%3A0%2C%22month%22%3A%222026-04%22%2C%22total%22%3A2089000%2C%22elecEnd%22%3A6335%2C%22evStart%22%3A0%7D%2C%22month%22%3A%222026-04%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B102</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Kim Anh</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,089,000 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(0)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B103&#39;, &#39;2026-04&#39;, &#39;%7B%22month%22%3A%222026-04%22%2C%22details%22%3A%7B%22otherCost%22%3A0%2C%22waterEnd%22%3A275%2C%22elecStart%22%3A4502%2C%22paid%22%3Atrue%2C%22roomId%22%3A%22B103%22%2C%22evEnd%22%3A0%2C%22waterStart%22%3A269%2C%22evStart%22%3A0%2C%22elecEnd%22%3A4578%2C%22month%22%3A%222026-04%22%2C%22total%22%3A2196000%7D%2C%22total%22%3A2196000%2C%22roomId%22%3A%22B103%22%2C%22renter%22%3A%22%C4%90i%E1%BB%83m%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B103</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Điểm</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,196,000 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(1)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B104&#39;, &#39;2026-04&#39;, &#39;%7B%22total%22%3A2355500%2C%22roomId%22%3A%22B104%22%2C%22renter%22%3A%22Thu%E1%BA%A7n%22%2C%22details%22%3A%7B%22month%22%3A%222026-04%22%2C%22total%22%3A2355500%2C%22evStart%22%3A0%2C%22elecEnd%22%3A7989%2C%22elecStart%22%3A7876%2C%22waterEnd%22%3A459%2C%22evEnd%22%3A0%2C%22waterStart%22%3A452%2C%22roomId%22%3A%22B104%22%2C%22paid%22%3Atrue%2C%22otherCost%22%3A0%7D%2C%22month%22%3A%222026-04%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B104</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Thuần</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,355,500 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(2)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B201&#39;, &#39;2026-04&#39;, &#39;%7B%22details%22%3A%7B%22month%22%3A%222026-04%22%2C%22total%22%3A2379500%2C%22evStart%22%3A0%2C%22elecEnd%22%3A10821%2C%22elecStart%22%3A10804%2C%22waterEnd%22%3A158%2C%22evEnd%22%3A0%2C%22waterStart%22%3A158%2C%22paid%22%3Atrue%2C%22roomId%22%3A%22B201%22%2C%22otherCost%22%3A0%7D%2C%22month%22%3A%222026-04%22%2C%22renter%22%3A%22Trung%20Qu%E1%BB%91c%22%2C%22total%22%3A2379500%2C%22roomId%22%3A%22B201%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B201</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Trung Quốc</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,379,500 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(3)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B202&#39;, &#39;2026-04&#39;, &#39;%7B%22details%22%3A%7B%22otherCost%22%3A0%2C%22elecStart%22%3A6568%2C%22waterEnd%22%3A205%2C%22waterStart%22%3A199%2C%22evEnd%22%3A0%2C%22roomId%22%3A%22B202%22%2C%22paid%22%3Atrue%2C%22evStart%22%3A0%2C%22elecEnd%22%3A6715%2C%22month%22%3A%222026-04%22%2C%22total%22%3A2354500%7D%2C%22month%22%3A%222026-04%22%2C%22roomId%22%3A%22B202%22%2C%22total%22%3A2354500%2C%22renter%22%3A%22D%E1%BA%A1y%20Ti%E1%BA%BFng%20Anh%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B202</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Dạy Tiếng Anh</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,354,500 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(4)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B203&#39;, &#39;2026-04&#39;, &#39;%7B%22details%22%3A%7B%22otherCost%22%3A0%2C%22paid%22%3Atrue%2C%22roomId%22%3A%22B203%22%2C%22waterStart%22%3A218%2C%22evEnd%22%3A4277%2C%22waterEnd%22%3A225%2C%22elecStart%22%3A3374%2C%22evStart%22%3A4272%2C%22elecEnd%22%3A3548%2C%22total%22%3A2476500%2C%22month%22%3A%222026-04%22%7D%2C%22month%22%3A%222026-04%22%2C%22renter%22%3A%22Th%E1%BB%A7y%22%2C%22total%22%3A2476500%2C%22roomId%22%3A%22B203%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B203</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Thủy</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,476,500 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(5)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B204&#39;, &#39;2026-04&#39;, &#39;%7B%22roomId%22%3A%22B204%22%2C%22total%22%3A2523000%2C%22renter%22%3A%22B%E1%BA%A1n%20Kim%20Anh%22%2C%22details%22%3A%7B%22total%22%3A2523000%2C%22month%22%3A%222026-04%22%2C%22evStart%22%3A0%2C%22elecEnd%22%3A6240%2C%22paid%22%3Atrue%2C%22roomId%22%3A%22B204%22%2C%22waterStart%22%3A139%2C%22evEnd%22%3A0%2C%22waterEnd%22%3A148%2C%22elecStart%22%3A6062%2C%22otherCost%22%3A0%7D%2C%22month%22%3A%222026-04%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B204</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Bạn Kim Anh</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,523,000 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(6)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;C101&#39;, &#39;2026-04&#39;, &#39;%7B%22roomId%22%3A%22C101%22%2C%22total%22%3A2235000%2C%22renter%22%3A%22C%C3%B4%20T%E1%BB%91t%22%2C%22details%22%3A%7B%22paid%22%3Atrue%2C%22roomId%22%3A%22C101%22%2C%22waterStart%22%3A352%2C%22evEnd%22%3A0%2C%22waterEnd%22%3A354%2C%22elecStart%22%3A8823%2C%22otherCost%22%3A0%2C%22total%22%3A2235000%2C%22month%22%3A%222026-04%22%2C%22evStart%22%3A0%2C%22elecEnd%22%3A8933%7D%2C%22month%22%3A%222026-04%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng C101</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Cô Tốt</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,235,000 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(7)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;C102&#39;, &#39;2026-04&#39;, &#39;%7B%22total%22%3A1890500%2C%22roomId%22%3A%22C102%22%2C%22renter%22%3A%22Ng%C6%B0%E1%BB%9Di%20m%E1%BB%9Bi%22%2C%22details%22%3A%7B%22total%22%3A1890500%2C%22month%22%3A%222026-04%22%2C%22elecEnd%22%3A7498%2C%22evStart%22%3A0%2C%22waterStart%22%3A228%2C%22evEnd%22%3A0%2C%22paid%22%3Atrue%2C%22roomId%22%3A%22C102%22%2C%22elecStart%22%3A7475%2C%22waterEnd%22%3A228%2C%22otherCost%22%3A0%7D%2C%22month%22%3A%222026-04%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng C102</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Người mới</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">1,890,500 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(8)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;C103&#39;, &#39;2026-04&#39;, &#39;%7B%22total%22%3A2274500%2C%22renter%22%3A%22B%C3%A1n%20h%C3%A0ng%20Xiaomi%22%2C%22roomId%22%3A%22C103%22%2C%22details%22%3A%7B%22elecEnd%22%3A5627%2C%22evStart%22%3A0%2C%22month%22%3A%222026-04%22%2C%22total%22%3A2274500%2C%22otherCost%22%3A0%2C%22waterEnd%22%3A235%2C%22elecStart%22%3A5520%2C%22roomId%22%3A%22C103%22%2C%22paid%22%3Atrue%2C%22waterStart%22%3A231%2C%22evEnd%22%3A0%7D%2C%22month%22%3A%222026-04%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng C103</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Bán hàng Xiaomi</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,274,500 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(9)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;C104&#39;, &#39;2026-04&#39;, &#39;%7B%22details%22%3A%7B%22month%22%3A%222026-04%22%2C%22total%22%3A2546000%2C%22elecEnd%22%3A9700%2C%22evStart%22%3A0%2C%22waterEnd%22%3A250%2C%22elecStart%22%3A9504%2C%22roomId%22%3A%22C104%22%2C%22paid%22%3Atrue%2C%22waterStart%22%3A248%2C%22evEnd%22%3A0%2C%22otherCost%22%3A0%7D%2C%22month%22%3A%222026-04%22%2C%22roomId%22%3A%22C104%22%2C%22total%22%3A2546000%2C%22renter%22%3A%22Nh%C3%A0%20Beo%22%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng C104</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Nhà Beo</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,546,000 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(10)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr><tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail(&#39;B101&#39;, &#39;2026-04&#39;, &#39;%7B%22renter%22%3A%22Nhi%22%2C%22roomId%22%3A%22B101%22%2C%22total%22%3A2130500%2C%22month%22%3A%222026-04%22%2C%22details%22%3A%7B%22otherCost%22%3A0%2C%22waterStart%22%3A110%2C%22evEnd%22%3A0%2C%22paid%22%3Atrue%2C%22roomId%22%3A%22B101%22%2C%22elecStart%22%3A4160%2C%22waterEnd%22%3A116%2C%22elecEnd%22%3A4243%2C%22evStart%22%3A0%2C%22total%22%3A2130500%2C%22month%22%3A%222026-04%22%7D%7D&#39;)">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">2026-04</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng B101</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">Nhi</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">2,130,500 ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(11)" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr></tbody>
+                            <tbody id="saved-invoices-tbody" class="divide-y divide-slate-150 text-slate-700 cursor-pointer"></tbody>
                         </table>
                     </div>
                 </div>
@@ -1468,187 +403,7 @@
                             <i class="fa-solid fa-plus-circle"></i> Thêm Phòng Mới
                         </button>
                     </div>
-                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5">
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B101</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Nhi</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,700,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(0)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(0)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B102</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Kim Anh</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,800,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(1)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(1)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B103</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">1 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Điểm</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,800,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(2)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(2)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B104</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Thuần</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,800,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(3)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(3)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B201</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Trung Quốc</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">2,300,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(4)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(4)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B202</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Dạy Tiếng Anh</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,700,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(5)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(5)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B203</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">1 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Thủy</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,700,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(6)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(6)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng B204</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Bạn Kim Anh</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,700,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(7)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(7)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng C101</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">1 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Cô Tốt</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,800,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(8)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(8)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng C102</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">1 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Người mới</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,800,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(9)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(9)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng C103</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Bán hàng Xiaomi</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,800,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(10)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(10)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            
-                <div class="bg-white border border-slate-200/80 p-4 rounded-2xl relative shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">Phòng C104</span>
-                        <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100">2 nhân khẩu</span>
-                    </div>
-                    <div class="space-y-2 text-xs text-slate-500 font-medium">
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-300 text-xs w-4"></i> Khách thuê: <b class="text-slate-800 font-bold">Nhà Beo</b></p>
-                        <p class="flex items-center gap-1.5"><i class="fa-solid fa-tags text-slate-300 text-xs w-4"></i> Cấu hình gốc: <b class="text-slate-800 font-bold">1,800,000 ₫</b></p>
-                    </div>
-                    <div class="flex justify-end gap-1.5 mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold">
-                        <button onclick="window.editRoom(11)" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg transition-all">Hiệu chỉnh</button>
-                        <button onclick="window.deleteRoom(11)" class="px-3 py-1.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all">Xóa</button>
-                    </div>
-                </div>
-            </div>
+                    <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5"></div>
                 </div>
 
                 <div id="tab-settings" class="tab-content hidden flex flex-col gap-6">
@@ -1657,13 +412,13 @@
                         <div class="bg-emerald-50/30 border border-emerald-100 p-5 rounded-2xl mt-4">
                             <p class="text-xs text-emerald-800 font-medium mb-4">Hệ thống hỗ trợ xuất xuất dữ liệu tự động ra bảng tính Excel (.xlsx). Các tệp tin được **định cấu trúc ô dữ liệu nghiêm ngặt, tự động đổ màu tiêu đề, căn biên kẻ bảng kế toán và chốt dòng tổng cộng** đồng bộ.</p>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                                <button onclick="window.exportToExcel(&#39;month&#39;)" class="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/10 transition-all flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-calendar-day text-sm"></i> Xuất Excel Tháng (<span class="working-month-txt">2026-05</span>)
+                                <button onclick="window.exportToExcel('month')" class="px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/10 transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-calendar-day text-sm"></i> Xuất Excel Tháng (<span class="working-month-txt"></span>)
                                 </button>
-                                <button onclick="window.exportToExcel(&#39;year&#39;)" class="px-4 py-3.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-md shadow-teal-600/10 transition-all flex items-center justify-center gap-2">
+                                <button onclick="window.exportToExcel('year')" class="px-4 py-3.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-md shadow-teal-600/10 transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-calendar-days text-sm"></i> Xuất Excel Cả Năm Hiện Tại
                                 </button>
-                                <button onclick="window.exportToExcel(&#39;all&#39;)" class="px-4 py-3.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                                <button onclick="window.exportToExcel('all')" class="px-4 py-3.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-server text-sm"></i> Xuất Toàn Bộ Hệ Thống Dữ Liệu
                                 </button>
                             </div>
@@ -1845,21 +600,11 @@
             if(!emailInput || !passInput) return;
             const email = emailInput.value.trim();
             const password = passInput.value;
-            if(!email || !password) { alert("Vui lòng điền đầy đủ tài khoản và mật khẩu!"); return; }
-            const btn = document.querySelector('#loginModal button');
-            if(btn){ btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i>Đang kết nối...'; }
-            var attempt = 0;
-            function tryLogin() {
-                if (typeof window.firebaseBridge.login === 'function') {
-                    window.firebaseBridge.login(email, password);
-                } else if(attempt++ < 20) {
-                    setTimeout(tryLogin, 300);
-                } else {
-                    if(btn){ btn.disabled=false; btn.innerHTML='Đăng Nhập Hệ Thống <i class="fa-solid fa-arrow-right text-xs"></i>'; }
-                    alert("Không kết nối được Firebase. Kiểm tra mạng!");
-                }
+            if (typeof window.firebaseBridge.login === 'function') {
+                window.firebaseBridge.login(email, password);
+            } else {
+                alert("Đang thiết lập liên kết máy chủ Google Firebase Cloud, vui lòng thử lại sau 1 giây!");
             }
-            tryLogin();
         };
         window.handleLogout = function() {
             if (typeof window.firebaseBridge.logout === 'function') {
@@ -1915,8 +660,6 @@
         window.firebaseBridge.login = function(email, password) {
             if(!email || !password) { alert("Vui lòng điền tài khoản!"); return; }
             signInWithEmailAndPassword(auth, email, password).catch(err => {
-                const btn = document.querySelector('#loginModal button');
-                if(btn){ btn.disabled=false; btn.innerHTML='Đăng Nhập Hệ Thống <i class="fa-solid fa-arrow-right text-xs"></i>'; }
                 alert("Đăng nhập thất bại: " + err.message);
             });
         };
@@ -2187,9 +930,9 @@
             if(!tbody) return;
             const currentExpenses = window.systemData.expenses.filter(e => e && e.month === currentMonth);
             tbody.innerHTML = currentExpenses.map((e, index) => `<tr class="hover:bg-slate-50/50 transition-all">
-                <td class="p-3.5 font-semibold text-slate-800" data-label="Khoản mục">${e.name}</td>
-                <td class="p-3.5 text-right font-bold text-rose-600" data-label="Số tiền">${e.amount.toLocaleString()} ₫</td>
-                <td class="p-3.5 text-center" data-label="Xóa"><button onclick="window.deleteExpense(${window.systemData.expenses.indexOf(e)})" class="text-slate-400 hover:text-rose-600 transition-all" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button></td>
+                <td class="p-3.5 font-semibold text-slate-800">${e.name}</td>
+                <td class="p-3.5 text-right font-bold text-rose-600">${e.amount.toLocaleString()} ₫</td>
+                <td class="p-3.5 text-center"><button onclick="window.deleteExpense(${window.systemData.expenses.indexOf(e)})" class="text-slate-400 hover:text-rose-600 transition-all"><i class="fa-solid fa-trash-can"></i></button></td>
             </tr>`).join('');
         }
 
@@ -2437,12 +1180,12 @@
             tbody.innerHTML = window.systemData.savedInvoices.map((inv, index) => {
                 const safeJsonStr = encodeURIComponent(JSON.stringify(inv));
                 return `<tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail('${inv.roomId}', '${inv.month}', '${safeJsonStr}')">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs" data-label="Chu kỳ">${inv.month}</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs" data-label="Phòng">Phòng ${inv.roomId}</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs" data-label="Khách thuê">${inv.renter}</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs" data-label="Tổng tiền">${inv.total.toLocaleString()} ₫</td>
-                    <td class="p-3 text-center no-print" data-label="Xóa" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(${index})" class="text-slate-400 hover:text-rose-600 px-2 py-1" style="min-height:36px;"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="p-3 font-semibold text-indigo-600 text-xs">${inv.month}</td>
+                    <td class="p-3 font-bold text-slate-900 text-xs">Phòng ${inv.roomId}</td>
+                    <td class="p-3 font-medium text-slate-600 text-xs">${inv.renter}</td>
+                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs">${inv.total.toLocaleString()} ₫</td>
+                    <td class="p-3 text-center no-print" onclick="event.stopPropagation();">
+                        <button onclick="window.deleteSavedInvoice(${index})" class="text-slate-400 hover:text-rose-600 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 </tr>`;
             }).join('');
@@ -3124,198 +1867,5 @@ window.viewAiProofPhoto = function(roomId, type) {
     `;
 };
     </script>
-
-    <!-- ===== iOS BOTTOM NAV ===== -->
-    <div id="ios-bottom-nav" class="no-print">
-        <div class="ib-row">
-            <button class="ib-btn on" id="ib-dashboard" onclick="window.switchTab(&#39;dashboard&#39;)">
-                <i class="fa-solid fa-grid-2"></i><span>Tổng Quan</span>
-            </button>
-            <button class="ib-btn" id="ib-input" onclick="window.switchTab(&#39;input&#39;)">
-                <i class="fa-solid fa-bolt-lightning"></i><span>Điện Nước</span>
-            </button>
-            <button class="ib-btn" id="ib-summary" onclick="window.switchTab(&#39;summary&#39;)">
-                <i class="fa-solid fa-file-invoice"></i><span>Doanh Thu</span>
-            </button>
-            <button class="ib-btn" id="ib-rooms" onclick="window.switchTab(&#39;rooms&#39;)">
-                <i class="fa-solid fa-door-closed"></i><span>Phòng</span>
-            </button>
-            <button class="ib-btn" id="ib-more" onclick="iosShowMore()">
-                <i class="fa-solid fa-ellipsis"></i><span>Thêm</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- ===== iOS MORE SHEET ===== -->
-    <div id="ios-more-bg" onclick="iosHideMore()"></div>
-    <div id="ios-more-sheet" class="no-print">
-        <div style="width:36px;height:4px;background:#e2e8f0;border-radius:4px;margin:0 auto 14px;"></div>
-        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;padding:0 4px 8px;">Chức năng khác</p>
-        <button class="ms-item" onclick="window.switchTab(&#39;expenses&#39;);iosHideMore()">
-            <div class="ms-icon" style="background:#fff1f2;color:#e11d48;"><i class="fa-solid fa-wallet"></i></div>
-            <div><div class="ms-title">Chi Phí Vận Hành</div><div class="ms-sub">Hạch toán phí tháng</div></div>
-        </button>
-        <button class="ms-item" onclick="window.switchTab(&#39;saved-invoices&#39;);iosHideMore()">
-            <div class="ms-icon" style="background:#eff6ff;color:#3b82f6;"><i class="fa-solid fa-clock-history"></i></div>
-            <div><div class="ms-title">Lưu Trữ Lịch Sử</div><div class="ms-sub">Hóa đơn đã khóa</div></div>
-        </button>
-        <button class="ms-item" onclick="window.switchTab(&#39;settings&#39;);iosHideMore()">
-            <div class="ms-icon" style="background:#fffbeb;color:#d97706;"><i class="fa-solid fa-sliders-h"></i></div>
-            <div><div class="ms-title">Thiết Lập Định Giá</div><div class="ms-sub">Biểu phí &amp; Gemini AI</div></div>
-        </button>
-    </div>
-
-    <script>
-    // ===== iOS BOTTOM NAV LOGIC =====
-    function iosShowMore() {
-        document.getElementById('ios-more-bg').style.display = 'block';
-        document.getElementById('ios-more-sheet').classList.add('show');
-    }
-    function iosHideMore() {
-        document.getElementById('ios-more-bg').style.display = 'none';
-        document.getElementById('ios-more-sheet').classList.remove('show');
-    }
-
-    // Wrap switchTab để sync bottom nav active state
-    document.addEventListener('DOMContentLoaded', function() {
-        var origSwitch = window.switchTab;
-        if (typeof origSwitch === 'function') {
-            window.switchTab = function(tabId) {
-                origSwitch(tabId);
-                // Sync bottom nav
-                var map = {dashboard:'dashboard',input:'input',summary:'summary',rooms:'rooms',expenses:'more','saved-invoices':'more',settings:'more'};
-                document.querySelectorAll('.ib-btn').forEach(function(b){ b.classList.remove('on'); });
-                var btnId = 'ib-' + (map[tabId] || tabId);
-                var btn = document.getElementById(btnId);
-                if(btn) btn.classList.add('on');
-                // Scroll top on mobile
-                if(window.innerWidth < 1024) window.scrollTo({top:0,behavior:'smooth'});
-                // Render mobile batch cards
-                if(tabId === 'input') setTimeout(renderMobBatch, 100);
-            };
-        }
-
-        // Init bottom nav visibility
-        function checkNav() {
-            var nav = document.getElementById('ios-bottom-nav');
-            if(!nav) return;
-            nav.style.display = window.innerWidth < 1024 ? 'block' : 'none';
-        }
-        checkNav();
-        window.addEventListener('resize', checkNav);
-
-        // First render of mobile batch cards
-        setTimeout(renderMobBatch, 800);
-    });
-
-    // ===== MOBILE BATCH CARDS =====
-    // Không can thiệp vào renderBatchInputTable gốc
-    // Chỉ render cards riêng vào #mob-batch
-    function renderMobBatch() {
-        var container = document.getElementById('mob-batch');
-        if(!container || !window.systemData) return;
-        var month = document.getElementById('global-month')
-                    ? document.getElementById('global-month').value
-                    : (window.currentMonth || '');
-        if(!month) return;
-
-        var parts = month.split('-').map(Number);
-        var year = parts[0], mon = parts[1];
-        var prevMonth = mon === 1
-            ? (year-1) + '-12'
-            : year + '-' + String(mon-1).padStart(2,'0');
-
-        container.innerHTML = (window.systemData.rooms || []).map(function(room) {
-            var billing = (window.systemData.billings || []).find(function(b){ return b.roomId===room.roomId && b.month===month; }) || {};
-            var prev    = (window.systemData.billings || []).find(function(b){ return b.roomId===room.roomId && b.month===prevMonth; });
-
-            var eS  = billing.elecStart  !== undefined ? billing.elecStart  : (prev && prev.elecEnd  !== undefined ? prev.elecEnd  : (room.initElec  || 0));
-            var eE  = billing.elecEnd    !== undefined ? billing.elecEnd    : 0;
-            var wS  = billing.waterStart !== undefined ? billing.waterStart : (prev && prev.waterEnd !== undefined ? prev.waterEnd : (room.initWater || 0));
-            var wE  = billing.waterEnd   !== undefined ? billing.waterEnd   : 0;
-            var evS = billing.evStart    !== undefined ? billing.evStart    : (prev && prev.evEnd    !== undefined ? prev.evEnd    : (room.initEv    || 0));
-            var evE = billing.evEnd      !== undefined ? billing.evEnd      : 0;
-            var oth = billing.otherCost  !== undefined ? billing.otherCost  : 0;
-
-            var hasE = localStorage.getItem('AI_PROOF_' + month + '_' + room.roomId + '_elec');
-            var hasW = localStorage.getItem('AI_PROOF_' + month + '_' + room.roomId + '_water');
-
-            return '<div class="mbc">'
-                + '<div style="display:flex;align-items:center;justify-content:space-between">'
-                +   '<div><div class="mbc-title">Phòng ' + room.roomId + '</div>'
-                +   '<div class="mbc-sub">' + (room.renter||'Trống') + ' · ' + (room.members||1) + ' người · ' + (room.price||0).toLocaleString() + '₫</div></div>'
-                +   '<div style="display:flex;gap:6px;">'
-                +   (hasE ? '<button onclick="window.viewAiProofPhoto(''+room.roomId+'','elec')" style="min-height:36px;min-width:36px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;color:#d97706;font-size:13px;cursor:pointer;"><i class="fa-solid fa-bolt"></i></button>' : '')
-                +   (hasW ? '<button onclick="window.viewAiProofPhoto(''+room.roomId+'','water')" style="min-height:36px;min-width:36px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;color:#0284c7;font-size:13px;cursor:pointer;"><i class="fa-solid fa-droplet"></i></button>' : '')
-                +   '</div></div>'
-                + '<div class="mbc-grid">'
-                + '<div><div class="mbc-label" style="color:#d97706">⚡ Điện đầu</div>'
-                + '<input type="number" inputmode="numeric" class="mbc-input mbc-elec" value="' + eS + '" '
-                + 'oninput="mbcSync(''+room.roomId+'','elecStart',this.value)" ></div>'
-
-                + '<div><div class="mbc-label" style="color:#d97706">⚡ Điện cuối</div>'
-                + '<input type="number" inputmode="numeric" class="mbc-input mbc-elec' + (eE<eS&&eE>0?' mbc-err':'') + '" value="' + eE + '" '
-                + 'oninput="mbcSync(''+room.roomId+'','elecEnd',this.value)"></div>'
-
-                + '<div><div class="mbc-label" style="color:#0284c7">💧 Nước đầu</div>'
-                + '<input type="number" inputmode="numeric" class="mbc-input mbc-water" value="' + wS + '" '
-                + 'oninput="mbcSync(''+room.roomId+'','waterStart',this.value)"></div>'
-
-                + '<div><div class="mbc-label" style="color:#0284c7">💧 Nước cuối</div>'
-                + '<input type="number" inputmode="numeric" class="mbc-input mbc-water' + (wE<wS&&wE>0?' mbc-err':'') + '" value="' + wE + '" '
-                + 'oninput="mbcSync(''+room.roomId+'','waterEnd',this.value)"></div>'
-
-                + '<div><div class="mbc-label" style="color:#059669">🔋 EV đầu</div>'
-                + '<input type="number" inputmode="numeric" class="mbc-input mbc-ev" value="' + evS + '" '
-                + 'oninput="mbcSync(''+room.roomId+'','evStart',this.value)"></div>'
-
-                + '<div><div class="mbc-label" style="color:#059669">🔋 EV cuối</div>'
-                + '<input type="number" inputmode="numeric" class="mbc-input mbc-ev' + (evE<evS&&evE>0?' mbc-err':'') + '" value="' + evE + '" '
-                + 'oninput="mbcSync(''+room.roomId+'','evEnd',this.value)"></div>'
-
-                + '<div style="grid-column:span 2"><div class="mbc-label" style="color:#e11d48">💰 Phụ thu khác (₫)</div>'
-                + '<input type="number" inputmode="numeric" class="mbc-input mbc-other" value="' + oth + '" '
-                + 'oninput="mbcSync(''+room.roomId+'','otherCost',this.value)"></div>'
-                + '</div></div>';
-        }).join('');
-    }
-
-    // Sync mobile card → hidden desktop inputs (saveBatchInput đọc từ desktop inputs)
-    function mbcSync(roomId, field, val) {
-        var ids = {
-            elecStart:  'input-elecStart-'  + roomId,
-            elecEnd:    'input-elecEnd-'    + roomId,
-            waterStart: 'input-waterStart-' + roomId,
-            waterEnd:   'input-waterEnd-'   + roomId,
-            evStart:    'input-evStart-'    + roomId,
-            evEnd:      'input-evEnd-'      + roomId,
-            otherCost:  'input-otherCost-'  + roomId,
-        };
-        var el = document.getElementById(ids[field]);
-        if(el) el.value = val;
-    }
-
-    // Re-render mobile batch when renderAll is called
-    (function() {
-        var timer;
-        var origRenderAll = window.renderAll;
-        // Poll until renderAll exists (module script loads async)
-        var poll = setInterval(function() {
-            if(typeof window.renderAll === 'function' && window.renderAll !== origRenderAll) {
-                origRenderAll = window.renderAll;
-            }
-            if(typeof window.renderAll === 'function') {
-                var prev = window.renderAll;
-                window.renderAll = function() {
-                    prev();
-                    clearTimeout(timer);
-                    timer = setTimeout(renderMobBatch, 200);
-                };
-                clearInterval(poll);
-            }
-        }, 300);
-    })();
-    </script>
-
-
-</body></html>
+</body>
+</html>
