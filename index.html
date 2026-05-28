@@ -1183,28 +1183,26 @@
             let roomPrice = 0;
 
             if (savedInvoiceStr) {
-        const savedData = JSON.parse(decodeURIComponent(savedInvoiceStr));
-        billing = savedData.details || savedData;
-        renterName = savedData.renter || "Khách thuê lịch sử";
-        const roomObj = window.systemData.rooms.find(r => r.roomId === roomId) || {};
-        
-        // Sửa lỗi: Lấy giá phòng gốc trực tiếp từ thuộc tính lịch sử, nếu không có mới tính toán trừ khống theo đơn giá thiết lập hệ thống
-        const currentSettings = window.systemData.settings || { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
-        const eUsage = Math.max(0, (billing.elecEnd || 0) - (billing.elecStart || 0));
-        const wUsage = Math.max(0, (billing.waterEnd || 0) - (billing.waterStart || 0));
-        const evUsage = Math.max(0, (billing.evEnd || 0) - (billing.evStart || 0));
-        
-        const eCost = eUsage * (currentSettings.elecFlat || 3500);
-        const wCost = wUsage * (currentSettings.waterFlat || 15000);
-        const evCost = evUsage * (currentSettings.evFlat || 4000);
-        const gMembers = billing.members || roomObj.members || 1;
-        const gCost = gMembers * (currentSettings.garbageFlat || 10000);
-        const oCost = billing.otherCost || 0;
+                const savedData = JSON.parse(decodeURIComponent(savedInvoiceStr));
+                billing = savedData.details || savedData;
+                renterName = savedData.renter || "Khách thuê lịch sử";
+                const roomObj = window.systemData.rooms.find(r => r.roomId === roomId) || {};
+                
+                const currentSettings = window.systemData.settings || { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
+                const eUsage = Math.max(0, (billing.elecEnd || 0) - (billing.elecStart || 0));
+                const wUsage = Math.max(0, (billing.waterEnd || 0) - (billing.waterStart || 0));
+                const evUsage = Math.max(0, (billing.evEnd || 0) - (billing.evStart || 0));
+                
+                const eCost = eUsage * (currentSettings.elecFlat || 3500);
+                const wCost = wUsage * (currentSettings.waterFlat || 15000);
+                const evCost = evUsage * (currentSettings.evFlat || 4000);
+                const gMembers = billing.members || roomObj.members || 1;
+                const gCost = gMembers * (currentSettings.garbageFlat || 10000);
+                const oCost = billing.otherCost || 0;
 
-        // Ưu tiên lấy giá phòng được lưu trong cấu trúc, nếu không có sẽ trừ chuẩn theo cài đặt hệ thống
-        roomPrice = roomObj.price || (billing.total - eCost - wCost - evCost - gCost - oCost);
-        members = gMembers;
-    }
+                roomPrice = roomObj.price || (billing.total - eCost - wCost - evCost - gCost - oCost);
+                members = gMembers;
+            }
             else {
                 billing = window.systemData.billings.find(b => b.roomId === roomId && b.month === month);
                 const roomObj = window.systemData.rooms.find(r => r.roomId === roomId);
@@ -1224,94 +1222,89 @@
             const garbageCost = (members || 1) * (settings.garbageFlat || 10000);
 
             const invoiceHTML = `
-                <div class="border border-slate-200 p-6 rounded-2xl bg-white text-slate-800 text-xs shadow-sm font-sans" id="invoice-printable-node">
-                    <div class="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
+                <div class="border border-slate-200 p-4 sm:p-6 rounded-2xl bg-white text-slate-800 shadow-sm font-sans" id="invoice-printable-node">
+                    <div class="flex justify-between items-start border-b border-slate-200 pb-3 sm:pb-4 mb-3 sm:mb-4">
                         <div>
-                            <h4 class="text-base font-extrabold uppercase tracking-tight text-slate-900 family-font">PHIẾU THU TIỀN NHÀ</h4>
-                            <p class="text-[11px] text-slate-400 font-medium mt-0.5">Chu kỳ thanh toán định kỳ: <span class="font-bold text-indigo-600">${billing.month}</span></p>
+                            <h4 class="text-sm sm:text-base font-extrabold uppercase tracking-tight text-slate-900 family-font">PHIẾU THU TIỀN NHÀ</h4>
+                            <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-0.5">Kỳ thanh toán: <span class="font-bold text-indigo-600">${billing.month}</span></p>
                         </div>
                         <div class="text-right">
-                            <h5 class="text-sm font-extrabold text-slate-900">Mã phòng: ${billing.roomId}</h5>
-                            <p class="text-[11px] text-slate-500 font-medium">Đối tượng thuê: ${renterName}</p>
+                            <h5 class="text-xs sm:text-sm font-extrabold text-slate-900">Phòng: ${billing.roomId}</h5>
+                            <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate max-w-[120px] sm:max-w-[200px]">Khách: ${renterName}</p>
                         </div>
                     </div>
 
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 font-bold uppercase text-slate-500 border-b border-slate-200 text-[10px] tracking-wider">
-                                <th class="p-2.5">Khoản mục thanh toán</th>
-                                <th class="p-2.5 text-center">Chỉ số đầu</th>
-                                <th class="p-2.5 text-center">Chỉ số cuối</th>
-                                <th class="p-2.5 text-center">Sản lượng</th>
-                                <th class="p-2.5 text-right">Đơn giá</th>
-                                <th class="p-2.5 text-right font-bold text-slate-900">Thành tiền</th>
+                            <tr class="bg-slate-50 font-bold uppercase text-slate-500 border-b border-slate-200 text-[9px] sm:text-[10px] tracking-wider">
+                                <th class="p-1.5 sm:p-2.5">Khoản mục</th>
+                                <th class="p-1.5 sm:p-2.5 text-center">Sản lượng</th>
+                                <th class="p-1.5 sm:p-2.5 text-right">Đơn giá</th>
+                                <th class="p-1.5 sm:p-2.5 text-right font-bold text-slate-900">Thành tiền</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
+                        <tbody class="divide-y divide-slate-100 font-medium text-slate-600 text-[10px] sm:text-[11px]">
                             <tr>
-                                <td class="p-2.5 font-bold text-slate-900">Giá thuê phòng gốc</td>
-                                <td class="p-2.5 text-center text-slate-300">-</td>
-                                <td class="p-2.5 text-center text-slate-300">-</td>
-                                <td class="p-2.5 text-center font-bold text-slate-800">1 Tháng</td>
-                                <td class="p-2.5 text-right">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()}</td>
-                                <td class="p-2.5 text-right font-extrabold text-slate-900">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()} ₫</td>
+                                <td class="p-1.5 sm:p-2.5 font-bold text-slate-900">Tiền phòng gốc</td>
+                                <td class="p-1.5 sm:p-2.5 text-center font-bold text-slate-800">1 Tháng</td>
+                                <td class="p-1.5 sm:p-2.5 text-right">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()}</td>
+                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold text-slate-900">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()} ₫</td>
                             </tr>
                             <tr>
-                                <td class="p-2.5 font-bold text-slate-900">Tiền điện sinh hoạt</td>
-                                <td class="p-2.5 text-center text-slate-400">${billing.elecStart}</td>
-                                <td class="p-2.5 text-center text-slate-400">${billing.elecEnd}</td>
-                                <td class="p-2.5 text-center font-bold text-amber-600">${elecUsage} kWh</td>
-                                <td class="p-2.5 text-right">${(settings.elecFlat || 3500).toLocaleString()}</td>
-                                <td class="p-2.5 text-right font-extrabold text-slate-900">${elecCost.toLocaleString()} ₫</td>
+                                <td class="p-1.5 sm:p-2.5 font-bold text-slate-900">Điện sinh hoạt</td>
+                                <td class="p-1.5 sm:p-2.5 text-center leading-tight">
+                                    <span class="font-bold text-amber-600 block">${elecUsage} kWh</span>
+                                    <span class="text-[8.5px] sm:text-[9px] text-slate-400 font-normal">(${billing.elecStart} &rarr; ${billing.elecEnd})</span>
+                                </td>
+                                <td class="p-1.5 sm:p-2.5 text-right">${(settings.elecFlat || 3500).toLocaleString()}</td>
+                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold text-slate-900">${elecCost.toLocaleString()} ₫</td>
                             </tr>
                             <tr>
-                                <td class="p-2.5 font-bold text-slate-900">Tiền nước sinh hoạt</td>
-                                <td class="p-2.5 text-center text-slate-400">${billing.waterStart}</td>
-                                <td class="p-2.5 text-center text-slate-400">${billing.waterEnd}</td>
-                                <td class="p-2.5 text-center font-bold text-sky-600">${waterUsage} m³</td>
-                                <td class="p-2.5 text-right">${(settings.waterFlat || 15000).toLocaleString()}</td>
-                                <td class="p-2.5 text-right font-extrabold text-slate-900">${waterCost.toLocaleString()} ₫</td>
+                                <td class="p-1.5 sm:p-2.5 font-bold text-slate-900">Nước sinh hoạt</td>
+                                <td class="p-1.5 sm:p-2.5 text-center leading-tight">
+                                    <span class="font-bold text-sky-600 block">${waterUsage} m³</span>
+                                    <span class="text-[8.5px] sm:text-[9px] text-slate-400 font-normal">(${billing.waterStart} &rarr; ${billing.waterEnd})</span>
+                                </td>
+                                <td class="p-1.5 sm:p-2.5 text-right">${(settings.waterFlat || 15000).toLocaleString()}</td>
+                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold text-slate-900">${waterCost.toLocaleString()} ₫</td>
                             </tr>
                             <tr>
-                                <td class="p-2.5 font-bold text-slate-900">Điện năng sạc xe máy EV</td>
-                                <td class="p-2.5 text-center text-slate-400">${billing.evStart}</td>
-                                <td class="p-2.5 text-center text-slate-400">${billing.evEnd}</td>
-                                <td class="p-2.5 text-center font-bold text-teal-600">${evUsage} kWh</td>
-                                <td class="p-2.5 text-right">${(settings.evFlat || 4000).toLocaleString()}</td>
-                                <td class="p-2.5 text-right font-extrabold text-slate-900">${evCost.toLocaleString()} ₫</td>
+                                <td class="p-1.5 sm:p-2.5 font-bold text-slate-900">Sạc xe điện EV</td>
+                                <td class="p-1.5 sm:p-2.5 text-center leading-tight">
+                                    <span class="font-bold text-teal-600 block">${evUsage} kWh</span>
+                                    <span class="text-[8.5px] sm:text-[9px] text-slate-400 font-normal">(${billing.evStart} &rarr; ${billing.evEnd})</span>
+                                </td>
+                                <td class="p-1.5 sm:p-2.5 text-right">${(settings.evFlat || 4000).toLocaleString()}</td>
+                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold text-slate-900">${evCost.toLocaleString()} ₫</td>
                             </tr>
                             <tr>
-                                <td class="p-2.5 font-bold text-slate-900">Phí vệ sinh thu gom rác</td>
-                                <td class="p-2.5 text-center text-slate-300">-</td>
-                                <td class="p-2.5 text-center text-slate-300">-</td>
-                                <td class="p-2.5 text-center font-bold text-slate-800">${members} Người</td>
-                                <td class="p-2.5 text-right">${(settings.garbageFlat || 10000).toLocaleString()}</td>
-                                <td class="p-2.5 text-right font-extrabold text-slate-900">${garbageCost.toLocaleString()} ₫</td>
+                                <td class="p-1.5 sm:p-2.5 font-bold text-slate-900">Phí thu rác</td>
+                                <td class="p-1.5 sm:p-2.5 text-center font-bold text-slate-800">${members} Ng</td>
+                                <td class="p-1.5 sm:p-2.5 text-right">${(settings.garbageFlat || 10000).toLocaleString()}</td>
+                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold text-slate-900">${garbageCost.toLocaleString()} ₫</td>
                             </tr>
                             ${billing.otherCost > 0 ? `
                             <tr class="bg-rose-50/40 text-rose-700">
-                                <td class="p-2.5 font-bold">Phí phát sinh phụ thu</td>
-                                <td class="p-2.5 text-center">-</td>
-                                <td class="p-2.5 text-center">-</td>
-                                <td class="p-2.5 text-center font-bold">Biên mục</td>
-                                <td class="p-2.5 text-right">-</td>
-                                <td class="p-2.5 text-right font-extrabold">${billing.otherCost.toLocaleString()} ₫</td>
+                                <td class="p-1.5 sm:p-2.5 font-bold">Phụ thu phát sinh</td>
+                                <td class="p-1.5 sm:p-2.5 text-center font-bold">-</td>
+                                <td class="p-1.5 sm:p-2.5 text-right">-</td>
+                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold">${billing.otherCost.toLocaleString()} ₫</td>
                             </tr>` : ''}
                         </tbody>
                     </table>
 
-                    <div class="mt-6 flex flex-col items-end border-t border-slate-100 pt-4">
-                        <div class="flex justify-between w-64 text-xs font-semibold mb-1">
-                            <span class="text-slate-400">Trạng thái hạch toán:</span>
-                            <span class="${billing.paid ? 'text-emerald-600' : 'text-amber-600'} font-bold uppercase tracking-wider">${billing.paid ? 'Đã thu tiền' : 'Chờ đối soát'}</span>
+                    <div class="mt-4 sm:mt-6 flex flex-col items-end border-t border-slate-100 pt-3 sm:pt-4">
+                        <div class="flex justify-between w-full sm:w-64 text-[10px] sm:text-xs font-semibold mb-1">
+                            <span class="text-slate-400">Trạng thái thu:</span>
+                            <span class="${billing.paid ? 'text-emerald-600' : 'text-amber-600'} font-bold uppercase tracking-wider">${billing.paid ? 'Đã thanh toán' : 'Chờ đối soát'}</span>
                         </div>
-                        <div class="flex justify-between w-64 border-t border-dashed border-slate-200 pt-2 text-xs font-bold text-slate-900">
-                            <span class="font-extrabold">TỔNG THU DOANH SỐ:</span>
-                            <span class="text-indigo-600 text-sm font-extrabold tracking-tight">${billing.total.toLocaleString()} ₫</span>
+                        <div class="flex justify-between w-full sm:w-64 border-t border-dashed border-slate-200 pt-2 text-xs sm:text-sm font-bold text-slate-900">
+                            <span class="font-extrabold">TỔNG HÓA ĐƠN:</span>
+                            <span class="text-indigo-600 text-sm sm:text-base font-extrabold tracking-tight">${billing.total.toLocaleString()} ₫</span>
                         </div>
                     </div>
                     
-                    <div class="mt-8 grid grid-cols-2 text-center text-[10px] text-slate-400 font-bold uppercase tracking-wider pt-4 border-t border-slate-100">
+                    <div class="mt-6 sm:mt-8 grid grid-cols-2 text-center text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider pt-3 sm:pt-4 border-t border-slate-100">
                         <div>Người lập phiếu</div>
                         <div>Đại diện khách thuê</div>
                     </div>
