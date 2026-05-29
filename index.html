@@ -523,42 +523,52 @@
                         <h2 class="text-lg font-bold text-slate-900">Ghi Nhận Chỉ Số Định Kỳ</h2>
                         <p class="text-xs text-slate-400 font-medium">Chu kỳ hạch toán áp dụng: <span class="working-month-txt font-bold text-indigo-600"></span></p>
                     </div>
-                    <div class="bg-indigo-50/40 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-900 font-medium flex items-center gap-2.5 shadow-sm">
-                        <i class="fa-solid fa-shield-exclamation text-indigo-500 text-sm"></i> 
-                        <span><b>Cơ chế An toàn Dữ liệu:</b> Chỉ số đầu kỳ kế thừa tự động. Hệ thống sẽ khóa và báo lỗi nếu chỉ số cuối kỳ nhập ngược <b>(nhỏ hơn đầu kỳ)</b>.</span>
-                   
-<div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm my-2">
-    <div class="flex flex-col gap-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <div>
-                <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                    <span class="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse shrink-0"></span>
-                    Quét Chỉ Số Bằng AI Engine
-                </h3>
-                <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Hỗ trợ trích xuất số liệu tự động trên iPhone/iPad.</p>
-            </div>
-            
-            <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm sm:text-xs rounded-xl shadow-md transition-all select-none w-full sm:w-auto active:scale-95">
-                <i class="fa-solid fa-camera text-base sm:text-sm"></i> Mở Camera Quét Số
-                <input type="file" id="iphone-camera-input" accept="image/*" capture="environment" class="hidden" onchange="processIPhonePhoto(this)">
-            </label>
-        </div>
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-5 mb-5 mx-0 sm:mx-1 mt-3">
+                        <div class="flex items-center justify-between border-b border-slate-50 pb-3.5 mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 shadow-sm">
+                                    <i class="fa-solid fa-brain-circuit text-base"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-extrabold text-slate-800">Nhận Diện Bằng AI</h3>
+                                    <p class="text-[10px] sm:text-[11px] text-slate-400">Chọn phòng và loại chỉ số trước khi quét</p>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
-            <div>
-                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phòng đang nhắm chụp</label>
-                <select id="aiTargetRoom" class="w-full px-3 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all"></select>
-            </div>
-            <div>
-                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Loại chỉ số đo</label>
-                <select id="aiTargetType" class="w-full px-3 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-bold text-slate-700 outline-none focus:border-amber-500 focus:bg-white transition-all">
-                    <option value="elec">Chỉ số ĐIỆN (kWh)</option>
-                    <option value="water">Chỉ số NƯỚC (m³)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">1. Phòng Cần Chụp</label>
+                                <div class="relative">
+                                    <select id="aiTargetRoom" class="w-full text-xs font-bold bg-slate-50 border border-slate-200 text-slate-700 rounded-xl py-2.5 pl-3 pr-8 appearance-none focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 transition-all"></select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">2. Loại Chỉ Số</label>
+                                <div class="grid grid-cols-2 gap-1 bg-slate-100/80 p-1 rounded-xl h-[38px]">
+                                    <button type="button" onclick="setScanType('elec')" id="btn-scan-elec" class="text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5">
+                                        <i class="fa-solid fa-bolt text-[10px] text-amber-500"></i> Điện
+                                    </button>
+                                    <button type="button" onclick="setScanType('water')" id="btn-scan-water" class="text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800">
+                                        <i class="fa-solid fa-droplet text-[10px] text-blue-500"></i> Nước
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative group">
+                            <label for="iphone-camera-input" class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 hover:border-amber-400 bg-slate-50/50 hover:bg-amber-50/10 rounded-2xl p-4 sm:p-6 cursor-pointer transition-all text-center min-h-[110px]">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-md text-white flex items-center justify-center group-hover:scale-105 transition-transform mb-2">
+                                    <i class="fa-solid fa-camera text-sm"></i>
+                                </div>
+                                <span class="text-xs font-bold text-slate-700">Mở Ống Kính Camera</span>
+                            </label>
+                            <input type="file" id="iphone-camera-input" accept="image/*" capture="environment" class="hidden" onchange="processIPhonePhoto(this)">
+                        </div>
+                    </div>
 
 <canvas id="aiCanvasBuffer" class="hidden"></canvas>
 
@@ -1894,13 +1904,31 @@
 // ==========================================
 
 // Hàm tự động nạp danh sách phòng vào menu chọn của AI (Bước A)
+// =========================================================================
+// MODUL NÂNG CẤP XỬ LÝ KHỐI QUÉT ẢNH CHỈ SỐ AI: CHUYỂN ĐỔI NÚT BẤM LINH HOẠT
+// =========================================================================
+let currentScanType = 'elec'; // Biến toàn cục lưu trạng thái loại chỉ số quét hiện tại
+
+window.setScanType = function(type) {
+    currentScanType = type;
+    const btnElec = document.getElementById('btn-scan-elec');
+    const btnWater = document.getElementById('btn-scan-water');
+    if (!btnElec || !btnWater) return;
+    
+    if (type === 'elec') {
+        btnElec.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5";
+        btnWater.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800";
+    } else {
+        btnWater.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5";
+        btnElec.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800";
+    }
+};
+
 window.updateAIRoomDropdown = function() {
     const selectRoom = document.getElementById('aiTargetRoom');
     if (!selectRoom) return;
-    
     selectRoom.innerHTML = '';
     const activeRooms = window.systemData?.rooms || [];
-    
     if (activeRooms.length > 0) {
         activeRooms.forEach(r => {
             let opt = document.createElement('option');
@@ -1911,7 +1939,6 @@ window.updateAIRoomDropdown = function() {
     }
 };
 
-// Tự động nhảy mục chọn sang phòng tiếp theo sau khi chụp thành công giúp thao tác nhanh
 function autoSwitchToNextRoom() {
     const selectRoom = document.getElementById('aiTargetRoom');
     if (selectRoom && selectRoom.selectedIndex < selectRoom.options.length - 1) {
@@ -1921,14 +1948,13 @@ function autoSwitchToNextRoom() {
     }
 }
 
-// Hàm cốt lõi xử lý ảnh từ iPhone và gọi API Gemini (Bước B chuẩn hóa)
 window.processIPhonePhoto = async function(inputElement) {
     const file = inputElement.files[0];
     if (!file) return;
 
-    // 1. LẤY THÔNG TIN HỆ THỐNG TRƯỚC
+    // LẤY THÔNG TIN TỪ KHỐI ĐIỀU KHIỂN MỚI
     const roomId = document.getElementById('aiTargetRoom')?.value;
-    const type = document.getElementById('aiTargetType')?.value; // 'elec' hoặc 'water'
+    const type = currentScanType; // Nhận diện trực tiếp từ trạng thái nút bấm thay vì thẻ select cũ
     const workingMonth = window.currentMonth || "2026-05";
     
     if (!roomId) {
