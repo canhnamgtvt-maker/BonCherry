@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1195,7 +1195,7 @@
             }
         };
 
-        window.viewInvoiceDetail = function(roomId, month, savedInvoiceStr = null) {
+      window.viewInvoiceDetail = function(roomId, month, savedInvoiceStr = null) {
             let billing = null;
             let renterName = "";
             let members = 1;
@@ -1239,6 +1239,10 @@
             const waterCost = waterUsage * (settings.waterFlat || 15000);
             const evCost = evUsage * (settings.evFlat || 4000);
             const garbageCost = (members || 1) * (settings.garbageFlat || 10000);
+            const roomCostFinal = roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost;
+
+            // Xây dựng tin nhắn chuẩn Form để gửi Zalo
+            const zaloMessage = `🧾 HÓA ĐƠN TIỀN NHÀ - P.${billing.roomId} (${billing.month})\n👤 Khách thuê: ${renterName}\n\n1. Tiền phòng: ${roomCostFinal.toLocaleString()} đ\n2. Điện (${elecUsage} kWh): ${elecCost.toLocaleString()} đ\n3. Nước (${waterUsage} m³): ${waterCost.toLocaleString()} đ\n4. Sạc xe (${evUsage} kWh): ${evCost.toLocaleString()} đ\n5. Rác (${members} Ng): ${garbageCost.toLocaleString()} đ\n${billing.otherCost > 0 ? `6. Phụ thu: ${billing.otherCost.toLocaleString()} đ\n` : ''}------------------------\n💰 TỔNG CỘNG: ${billing.total.toLocaleString()} đ\n(Trạng thái: ${billing.paid ? 'Đã thanh toán' : 'Chờ đối soát'})`;
 
             const invoiceHTML = `
                 <div class="border border-slate-200 p-4 sm:p-6 rounded-2xl bg-white text-slate-800 shadow-sm font-sans" id="invoice-printable-node">
@@ -1267,7 +1271,7 @@
                                 <td class="p-1.5 sm:p-2.5 font-bold text-slate-900">Tiền phòng gốc</td>
                                 <td class="p-1.5 sm:p-2.5 text-center font-bold text-slate-800">1 Tháng</td>
                                 <td class="p-1.5 sm:p-2.5 text-right">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()}</td>
-                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold text-slate-900">${(roomPrice || billing.total - elecCost - waterCost - evCost - garbageCost).toLocaleString()} ₫</td>
+                                <td class="p-1.5 sm:p-2.5 text-right font-extrabold text-slate-900">${roomCostFinal.toLocaleString()} ₫</td>
                             </tr>
                             <tr>
                                 <td class="p-1.5 sm:p-2.5 font-bold text-slate-900">Điện sinh hoạt</td>
@@ -1322,12 +1326,11 @@
                             <span class="text-indigo-600 text-sm sm:text-base font-extrabold tracking-tight">${billing.total.toLocaleString()} ₫</span>
                         </div>
                     </div>
-                    
-                    <div class="mt-6 sm:mt-8 grid grid-cols-2 text-center text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider pt-3 sm:pt-4 border-t border-slate-100">
-                        <div>Người lập phiếu</div>
-                        <div>Đại diện khách thuê</div>
-                    </div>
                 </div>
+                
+                <button id="btn-share-zalo" onclick="window.shareInvoiceAsImage()" class="mt-4 sm:mt-6 w-full bg-gradient-to-r from-[#0068ff] to-[#0055d4] hover:opacity-90 text-white py-3 sm:py-3.5 rounded-xl font-extrabold flex justify-center items-center gap-2 text-xs sm:text-sm shadow-lg shadow-blue-500/30 transition-all active:scale-95">
+                    <i class="fa-solid fa-image"></i> Xuất Ảnh Hóa Đơn & Gửi Zalo
+                </button>
             `;
 
             document.getElementById('invoice-modal-content').innerHTML = invoiceHTML;
@@ -2030,6 +2033,78 @@ window.viewAiProofPhoto = function(roomId, type) {
         </div>
     `;
 };
+// Hàm kích hoạt bảng chia sẻ Native trên điện thoại
+        window.shareInvoiceData = function(encodedText) {
+            const text = decodeURIComponent(encodedText);
+            
+            // Nếu dùng trên iPhone/iPad hoặc điện thoại có hỗ trợ Share API
+            if (navigator.share) {
+                navigator.share({
+                    text: text
+                }).catch(function(error) {
+                    console.log('Lỗi chia sẻ:', error);
+                });
+            } else {
+                // Nếu dùng trên máy tính không có Share API thì copy vào khay nhớ tạm
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('Đã copy nội dung hóa đơn! Anh có thể dán (Paste) vào Zalo.');
+                });
+            }
+        };
+        // Thuật toán: Chụp ngầm Hóa đơn -> Chuyển thành File Ảnh -> Gọi bảng Share Zalo của iOS
+        window.shareInvoiceAsImage = async function() {
+            const invoiceNode = document.getElementById('invoice-printable-node');
+            const btn = document.getElementById('btn-share-zalo');
+            if (!invoiceNode || !btn) return;
+
+            // Đổi text nút bấm để báo hiệu đang xử lý
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo ảnh hóa đơn sắc nét...';
+            btn.disabled = true;
+
+            try {
+                // 1. Dùng html2canvas chụp lại cái Form hóa đơn với độ phân giải cao (scale: 2)
+                const canvas = await html2canvas(invoiceNode, {
+                    scale: 2, 
+                    useCORS: true,
+                    backgroundColor: "#ffffff", // Đảm bảo nền trắng
+                    logging: false
+                });
+
+                // 2. Chuyển Canvas thành File Ảnh JPG
+                canvas.toBlob(async function(blob) {
+                    const file = new File([blob], "Hoa_Don_Tien_Nha.jpg", { type: "image/jpeg" });
+
+                    // 3. Gọi tính năng Share File của Apple iOS
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Hóa Đơn Tiền Nhà',
+                            // Zalo sẽ nhận file ảnh này và cho phép anh chọn người gửi
+                        });
+                    } else {
+                        // Phương án dự phòng nếu dùng trình duyệt cũ: Tự động tải ảnh về máy
+                        const link = document.createElement('a');
+                        link.href = canvas.toDataURL("image/jpeg", 0.9);
+                        link.download = "Hoa_Don_Tien_Nha.jpg";
+                        link.click();
+                        alert("Đã lưu ảnh hóa đơn về Thư viện ảnh! Anh có thể mở Zalo để gửi.");
+                    }
+                    
+                    // Trả lại trạng thái nút bấm
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    
+                }, "image/jpeg", 0.95); // Nén 95% giữ chất lượng cao
+
+            } catch (error) {
+                console.error("Lỗi xuất ảnh:", error);
+                alert("Không thể tạo ảnh. Vui lòng thử lại!");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+        
     </script>
 </body>
 </html>
