@@ -616,6 +616,10 @@
     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Đơn Giá Rác Thải Sinh Hoạt (VND/Người/Tháng)</label>
     <input type="number" id="setting-garbage-flat" class="w-full px-3.5 py-2.5 border border-slate-200 bg-slate-50/50 rounded-xl text-sm font-medium focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
 </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Phụ Thu Ngầm (VND/Đơn vị điện hao hụt)</label>
+                                <input type="number" id="setting-other-elec-flat" placeholder="Ví dụ: 500" class="w-full px-3.5 py-2.5 border border-amber-200 bg-amber-50/30 rounded-xl text-sm font-medium focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 outline-none transition-all" title="Hệ thống tự động nhân với sản lượng điện thành Phụ Thu Khác (ẩn kWh)">
+                            </div>
 
                             
                         </div>
@@ -927,6 +931,17 @@
             } else {
                 endEl.classList.remove('bg-rose-50', 'text-rose-600', 'border-rose-300', 'focus:ring-rose-500/10');
             }
+           // TỰ ĐỘNG TÍNH PHỤ THU NGẦM THEO SẢN LƯỢNG ĐIỆN
+            if (type === 'elec' && endVal >= startVal) {
+                const usage = endVal - startVal;
+                const otherRate = window.systemData.settings.otherElecFlat || 0;
+                const otherCostInput = document.getElementById(`input-otherCost-${roomId}`);
+                
+                // Nếu có cài đặt đơn giá phụ thu ngầm > 0, tự động nhảy số tiền vào ô
+                if (otherCostInput && otherRate > 0) {
+                    otherCostInput.value = usage * otherRate;
+                }
+            } 
         };
 
         function renderDashboardMetrics() {
@@ -1454,6 +1469,7 @@
     document.getElementById('setting-gemini-key').value = s.geminiKey || "";
     localStorage.setItem('SMARTRENTAL_GEMINI_KEY', s.geminiKey || "");
 }
+            if(document.getElementById('setting-other-elec-flat')) document.getElementById('setting-other-elec-flat').value = s.otherElecFlat || 0;
         }
 
        window.saveSystemSettings = async function() {
@@ -1462,6 +1478,8 @@
         waterFlat: parseFloat(document.getElementById('setting-water-flat').value) || 15000,
         evFlat: parseFloat(document.getElementById('setting-ev-flat').value) || 4000,
         garbageFlat: parseFloat(document.getElementById('setting-garbage-flat').value) || 10000,
+        // DÒNG BỔ SUNG: Lưu cấu hình phụ thu ngầm
+                otherElecFlat: parseFloat(document.getElementById('setting-other-elec-flat').value) || 0,
         // Bổ sung lưu Gemini Key vào cấu hình hệ thống đồng bộ Cloud
         geminiKey: document.getElementById('setting-gemini-key')?.value || "",
         
