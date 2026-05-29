@@ -123,77 +123,109 @@
             /* ========================================================== */
             /* TỐI ƯU MENU ĐÁY THANH MẢNH - CHUẨN IOS PREMIUM             */
             /* ========================================================== */
+           @media (max-width: 1024px) {
+            /* ========================================================== */
+            /* HIỆU ỨNG APP IOS: BIẾN THÀNH FLOATING DOCK (THANH MENU NỔI)*/
+            /* GIẢI QUYẾT TRIỆT TIỂU LỖI CHẠM NHẦM VẠCH VUỐT LÊN CỦA IPHONE*/
+            /* ========================================================== */
             aside {
                 position: fixed !important;
-                bottom: 0; left: 0; width: 100%;
-                background-color: rgba(255, 255, 255, 0.82) !important; /* Tăng độ trong suốt */
-                backdrop-filter: blur(25px) !important; /* Làm mờ sâu hiệu ứng kính mờ (Glassmorphism) */
-                -webkit-backdrop-filter: blur(25px) !important;
-                z-index: 150;
-                border-top: 0.5px solid rgba(0, 0, 0, 0.08) !important; /* Đường viền siêu mảnh siêu thực */
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.02) !important;
-                /* Thu hẹp padding giúp thanh menu cực kỳ gọn */
-                padding: 5px 8px calc(5px + env(safe-area-inset-bottom)) 8px !important;
+                /* Nhấc hẳn thanh menu lên cách đáy một khoảng để không bị kích hoạt nhầm cử chỉ của iOS */
+                bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+                left: 12px !important;
+                right: 12px !important;
+                width: calc(100% - 24px) !important;
+                
+                /* Thiết kế dạng thanh nổi bo tròn (Floating Dock) siêu sang trọng */
+                background-color: rgba(255, 255, 255, 0.96) !important;
+                backdrop-filter: blur(20px) !important;
+                -webkit-backdrop-filter: blur(20px) !important;
+                z-index: 150 !important;
+                border: 1px solid rgba(226, 232, 240, 0.9) !important;
+                border-radius: 20px !important;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15) !important;
+                
+                /* Cân đối lại khoảng cách đệm bên trong */
+                padding: 6px 10px !important;
                 margin: 0 !important;
                 display: flex !important;
                 flex-direction: row !important;
                 overflow-x: auto;
                 scroll-behavior: smooth;
                 -webkit-overflow-scrolling: touch;
-                gap: 4px !important; /* Khít sát các nút lại với nhau */
+                gap: 6px !important;
             }
             
-            aside::-webkit-scrollbar { display: none; }
+            /* Ẩn hoàn toàn thanh cuộn ngang để menu sạch sẽ */
+            aside::-webkit-scrollbar {
+                display: none !important;
+            }
             
-            /* Đẩy vùng nội dung chính lên một khoảng vừa vặn, không bị thừa không gian */
+            /* Tăng khoảng cách đẩy nội dung chính (main) để không bị che khuất bởi thanh menu nổi */
             main {
-                margin-bottom: calc(70px + env(safe-area-inset-bottom)) !important;
+                margin-bottom: calc(95px + env(safe-area-inset-bottom)) !important;
             }
 
-            /* Tinh chỉnh nút bấm thanh thoát và nhỏ gọn */
+            /* Tinh chỉnh các nút bấm Menu nhỏ gọn, tăng độ nhạy cảm ứng */
             .tab-btn {
-                flex-direction: column !important;
+                flex-direction: column !important; /* Icon trên, chữ dưới */
                 justify-content: center;
                 align-items: center;
                 gap: 2px !important;
-                padding: 4px 2px !important;
+                padding: 6px 2px !important;
                 min-width: 76px !important;
                 height: 46px !important;
-                border-radius: 12px !important;
+                border-radius: 14px !important;
                 text-align: center;
                 white-space: nowrap;
                 flex-shrink: 0;
                 font-size: 9px !important;
-                font-weight: 600 !important;
+                font-weight: 700 !important;
                 letter-spacing: -0.1px;
-                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                -webkit-appearance: none;
+                appearance: none;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
             
-            /* TRANG TRÍ TAB ĐANG ĐƯỢC CHỌN (ACTIVE) VỚI MÀU XANH TÍM NỔI BẬT */
+            /* ÉP SAFARI HIỂN THỊ MÀU GRADIENT XANH TÍM CHUẨN XÁC KHI TAB ACTIVE */
+            .tab-btn.from-indigo-600,
             .tab-btn.text-white {
-                background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
-                box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
+                background-color: #4f46e5 !important; /* Lớp nền cứng dự phòng cho Safari */
+                background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+                box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35) !important;
                 color: #ffffff !important;
             }
 
-            /* CÁC TAB CHƯA CHỌN (INACTIVE) DẠNG KÍNH MỜ */
-            .tab-btn:not(.text-white) {
+            /* CÁC TAB CHƯA CHỌN (INACTIVE) ĐỂ DẠNG TRONG SUỐT TINH TẾ */
+            .tab-btn:not(.from-indigo-600):not(.text-white) {
                 background: transparent !important;
+                background-image: none !important;
                 color: #64748b !important;
+                box-shadow: none !important;
             }
             
-            /* Thu nhỏ Icon sang trọng */
-            .tab-btn i {
+            /* Đồng bộ màu sắc và kích thước Icon khi được chọn */
+            .tab-btn.from-indigo-600 i,
+            .tab-btn.text-white i {
+                color: #ffffff !important;
                 font-size: 16px !important;
                 width: auto !important;
                 margin: 0 !important;
-                transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            /* Đồng bộ màu sắc Icon khi chưa chọn */
+            .tab-btn:not(.from-indigo-600):not(.text-white) i {
+                color: #64748b !important;
+                font-size: 16px !important;
+                width: auto !important;
+                margin: 0 !important;
             }
             
-            /* Hiệu ứng đàn hồi (Micro-interaction) khi dùng ngón tay ấn giữ Tab */
+            /* Hiệu ứng nảy nhẹ cực mượt khi ngón tay ấn chọn Tab */
             .tab-btn:active i {
-                transform: scale(0.85);
+                transform: scale(0.88);
             }
+        }
 
             /* Cố định cột Mã Phòng khi vuốt ngang bảng tính */
             #batch-input-tbody td:first-child,
