@@ -1081,11 +1081,22 @@
                 const waterEnd = parseFloat(document.getElementById(`input-waterEnd-${room.roomId}`).value) || 0;
                 const evStart = parseFloat(document.getElementById(`input-evStart-${room.roomId}`).value) || 0;
                 const evEnd = parseFloat(document.getElementById(`input-evEnd-${room.roomId}`).value) || 0;
-                const otherCost = parseFloat(document.getElementById(`input-otherCost-${room.roomId}`).value) || 0;
+                
+                // Lấy phụ thu khác nhập tay trên giao diện
+                let otherCost = parseFloat(document.getElementById(`input-otherCost-${room.roomId}`).value) || 0;
 
                 const elecUsage = elecEnd - elecStart;
                 const waterUsage = waterEnd - waterStart;
                 const evUsage = evEnd - evStart;
+
+                // TÍNH TOÁN LẠI PHỤ THU NGẦM TẠI THỜI ĐIỂM CHỐT SỔ ĐỂ ĐẢM BẢO CHÍNH XÁC 100%
+                const otherRate = settings.otherElecFlat || 0;
+                if (otherRate > 0) {
+                    otherCost = elecUsage * otherRate;
+                    // Cập nhật ngược lại ô HTML để giao diện hiển thị đúng số tiền đã tính
+                    const otherCostInput = document.getElementById(`input-otherCost-${room.roomId}`);
+                    if(otherCostInput) otherCostInput.value = otherCost;
+                }
 
                 const basePrice = room.price || 0;
                 const elecCost = elecUsage * (settings.elecFlat || 3500);
