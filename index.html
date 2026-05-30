@@ -547,15 +547,20 @@
                                 </div>
                             </div>
                             <div>
+                                <div>
                                 <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">2. Loại Chỉ Số</label>
-                                <div class="grid grid-cols-2 gap-1 bg-slate-100/80 p-1 rounded-xl h-[38px]">
-                                    <button type="button" onclick="setScanType('elec')" id="btn-scan-elec" class="text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5">
+                                <div class="grid grid-cols-3 gap-1 bg-slate-100/80 p-1 rounded-xl min-h-[38px]">
+                                    <button type="button" onclick="setScanType('elec')" id="btn-scan-elec" class="text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5 py-1.5">
                                         <i class="fa-solid fa-bolt text-[10px] text-amber-500"></i> Điện
                                     </button>
-                                    <button type="button" onclick="setScanType('water')" id="btn-scan-water" class="text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800">
-                                        <i class="fa-solid fa-droplet text-[10px] text-blue-500"></i> Nước
+                                    <button type="button" onclick="setScanType('water')" id="btn-scan-water" class="text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800 py-1.5">
+                                        <i class="fa-solid fa-droplet text-[10px] text-sky-500"></i> Nước
+                                    </button>
+                                    <button type="button" onclick="setScanType('ev')" id="btn-scan-ev" class="text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800 py-1.5">
+                                        <i class="fa-solid fa-car-battery text-[10px] text-teal-500"></i> Xe EV
                                     </button>
                                 </div>
+                            </div>
                             </div>
                         </div>
 
@@ -1084,82 +1089,76 @@
         }
 
         function renderBatchInputTable() {
-    const tbody = document.getElementById('batch-input-tbody');
-    if(!tbody) return;
-    tbody.innerHTML = window.systemData.rooms.map(room => {
-        // Tìm hóa đơn hiện tại của tháng đang chọn
-        const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
-        
-        // ---- BỔ SUNG LOGIC TỰ ĐỘNG TÍNH TOÁN VÀ KẾ THỪA TỪ THÁNG TRƯỚC ----
-        const [year, month] = currentMonth.split('-').map(Number);
-        
-        let prevMonthStr = "";
-        if (month === 1) {
-            prevMonthStr = `${year - 1}-12`;
-        } else {
-            prevMonthStr = `${year}-${String(month - 1).padStart(2, '0')}`;
+            const tbody = document.getElementById('batch-input-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = window.systemData.rooms.map(room => {
+                const billing = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === currentMonth) || {};
+                
+                const [year, month] = currentMonth.split('-').map(Number);
+                let prevMonthStr = month === 1 ? `${year - 1}-12` : `${year}-${String(month - 1).padStart(2, '0')}`;
+                const prevBilling = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === prevMonthStr);
+
+                const eStart = billing.elecStart !== undefined ? billing.elecStart : ((prevBilling && prevBilling.elecEnd !== undefined) ? prevBilling.elecEnd : (room.initElec || 0));
+                const eEnd = billing.elecEnd || 0;
+                
+                const wStart = billing.waterStart !== undefined ? billing.waterStart : ((prevBilling && prevBilling.waterEnd !== undefined) ? prevBilling.waterEnd : (room.initWater || 0));
+                const wEnd = billing.waterEnd || 0;
+                
+                const evStart = billing.evStart !== undefined ? billing.evStart : ((prevBilling && prevBilling.evEnd !== undefined) ? prevBilling.evEnd : (room.initEv || 0));
+                const evEnd = billing.evEnd || 0;
+
+                const workingMonth = window.currentMonth || "2026-05";
+                const hasElecProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`) ? 'text-amber-500 scale-110 font-bold' : 'text-slate-300 hover:text-amber-500';
+                const hasWaterProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`) ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300 hover:text-sky-500';
+                // Bổ sung kiểm tra minh chứng Xe EV
+                const hasEvProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_ev`) ? 'text-teal-500 scale-110 font-bold' : 'text-slate-300 hover:text-teal-500';
+
+                return `<tr class="hover:bg-slate-50/70 transition-all">
+                    <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
+                    <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">${room.members || 1}</td>
+                    
+                    <td class="p-2 bg-amber-50/20 border-l border-slate-100">
+                        <input type="number" id="input-elecStart-${room.roomId}" value="${eStart}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
+                    </td>
+                    <td class="p-2 bg-amber-50/40">
+                        <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${eEnd < eStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
+                            <input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
+                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'elec')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasElecProof}" title="Xem ảnh công tơ điện">
+                                <i class="fa-solid fa-eye text-[11px]"></i>
+                            </button>
+                        </div>
+                    </td>
+                    
+                    <td class="p-2 bg-sky-50/20 border-l border-slate-100">
+                        <input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
+                    </td>
+                    <td class="p-2 bg-sky-50/40">
+                        <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${wEnd < wStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
+                            <input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
+                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'water')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasWaterProof}" title="Xem ảnh công tơ nước">
+                                <i class="fa-solid fa-eye text-[11px]"></i>
+                            </button>
+                        </div>
+                    </td>
+                    
+                    <td class="p-2 bg-teal-50/20 border-l border-slate-100">
+                        <input type="number" id="input-evStart-${room.roomId}" value="${evStart}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
+                    </td>
+                    <td class="p-2 bg-teal-50/40">
+                        <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${evEnd < evStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
+                            <input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 pr-6">
+                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'ev')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasEvProof}" title="Xem ảnh công tơ sạc xe EV">
+                                <i class="fa-solid fa-eye text-[11px]"></i>
+                            </button>
+                        </div>
+                    </td>
+                    
+                    <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
+                        <input type="number" id="input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
+                    </td>
+                </tr>`;
+            }).join('');
         }
-
-        const prevBilling = window.systemData.billings.find(b => b.roomId === room.roomId && b.month === prevMonthStr);
-
-        const eStart = billing.elecStart !== undefined ? billing.elecStart : ((prevBilling && prevBilling.elecEnd !== undefined) ? prevBilling.elecEnd : (room.initElec || 0));
-        const eEnd = billing.elecEnd || 0;
-        
-        const wStart = billing.waterStart !== undefined ? billing.waterStart : ((prevBilling && prevBilling.waterEnd !== undefined) ? prevBilling.waterEnd : (room.initWater || 0));
-        const wEnd = billing.waterEnd || 0;
-        
-        const evStart = billing.evStart !== undefined ? billing.evStart : ((prevBilling && prevBilling.evEnd !== undefined) ? prevBilling.evEnd : (room.initEv || 0));
-        const evEnd = billing.evEnd || 0;
-        // ---- KẾT THÚC LOGIC BỔ SUNG ----
-
-        // Kiểm tra xem phòng này có ảnh quét AI trong máy không để làm sáng nút mắt
-        const workingMonth = window.currentMonth || "2026-05";
-        const hasElecProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`) ? 'text-amber-500 scale-110 font-bold' : 'text-slate-300 hover:text-amber-500';
-        const hasWaterProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`) ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300 hover:text-sky-500';
-
-        return `<tr class="hover:bg-slate-50/70 transition-all">
-            <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
-            <td class="p-3.5 bg-slate-50/40 text-center font-semibold text-slate-500">${room.members || 1}</td>
-            
-            <td class="p-2 bg-amber-50/20 border-l border-slate-100">
-                <input type="number" id="input-elecStart-${room.roomId}" value="${eStart}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-amber-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${eEnd < eStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
-                    <input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto('${room.roomId}', 'elec')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasElecProof}" title="Xem ảnh công tơ điện">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-sky-50/20 border-l border-slate-100">
-                <input type="number" id="input-waterStart-${room.roomId}" value="${wStart}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            
-            <td class="p-2 bg-sky-50/40">
-                <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${wEnd < wStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
-                    <input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                    <button onclick="window.viewAiProofPhoto('${room.roomId}', 'water')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasWaterProof}" title="Xem ảnh công tơ nước">
-                        <i class="fa-solid fa-eye text-[11px]"></i>
-                    </button>
-                </div>
-            </td>
-            
-            <td class="p-2 bg-teal-50/20 border-l border-slate-100">
-                <input type="number" id="input-evStart-${room.roomId}" value="${evStart}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-medium text-slate-600 focus:ring-0">
-            </td>
-            <td class="p-2 bg-teal-50/40">
-                <input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 rounded border border-transparent ${evEnd < evStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
-            </td>
-            
-            <td class="p-2 bg-rose-50/20 border-l border-slate-100 text-right">
-                <input type="number" id="input-otherCost-${room.roomId}" value="${billing.otherCost || 0}" class="w-full bg-transparent outline-none text-right font-bold text-slate-800 focus:ring-0">
-            </td>
-        </tr>`;
-    }).join('');
-}
 
         window.saveBatchInput = async function() {
             const settings = window.systemData.settings;
@@ -1906,21 +1905,21 @@
 // =========================================================================
 // MODUL NÂNG CẤP XỬ LÝ KHỐI QUÉT ẢNH CHỈ SỐ AI: CHUYỂN ĐỔI NÚT BẤM LINH HOẠT
 // =========================================================================
-let currentScanType = 'elec'; // Biến toàn cục lưu trạng thái loại chỉ số quét hiện tại
+let currentScanType = 'elec'; 
 
 window.setScanType = function(type) {
     currentScanType = type;
     const btnElec = document.getElementById('btn-scan-elec');
     const btnWater = document.getElementById('btn-scan-water');
-    if (!btnElec || !btnWater) return;
+    const btnEv = document.getElementById('btn-scan-ev');
+    if (!btnElec || !btnWater || !btnEv) return;
     
-    if (type === 'elec') {
-        btnElec.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5";
-        btnWater.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800";
-    } else {
-        btnWater.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5";
-        btnElec.className = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800";
-    }
+    const activeClass = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all bg-white text-indigo-600 shadow-sm border border-black/5 py-1.5";
+    const inactiveClass = "text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-all text-slate-500 hover:text-slate-800 py-1.5";
+    
+    btnElec.className = (type === 'elec') ? activeClass : inactiveClass;
+    btnWater.className = (type === 'water') ? activeClass : inactiveClass;
+    btnEv.className = (type === 'ev') ? activeClass : inactiveClass;
 };
 
 window.updateAIRoomDropdown = function() {
@@ -1951,18 +1950,12 @@ window.processIPhonePhoto = async function(inputElement) {
     const file = inputElement.files[0];
     if (!file) return;
 
-    // LẤY THÔNG TIN TỪ KHỐI ĐIỀU KHIỂN MỚI
     const roomId = document.getElementById('aiTargetRoom')?.value;
-    const type = currentScanType; // Nhận diện trực tiếp từ trạng thái nút bấm thay vì thẻ select cũ
+    const type = currentScanType; 
     const workingMonth = window.currentMonth || "2026-05";
     
-    if (!roomId) {
-        alert("⚠️ Vui lòng chọn phòng cần nhập chỉ số.");
-        inputElement.value = '';
-        return;
-    }
+    if (!roomId) { alert("⚠️ Vui lòng chọn phòng cần nhập chỉ số."); inputElement.value = ''; return; }
 
-    // 2. HIỂN THỊ NGAY Ô XEM TRƯỚC TRONG 0.01 GIÂY ĐỂ ANH CHẠM GIỮ LƯU THƯ VIỆN
     const imageUrl = URL.createObjectURL(file);
     try {
         let previewContainer = document.getElementById('iphone-photo-preview-box');
@@ -1970,25 +1963,16 @@ window.processIPhonePhoto = async function(inputElement) {
             previewContainer = document.createElement('div');
             previewContainer.id = 'iphone-photo-preview-box';
             previewContainer.className = 'fixed bottom-20 right-4 z-[9999] p-3.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border-2 border-amber-500 max-w-[170px] text-center select-none touch-none';
-            previewContainer.style.position = 'fixed';
-            previewContainer.style.transition = 'none';
             document.body.appendChild(previewContainer);
 
-            // TÍCH HỢP KÉO THẢ LINH HOẠT CHỐNG GIẬT MÀN HÌNH
-            let isDragging = false;
-            let startX, startY, initialLeft, initialTop;
+            let isDragging = false; let startX, startY, initialLeft, initialTop;
             previewContainer.addEventListener('touchstart', function(e) {
                 if (e.target.tagName === 'BUTTON' || e.target.tagName === 'IMG') return;
-                isDragging = true;
-                let touch = e.touches[0];
-                let rect = previewContainer.getBoundingClientRect();
-                startX = touch.clientX; startY = touch.clientY;
-                initialLeft = rect.left; initialTop = rect.top;
+                isDragging = true; let touch = e.touches[0]; let rect = previewContainer.getBoundingClientRect();
+                startX = touch.clientX; startY = touch.clientY; initialLeft = rect.left; initialTop = rect.top;
             }, { passive: true });
-
             document.addEventListener('touchmove', function(e) {
-                if (!isDragging) return;
-                let touch = e.touches[0];
+                if (!isDragging) return; let touch = e.touches[0];
                 previewContainer.style.bottom = 'auto'; previewContainer.style.right = 'auto';
                 previewContainer.style.left = (initialLeft + touch.clientX - startX) + 'px';
                 previewContainer.style.top = (initialTop + touch.clientY - startY) + 'px';
@@ -1996,151 +1980,101 @@ window.processIPhonePhoto = async function(inputElement) {
             document.addEventListener('touchend', function() { isDragging = false; });
         }
         
+        // Tên hiển thị loại chỉ số trên thông báo xem trước ảnh
+        const typeLabel = type === 'elec' ? 'Điện' : (type === 'water' ? 'Nước' : 'Xe EV');
+        
         previewContainer.innerHTML = `
                 <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-dashed border-slate-200">
-                    <span class="text-[10px] font-black text-amber-600 uppercase">
-                        <i class="fa-solid fa-circle-dot animate-pulse"></i> P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'})
-                    </span>
+                    <span class="text-[10px] font-black text-amber-600 uppercase"><i class="fa-solid fa-circle-dot animate-pulse"></i> P.${roomId} (${typeLabel})</span>
                 </div>
-                
                 <button onclick="window.saveToIPhoneGallery('${imageUrl}', 'Chiso_Phong_${roomId}_${type}')" class="mb-2 w-full py-1.5 bg-amber-500 active:bg-amber-600 text-white text-[11px] font-extrabold rounded-lg shadow-sm flex items-center justify-center gap-1 transition-colors">
-                    <i class="fa-solid fa-floppy-disk"></i> Lưu Vào Thư Viện iPhone
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Thư Viện iPhone
                 </button>
-
                 <p class="text-[9px] font-medium text-slate-400 mb-1.5 leading-tight">Hoặc chạm giữ ảnh để sao chép nhanh:</p>
-                
                 <img src="${imageUrl}" class="w-[140px] h-[140px] object-cover rounded-xl border border-slate-200 mx-auto" style="-webkit-touch-callout: default !important; -webkit-user-select: auto !important; user-select: auto !important;">
-                
                 <button onclick="this.parentElement.remove()" class="mt-2 w-full py-1.5 bg-slate-100 active:bg-red-500 text-slate-600 active:text-white text-[11px] font-extrabold rounded-lg transition-colors flex items-center justify-center gap-1">
                     <i class="fa-solid fa-circle-xmark"></i> Đóng thông báo
-                </button>
-            `;
+                </button>`;
 
-            // Khai báo hàm xử lý chia sẻ/lưu ảnh trực tiếp vào Thư viện hệ thống của iOS
             window.saveToIPhoneGallery = async function(base64Data, filename) {
                 try {
-                    const response = await fetch(base64Data);
-                    const blob = await response.blob();
+                    const response = await fetch(base64Data); const blob = await response.blob();
                     const file = new File([blob], `${filename}.jpg`, { type: 'image/jpeg' });
-
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: 'Lưu Ảnh Minh Chứng',
-                            text: ''
-                        });
+                        await navigator.share({ files: [file], title: 'Lưu Ảnh Minh Chứng', text: '' });
                     } else {
-                        const link = document.createElement('a');
-                        link.href = base64Data;
-                        link.download = `${filename}.jpg`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
+                        const link = document.createElement('a'); link.href = base64Data; link.download = `${filename}.jpg`;
+                        document.body.appendChild(link); link.click(); document.body.removeChild(link);
                     }
-                } catch (err) {
-                    console.error("Lỗi thực thi lưu ảnh trên iOS:", err);
-                }
+                } catch (err) { console.error("Lỗi:", err); }
             };
-
         } catch (e) { console.error(e); }
 
-    // BẬT OVERLAY CHỜ XỬ LÝ SONG SONG CỦA HỆ THỐNG
     const overlay = document.getElementById('aiProcessingOverlay');
     if (overlay) { overlay.classList.remove('hidden'); overlay.classList.add('flex'); }
 
     try {
         const apiKey = localStorage.getItem('SMARTRENTAL_GEMINI_KEY') || window.systemData?.settings?.geminiKey;
-        if (!apiKey) throw new Error("Chưa cấu hình Gemini API Key trong phần Thiết lập.");
+        if (!apiKey) throw new Error("Chưa cấu hình Gemini API Key.");
 
-        // 3. NÉN ẢNH SIÊU TỐC VÀ TRÍCH XUẤT CHUỖI DỮ LIỆU AN TOÀN
         const base64ImageWithHeader = await new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.getElementById('aiCanvasBuffer') || document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const maxDimension = 800; // Giới hạn kích thước vàng giúp AI đọc chuẩn và truyền file cực nhẹ
-                let w = img.width, h = img.height;
+                const ctx = canvas.getContext('2d'); let w = img.width, h = img.height;
+                const maxDimension = 800;
                 if (w > maxDimension || h > maxDimension) {
                     if (w > h) { h = Math.round((h * maxDimension) / w); w = maxDimension; }
                     else { w = Math.round((w * maxDimension) / h); h = maxDimension; }
                 }
-                canvas.width = w; canvas.height = h;
-                ctx.drawImage(img, 0, 0, w, h);
-                resolve(canvas.toDataURL('image/jpeg', 0.55)); // Nén 55% giảm dung lượng tải mạng 4G cực nhanh
+                canvas.width = w; canvas.height = h; ctx.drawImage(img, 0, 0, w, h);
+                resolve(canvas.toDataURL('image/jpeg', 0.55));
             };
-            img.onerror = () => reject(new Error("Lỗi tải cấu trúc ảnh."));
-            img.src = imageUrl;
+            img.onerror = () => reject(new Error("Lỗi tải ảnh.")); img.src = imageUrl;
         });
 
         const base64Data = base64ImageWithHeader.split(',')[1];
-
-        // Lưu bản lưu minh chứng vào bộ nhớ máy (Đồng bộ Firebase mượt mà)
         localStorage.setItem(`AI_PROOF_${workingMonth}_${roomId}_${type}`, base64ImageWithHeader);
 
-        // 4. GỬI TRUY VẤN QUA ĐƯỜNG JSON TIÊU CHUẨN (AN TOÀN TUYỆT ĐỐI - KHÔNG THỂ LỖI KẾT NỐI)
         const promptText = `Read the meter index from the image. Return JSON format with key "value" as integer.`;
         const activeModel = window.systemData?.settings?.geminiModel || "gemini-2.5-flash";
         
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: 'image/jpeg', data: base64Data } }] }],
-                generationConfig: {
-                    temperature: 0.0, // Đóng băng tư duy sáng tạo giúp AI phản hồi cơ khí siêu tốc
-                    responseMimeType: "application/json", // Ép định dạng đầu ra thô JSON
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: { value: { type: "INTEGER" } },
-                        required: ["value"]
-                    }
-                }
+                generationConfig: { temperature: 0.0, responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { value: { type: "INTEGER" } }, required: ["value"] } }
             })
         });
 
-        if (!response.ok) throw new Error("Máy chủ AI phản hồi chậm hoặc Key cấu hình có lỗi.");
-        
+        if (!response.ok) throw new Error("Lỗi kết nối máy chủ AI.");
         const resData = await response.json();
         const aiJsonText = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 
         let extractedValue = null;
-        try {
-            const parsed = JSON.parse(aiJsonText);
-            extractedValue = parseInt(parsed.value);
-        } catch(e) {
-            throw new Error("AI tạm thời chưa bóc tách được số. Vui lòng thử lại vuông góc hơn.");
-        }
+        try { extractedValue = parseInt(JSON.parse(aiJsonText).value); } catch(e) { throw new Error("AI chưa thể bóc tách số."); }
+        if (isNaN(extractedValue)) throw new Error("Mặt số bị lóa hoặc mờ.");
 
-        if (isNaN(extractedValue)) throw new Error("Mặt số đồng hồ bị mờ hoặc lóa.");
-
-        // 5. ĐỔ SỐ VÀO BẢNG TÍNH VÀ ĐỔI MÀU THÀNH CÔNG
-        const targetInputId = type === 'elec' ? `input-elecEnd-${roomId}` : `input-waterEnd-${roomId}`;
+        // PHÂN LUỒNG MỤC TIÊU (ĐIỆN / NƯỚC / EV) ĐỂ ĐIỀN ĐÚNG Ô
+        const targetInputId = type === 'elec' ? `input-elecEnd-${roomId}` : (type === 'water' ? `input-waterEnd-${roomId}` : `input-evEnd-${roomId}`);
         const targetInput = document.getElementById(targetInputId);
         
         if (targetInput) {
             targetInput.value = extractedValue;
             targetInput.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-700', 'font-bold');
             targetInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            if (typeof window.validateLiveInput === 'function') {
-                window.validateLiveInput(roomId, type);
-            }
+            if (typeof window.validateLiveInput === 'function') window.validateLiveInput(roomId, type);
             setTimeout(() => { targetInput.classList.remove('bg-emerald-50', 'border-emerald-300'); }, 2000);
         }
 
-        // TỰ ĐỘNG CHUYỂN SANG PHÒNG TIẾP THEO
         if (typeof autoSwitchToNextRoom === 'function') { autoSwitchToNextRoom(); }
 
-    } catch (error) {
-        alert("⚠️ Lỗi trích xuất AI: " + error.message);
-        console.error(error);
-    } finally {
+    } catch (error) { alert("⚠️ Lỗi trích xuất AI: " + error.message); } finally {
         inputElement.value = ''; 
         if (overlay) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
     }
 };
 
-// --- GIỮ NGUYÊN CÁC HÀM LẮNG NGHE ĐỒNG BỘ PHÍA DƯỚI CỦA ANH ---
 const originalRenderAll = window.renderAll;
 if (typeof originalRenderAll === 'function') {
     window.renderAll = function() { originalRenderAll(); setTimeout(window.updateAIRoomDropdown, 300); };
@@ -2151,18 +2085,13 @@ if (typeof originalChangeMonth === 'function') {
     window.changeWorkingMonth = function(val) { originalChangeMonth(val); setTimeout(window.updateAIRoomDropdown, 800); };
 }
 
-        // HÀM HIỂN THỊ ẢNH ĐỐI CHIẾU KHI BẤM NÚT CON MẮT
 window.viewAiProofPhoto = function(roomId, type) {
     const workingMonth = window.currentMonth || "2026-05";
     const key = `AI_PROOF_${workingMonth}_${roomId}_${type}`;
     const base64Image = localStorage.getItem(key);
 
-    if (!base64Image) {
-        alert("Phòng này chưa được quét bằng AI hoặc ảnh kỳ này chưa được lưu.");
-        return;
-    }
+    if (!base64Image) { alert("Phòng này chưa quét AI hoặc ảnh chưa được lưu."); return; }
 
-    // Tạo một khung Popup Modal giữa màn hình
     let viewModal = document.getElementById('ai-proof-view-modal');
     if (!viewModal) {
         viewModal = document.createElement('div');
@@ -2171,20 +2100,16 @@ window.viewAiProofPhoto = function(roomId, type) {
         document.body.appendChild(viewModal);
     }
 
+    const typeLabel = type === 'elec' ? 'Điện' : (type === 'water' ? 'Nước' : 'Xe EV');
+
     viewModal.innerHTML = `
         <div class="bg-white rounded-2xl shadow-2xl p-4 max-w-sm w-full text-center animate-scaleIn">
             <div class="flex items-center justify-between border-b pb-2 mb-3">
-                <h4 class="text-xs font-black text-slate-800 uppercase">
-                    📸 Minh chứng P.${roomId} (${type === 'elec' ? 'Điện' : 'Nước'}) - Kỳ ${workingMonth}
-                </h4>
-                <button onclick="this.closest('#ai-proof-view-modal').remove()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
+                <h4 class="text-xs font-black text-slate-800 uppercase">📸 Minh chứng P.${roomId} (${typeLabel}) - Kỳ ${workingMonth}</h4>
+                <button onclick="this.closest('#ai-proof-view-modal').remove()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
             <img src="${base64Image}" class="w-full h-auto max-h-[350px] object-contain rounded-xl border border-slate-100 shadow-inner mb-3">
-            <button onclick="this.closest('#ai-proof-view-modal').remove()" class="w-full py-2 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 active:scale-95 transition-all">
-                Đóng cửa sổ
-            </button>
+            <button onclick="this.closest('#ai-proof-view-modal').remove()" class="w-full py-2 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 active:scale-95 transition-all">Đóng cửa sổ</button>
         </div>
     `;
 };
