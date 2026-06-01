@@ -2033,24 +2033,72 @@ window.processIPhonePhoto = async function(inputElement) {
 
         const base64Data = base64ImageWithHeader.split(',')[1];
         localStorage.setItem(`AI_PROOF_${workingMonth}_${roomId}_${type}`, base64ImageWithHeader);
-
+// 2. Đẩy lên Firebase Firestore (MÃ MỚI BỔ SUNG)
+        try {
+            const proofDocRef = doc(db, "rental_data_proofs", proofKey);
+            await setDoc(proofDocRef, { imageBase64: base64ImageWithHeader, timestamp: new Date().getTime() });
+        } catch(err) {
+            console.error("Lỗi đẩy ảnh lên Cloud, lưu tạm ở local:", err);
+        }
+        
         const promptText = `Read the meter index from the image. Return JSON format with key "value" as integer.`;
         const activeModel = window.systemData?.settings?.geminiModel || "gemini-2.5-flash";
         
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: 'image/jpeg', data: base64Data } }] }],
-                generationConfig: { temperature: 0.0, responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { value: { type: "INTEGER" } }, required: ["value"] } }
-            })
+        const payload = JSON.stringify({
+            contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: 'image/jpeg', data: base64Data } }] }],
+            generationConfig: { temperature: 0.0, responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { value: { type: "INTEGER" } }, required: ["value"] } }
         });
 
-        if (!response.ok) throw new Error("Lỗi kết nối máy chủ AI.");
+        // Tự động phân luồng chống nghẽn khi chụp liên tục (Thử lại tối đa 3 lần)
+        let response;
+        let retries = 3;
+        let delayMs = 3000; // Thời gian chờ ban đầu là 3 giây
+
+        while (retries > 0) {
+            response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: payload
+            });
+
+            // Nếu gặp lỗi 429 (Quá hạn mức số lượt quét/phút của Google)
+            if (response.status === 429) {
+                retries--;
+                if (retries === 0) break; // Hết số lần thử lại thì dừng hẳn
+                
+                // Cập nhật trạng thái ngay trên màn hình để anh theo dõi
+                const overlayMsg = document.querySelector('#aiProcessingOverlay p');
+                if (overlayMsg) {
+                    overlayMsg.innerText = `Hệ thống AI đang xếp hàng... Tự động quét lại sau ${delayMs / 1000}s`;
+                }
+                
+                // Tạm dừng hệ thống trước khi thử lại
+                await new Promise(resolve => setTimeout(resolve, delayMs));
+                delayMs *= 2; // Gấp đôi thời gian chờ cho lần sau (3s -> 6s)
+            } else {
+                break; // Nếu thành công hoặc gặp lỗi khác (ví dụ sai key) thì thoát vòng lặp ngay
+            }
+        }
+
+        // Kiểm tra kết quả sau các lượt thử nghiệm
+        if (!response || !response.ok) {
+            if (response && response.status === 429) {
+                throw new Error("AI đang quá tải do tốc độ chụp quá nhanh. Anh vui lòng nghỉ tay khoảng 15 giây rồi chụp tiếp.");
+            }
+            throw new Error("Lỗi kết nối máy chủ AI.");
+        }
+
+        // Bóc tách dữ liệu khi AI trả về kết quả thành công
         const resData = await response.json();
         const aiJsonText = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 
         let extractedValue = null;
-        try { extractedValue = parseInt(JSON.parse(aiJsonText).value); } catch(e) { throw new Error("AI chưa thể bóc tách số."); }
+        try { 
+            extractedValue = parseInt(JSON.parse(aiJsonText).value); 
+        } catch(e) { 
+            throw new Error("AI chưa thể bóc tách số."); 
+        }
+        
         if (isNaN(extractedValue)) throw new Error("Mặt số bị lóa hoặc mờ.");
 
         // PHÂN LUỒNG MỤC TIÊU (ĐIỆN / NƯỚC / EV) ĐỂ ĐIỀN ĐÚNG Ô
@@ -2083,12 +2131,31 @@ if (typeof originalChangeMonth === 'function') {
     window.changeWorkingMonth = function(val) { originalChangeMonth(val); setTimeout(window.updateAIRoomDropdown, 800); };
 }
 
-window.viewAiProofPhoto = function(roomId, type) {
+window.viewAiProofPhoto = async function(roomId, type) {
     const workingMonth = window.currentMonth || "2026-05";
     const key = `AI_PROOF_${workingMonth}_${roomId}_${type}`;
-    const base64Image = localStorage.getItem(key);
+    
+    // 1. Kiểm tra cache ở thiết bị trước cho nhanh
+    let base64Image = localStorage.getItem(key);
 
-    if (!base64Image) { alert("Phòng này chưa quét AI hoặc ảnh chưa được lưu."); return; }
+    // 2. Nếu không có ở máy, tự động tải từ hệ thống máy chủ Firebase
+    if (!base64Image) {
+        try {
+            const proofDocRef = doc(db, "rental_data_proofs", key);
+            const snap = await getDoc(proofDocRef);
+            if (snap.exists()) {
+                base64Image = snap.data().imageBase64;
+                localStorage.setItem(key, base64Image); // Lưu nháp lại vào máy để lần sau mở nhanh hơn
+            }
+        } catch(e) {
+            console.error("Lỗi đồng bộ ảnh từ Cloud", e);
+        }
+    }
+
+    if (!base64Image) { 
+        alert("Không tìm thấy dữ liệu ảnh minh chứng trên hệ thống đám mây."); 
+        return; 
+    }
 
     let viewModal = document.getElementById('ai-proof-view-modal');
     if (!viewModal) {
@@ -2103,13 +2170,45 @@ window.viewAiProofPhoto = function(roomId, type) {
     viewModal.innerHTML = `
         <div class="bg-white rounded-2xl shadow-2xl p-4 max-w-sm w-full text-center animate-scaleIn">
             <div class="flex items-center justify-between border-b pb-2 mb-3">
-                <h4 class="text-xs font-black text-slate-800 uppercase">📸 Minh chứng P.${roomId} (${typeLabel}) - Kỳ ${workingMonth}</h4>
-                <button onclick="this.closest('#ai-proof-view-modal').remove()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-sm"></i></button>
+                <h4 class="text-xs font-black text-slate-800 uppercase">📸 Minh chứng P.${roomId} (${typeLabel})</h4>
+                <button onclick="this.closest('#ai-proof-view-modal').remove()" class="text-slate-400 hover:text-rose-600 transition-all"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <img src="${base64Image}" class="w-full h-auto max-h-[350px] object-contain rounded-xl border border-slate-100 shadow-inner mb-3">
-            <button onclick="this.closest('#ai-proof-view-modal').remove()" class="w-full py-2 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 active:scale-95 transition-all">Đóng cửa sổ</button>
+            
+            <div class="grid grid-cols-2 gap-2 mt-4">
+                <button onclick="this.closest('#ai-proof-view-modal').remove()" class="w-full py-2.5 bg-slate-100 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-200 transition-all">
+                    Đóng
+                </button>
+                <button onclick="window.shareProofImage('${base64Image}', '${roomId}', '${typeLabel}')" class="w-full py-2.5 bg-gradient-to-r from-[#0068ff] to-[#0055d4] text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/30 hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-share-nodes"></i> Gửi Zalo
+                </button>
+            </div>
         </div>
     `;
+};
+
+// Hàm xử lý gửi ảnh qua Zalo/Native Share
+window.shareProofImage = async function(base64Data, roomId, typeLabel) {
+    try {
+        const response = await fetch(base64Data);
+        const blob = await response.blob();
+        const file = new File([blob], `MinhChung_P${roomId}_${typeLabel}.jpg`, { type: 'image/jpeg' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: `Ảnh minh chứng ${typeLabel} - P.${roomId}`
+            });
+        } else {
+            const link = document.createElement('a');
+            link.href = base64Data;
+            link.download = `MinhChung_P${roomId}_${typeLabel}.jpg`;
+            link.click();
+            alert("Đã lưu ảnh về máy! Anh có thể mở Zalo để gửi.");
+        }
+    } catch (error) {
+        alert("Không thể chia sẻ ảnh lúc này. Vui lòng thử lại!");
+    }
 };
 // Hàm kích hoạt bảng chia sẻ Native trên điện thoại
         window.shareInvoiceData = function(encodedText) {
