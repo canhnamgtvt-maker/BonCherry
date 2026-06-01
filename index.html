@@ -2032,14 +2032,23 @@ window.processIPhonePhoto = async function(inputElement) {
         });
 
         const base64Data = base64ImageWithHeader.split(',')[1];
-        localStorage.setItem(`AI_PROOF_${workingMonth}_${roomId}_${type}`, base64ImageWithHeader);
-// 2. Đẩy lên Firebase Firestore (MÃ MỚI BỔ SUNG)
-        try {
-            const proofDocRef = doc(db, "rental_data_proofs", proofKey);
-            await setDoc(proofDocRef, { imageBase64: base64ImageWithHeader, timestamp: new Date().getTime() });
-        } catch(err) {
-            console.error("Lỗi đẩy ảnh lên Cloud, lưu tạm ở local:", err);
-        }
+
+// KHAI BÁO BIẾN KHÓA ẢNH ĐỂ SỬ DỤNG CHUNG CHO CẢ LOCAL VÀ CLOUD
+const proofKey = `AI_PROOF_${workingMonth}_${roomId}_${type}`;
+
+// 1. Lưu tạm ở thiết bị (Local)
+localStorage.setItem(proofKey, base64ImageWithHeader);
+
+// 2. Đẩy lên Firebase Firestore (Cloud)
+try {
+    const proofDocRef = doc(db, "rental_data_proofs", proofKey);
+    await setDoc(proofDocRef, { 
+        imageBase64: base64ImageWithHeader, 
+        timestamp: new Date().getTime() 
+    });
+} catch(err) {
+    console.error("Lỗi đẩy ảnh lên Cloud, lưu tạm ở local:", err);
+}
         
         const promptText = `Read the meter index from the image. Return JSON format with key "value" as integer.`;
         const activeModel = window.systemData?.settings?.geminiModel || "gemini-2.5-flash";
