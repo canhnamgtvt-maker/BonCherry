@@ -1201,7 +1201,7 @@
                 // TÍNH TOÁN LẠI PHỤ THU NGẦM TẠI THỜI ĐIỂM CHỐT SỔ ĐỂ ĐẢM BẢO CHÍNH XÁC 100%
                 // Mã mới: Luôn đồng bộ Phụ thu ngầm theo Cài đặt
 const otherRate = settings.otherElecFlat || 0;
-otherCost = elecUsage * otherRate;
+otherCost = (elecUsage * otherRate) + (evUsage * otherRate);
 const otherCostInput = document.getElementById(`input-otherCost-${room.roomId}`);
 if (otherCostInput) otherCostInput.value = otherCost;
 
@@ -1475,21 +1475,62 @@ if (otherCostInput) otherCostInput.value = otherCost;
         window.triggerPrintInvoice = function() { window.print(); };
 
         function renderSavedInvoicesTable() {
-            const tbody = document.getElementById('saved-invoices-tbody');
-            if(!tbody) return;
-            tbody.innerHTML = window.systemData.savedInvoices.map((inv, index) => {
-                const safeJsonStr = encodeURIComponent(JSON.stringify(inv));
-                return `<tr class="hover:bg-slate-50 transition-all border-b border-slate-100" onclick="window.viewInvoiceDetail('${inv.roomId}', '${inv.month}', '${safeJsonStr}')">
-                    <td class="p-3 font-semibold text-indigo-600 text-xs">${inv.month}</td>
-                    <td class="p-3 font-bold text-slate-900 text-xs">Phòng ${inv.roomId}</td>
-                    <td class="p-3 font-medium text-slate-600 text-xs">${inv.renter}</td>
-                    <td class="p-3 text-right font-extrabold text-emerald-600 text-xs">${inv.total.toLocaleString()} ₫</td>
-                    <td class="p-3 text-center no-print" onclick="event.stopPropagation();">
-                        <button onclick="window.deleteSavedInvoice(${index})" class="text-slate-400 hover:text-rose-600 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr>`;
-            }).join('');
-        }
+    const tbody = document.getElementById('saved-invoices-tbody');
+    if(!tbody) return;
+    
+    // 1. Phân nhóm hóa đơn theo chu kỳ tháng
+    const monthlyGroups = {};
+    window.systemData.savedInvoices.forEach((inv, originalIndex) => {
+        const month = inv.month || "Không rõ";
+        if (!monthlyGroups[month]) monthlyGroups[month] = [];
+        monthlyGroups[month].push({ ...inv, originalIndex }); 
+    });
+
+    // 2. Sắp xếp tháng mới nhất lên đầu danh sách
+    const sortedMonths = Object.keys(monthlyGroups).sort((a, b) => b.localeCompare(a));
+    
+    if (sortedMonths.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-slate-400 text-xs italic">Chưa có dữ liệu khóa đối soát.</td></tr>`;
+        return;
+    }
+
+    // 3. Kết xuất giao diện Bảng thông minh (Accordion Rows)
+    let html = '';
+    sortedMonths.forEach((month, idx) => {
+        const isExpanded = idx === 0; // Mặc định tự động mở danh sách của tháng mới nhất
+        
+        // Dòng Tiêu đề của Tháng (Bấm vào để ẩn/hiện)
+        html += `
+            <tr class="bg-indigo-50/70 cursor-pointer border-b border-indigo-100 select-none hover:bg-indigo-100/70 transition-all" onclick="document.querySelectorAll('.archive-month-${month}').forEach(el => el.classList.toggle('hidden'))">
+                <td colspan="5" class="p-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-indigo-600"></i>
+                        <span class="font-bold text-indigo-900 text-xs uppercase tracking-wider">Kỳ đối soát: ${month}</span>
+                        <span class="text-[10px] bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded font-bold">${monthlyGroups[month].length} hóa đơn</span>
+                        <i class="fa-solid fa-arrows-up-down text-indigo-400 text-[10px] ml-auto"></i>
+                    </div>
+                </td>
+            </tr>
+        `;
+        
+        // Các dòng hóa đơn chi tiết bên trong
+        monthlyGroups[month].forEach(inv => {
+            const safeJsonStr = encodeURIComponent(JSON.stringify(inv));
+            html += `
+            <tr class="archive-month-${month} hover:bg-slate-50 transition-all border-b border-slate-100 ${isExpanded ? '' : 'hidden'}" onclick="window.viewInvoiceDetail('${inv.roomId}', '${inv.month}', '${safeJsonStr}')">
+                <td class="p-3 font-semibold text-slate-400 text-xs pl-8">↳ ${inv.month}</td>
+                <td class="p-3 font-bold text-slate-900 text-xs">Phòng ${inv.roomId}</td>
+                <td class="p-3 font-medium text-slate-600 text-xs">${inv.renter}</td>
+                <td class="p-3 text-right font-extrabold text-emerald-600 text-xs">${inv.total.toLocaleString()} ₫</td>
+                <td class="p-3 text-center no-print" onclick="event.stopPropagation();">
+                    <button onclick="window.deleteSavedInvoice(${inv.originalIndex})" class="text-slate-400 hover:text-rose-600 px-2 py-1 transition-all"><i class="fa-solid fa-trash-can"></i></button>
+                </td>
+            </tr>`;
+        });
+    });
+    
+    tbody.innerHTML = html;
+}
 
         window.deleteSavedInvoice = async function(idx) {
             if(confirm("Anh có chắc chắn muốn hủy khóa hóa đơn lịch sử cố định này?")) {
