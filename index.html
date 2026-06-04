@@ -1108,10 +1108,12 @@
                 const evEnd = billing.evEnd || 0;
 
                 const workingMonth = currentMonth;
-                const hasElecProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`) ? 'text-amber-500 scale-110 font-bold' : 'text-slate-300 hover:text-amber-500';
-                const hasWaterProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`) ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300 hover:text-sky-500';
-                // Bổ sung kiểm tra minh chứng Xe EV
-                const hasEvProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_ev`) ? 'text-teal-500 scale-110 font-bold' : 'text-slate-300 hover:text-teal-500';
+                // Đọc trạng thái từ Cloud (systemData.proofs) để máy tính cũng sáng đèn "con mắt"
+const hasElecProof = (localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`) || (window.systemData.proofs && window.systemData.proofs[`AI_PROOF_${workingMonth}_${room.roomId}_elec`])) ? 'text-amber-500 scale-110 font-bold' : 'text-slate-300 hover:text-amber-500';
+
+const hasWaterProof = (localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`) || (window.systemData.proofs && window.systemData.proofs[`AI_PROOF_${workingMonth}_${room.roomId}_water`])) ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300 hover:text-sky-500';
+
+const hasEvProof = (localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_ev`) || (window.systemData.proofs && window.systemData.proofs[`AI_PROOF_${workingMonth}_${room.roomId}_ev`])) ? 'text-teal-500 scale-110 font-bold' : 'text-slate-300 hover:text-teal-500';
 
                 return `<tr class="hover:bg-slate-50/70 transition-all">
                     <td class="p-3.5 font-bold text-slate-900">Phòng ${room.roomId}</td>
@@ -2082,11 +2084,18 @@ localStorage.setItem(proofKey, base64ImageWithHeader);
 
 // 2. Đẩy lên Firebase Firestore (Cloud)
 try {
-    const proofDocRef = doc(db, "rental_data_proofs", proofKey);
+    // Đổi collection về 'rental_data' để đảm bảo không bị Firebase Rules chặn quyền
+    const proofDocRef = doc(db, "rental_data", proofKey);
     await setDoc(proofDocRef, { 
         imageBase64: base64ImageWithHeader, 
         timestamp: new Date().getTime() 
     });
+    
+    // Đánh dấu cờ (flag) vào dữ liệu hệ thống để báo cho mọi thiết bị biết đã có ảnh
+    if (!window.systemData.proofs) window.systemData.proofs = {};
+    window.systemData.proofs[proofKey] = true;
+    await window.syncToCloud(); // Gửi cờ lên Cloud ngay lập tức
+
 } catch(err) {
     console.error("Lỗi đẩy ảnh lên Cloud, lưu tạm ở local:", err);
 }
@@ -2191,7 +2200,7 @@ window.viewAiProofPhoto = async function(roomId, type, targetMonth) {
     // 2. Nếu không có ở máy, tự động tải từ hệ thống máy chủ Firebase
     if (!base64Image) {
         try {
-            const proofDocRef = doc(db, "rental_data_proofs", key);
+            const proofDocRef = doc(db, "rental_data", key);
             const snap = await getDoc(proofDocRef);
             if (snap.exists()) {
                 base64Image = snap.data().imageBase64;
