@@ -1123,7 +1123,7 @@
                     <td class="p-2 bg-amber-50/40">
                         <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${eEnd < eStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
                             <input type="number" id="input-elecEnd-${room.roomId}" value="${eEnd}" oninput="window.validateLiveInput('${room.roomId}', 'elec')" class="w-full bg-transparent outline-none font-bold text-amber-950 focus:ring-0 px-1 py-0.5 pr-6">
-                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'elec')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasElecProof}" title="Xem ảnh công tơ điện">
+                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'elec', '${workingMonth}')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasElecProof}" title="Xem ảnh công tơ điện">
                                 <i class="fa-solid fa-eye text-[11px]"></i>
                             </button>
                         </div>
@@ -1135,7 +1135,7 @@
                     <td class="p-2 bg-sky-50/40">
                         <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${wEnd < wStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
                             <input type="number" id="input-waterEnd-${room.roomId}" value="${wEnd}" oninput="window.validateLiveInput('${room.roomId}', 'water')" class="w-full bg-transparent outline-none font-bold text-sky-950 focus:ring-0 px-1 py-0.5 pr-6">
-                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'water')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasWaterProof}" title="Xem ảnh công tơ nước">
+                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'water', '${workingMonth}')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasWaterProof}" title="Xem ảnh công tơ nước">
                                 <i class="fa-solid fa-eye text-[11px]"></i>
                             </button>
                         </div>
@@ -1147,7 +1147,7 @@
                     <td class="p-2 bg-teal-50/40">
                         <div class="relative flex items-center w-full bg-transparent rounded border border-transparent ${evEnd < evStart ? 'bg-rose-50 border-rose-200 text-rose-600' : ''}">
                             <input type="number" id="input-evEnd-${room.roomId}" value="${evEnd}" oninput="window.validateLiveInput('${room.roomId}', 'ev')" class="w-full bg-transparent outline-none font-bold text-teal-950 focus:ring-0 px-1 py-0.5 pr-6">
-                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'ev')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasEvProof}" title="Xem ảnh công tơ sạc xe EV">
+                            <button onclick="window.viewAiProofPhoto('${room.roomId}', 'ev', '${workingMonth}')" class="absolute right-1.5 p-0.5 transition-all active:scale-95 z-10 ${hasEvProof}" title="Xem ảnh công tơ sạc xe EV">
                                 <i class="fa-solid fa-eye text-[11px]"></i>
                             </button>
                         </div>
@@ -1991,7 +1991,7 @@ window.processIPhonePhoto = async function(inputElement) {
 
     const roomId = document.getElementById('aiTargetRoom')?.value;
     const type = currentScanType; 
-    const workingMonth = currentMonth;
+    const workingMonth = document.getElementById('global-month').value || currentMonth;
     
     if (!roomId) { alert("⚠️ Vui lòng chọn phòng cần nhập chỉ số."); inputElement.value = ''; return; }
 
@@ -2181,8 +2181,8 @@ if (typeof originalChangeMonth === 'function') {
     window.changeWorkingMonth = function(val) { originalChangeMonth(val); setTimeout(window.updateAIRoomDropdown, 800); };
 }
 
-window.viewAiProofPhoto = async function(roomId, type) {
-    const workingMonth = currentMonth;
+window.viewAiProofPhoto = async function(roomId, type, targetMonth) {
+    const workingMonth = targetMonth || document.getElementById('global-month').value || currentMonth;
     const key = `AI_PROOF_${workingMonth}_${roomId}_${type}`;
     
     // 1. Kiểm tra cache ở thiết bị trước cho nhanh
