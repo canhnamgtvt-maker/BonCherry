@@ -1107,7 +1107,7 @@
                 const evStart = billing.evStart !== undefined ? billing.evStart : ((prevBilling && prevBilling.evEnd !== undefined) ? prevBilling.evEnd : (room.initEv || 0));
                 const evEnd = billing.evEnd || 0;
 
-                const workingMonth = window.currentMonth || "2026-05";
+                const workingMonth = currentMonth;
                 const hasElecProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_elec`) ? 'text-amber-500 scale-110 font-bold' : 'text-slate-300 hover:text-amber-500';
                 const hasWaterProof = localStorage.getItem(`AI_PROOF_${workingMonth}_${room.roomId}_water`) ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300 hover:text-sky-500';
                 // Bổ sung kiểm tra minh chứng Xe EV
@@ -1991,7 +1991,7 @@ window.processIPhonePhoto = async function(inputElement) {
 
     const roomId = document.getElementById('aiTargetRoom')?.value;
     const type = currentScanType; 
-    const workingMonth = window.currentMonth || "2026-05";
+    const workingMonth = currentMonth;
     
     if (!roomId) { alert("⚠️ Vui lòng chọn phòng cần nhập chỉ số."); inputElement.value = ''; return; }
 
@@ -2182,7 +2182,7 @@ if (typeof originalChangeMonth === 'function') {
 }
 
 window.viewAiProofPhoto = async function(roomId, type) {
-    const workingMonth = window.currentMonth || "2026-05";
+    const workingMonth = currentMonth;
     const key = `AI_PROOF_${workingMonth}_${roomId}_${type}`;
     
     // 1. Kiểm tra cache ở thiết bị trước cho nhanh
