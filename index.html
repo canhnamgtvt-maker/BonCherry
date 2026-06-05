@@ -448,10 +448,33 @@
             <option value="year">Tổng Hợp Năm</option>
         </select>
         <select id="chart-target-year" onchange="window.handleChartConfigChange()" class="flex-1 sm:flex-none min-w-0 bg-slate-800 border border-slate-700 rounded-lg px-2 sm:px-3 py-2.5 sm:py-1.5 font-bold text-white outline-none cursor-pointer text-[11px] sm:text-xs">
-            <option value="2026">Năm 2026</option>
-            <option value="2025">Năm 2025</option>
-            <option value="2027">Năm 2027</option>
-        </select>
+    <option value="2025">Năm 2025</option>
+    <option value="2026" selected>Năm 2026</option>
+    <option value="2027">Năm 2027</option>
+    <option value="2028">Năm 2028</option>
+    <option value="2029">Năm 2029</option>
+    <option value="2030">Năm 2030</option>
+            <option value="2030">Năm 2031</option>
+            <option value="2030">Năm 2032</option>
+            <option value="2030">Năm 2033</option>
+            <option value="2030">Năm 2034</option>
+            <option value="2030">Năm 2035</option>
+            <option value="2030">Năm 2036</option>
+            <option value="2030">Năm 2037</option>
+            <option value="2030">Năm 2038</option>
+            <option value="2030">Năm 2039</option>
+            <option value="2030">Năm 2040</option>
+            <option value="2030">Năm 2041</option>
+            <option value="2030">Năm 2042</option>
+            <option value="2030">Năm 2043</option>
+            <option value="2030">Năm 2044</option>
+            <option value="2030">Năm 2045</option>
+            <option value="2030">Năm 2046</option>
+            <option value="2030">Năm 2047</option>
+            <option value="2030">Năm 2048</option>
+            <option value="2030">Năm 2049</option>
+            <option value="2030">Năm 2050</option>
+</select>
     </div>
 </div>
 
@@ -1984,14 +2007,17 @@ if (otherCostInput) otherCostInput.value = otherCost;
             waterData.push(targetBillings.reduce((sum, b) => sum + Math.max(0, (b.waterEnd || 0) - (b.waterStart || 0)), 0));
         }
     } else {
-        labels = ["Năm 2025", "Năm 2026", "Năm 2027"];
+        // TỰ ĐỘNG HÓA: Lấy năm anh chọn làm mốc, tự động vẽ so sánh 3 năm (Năm ngoái - Năm nay - Năm tới)
+        const baseYear = parseInt(yearType);
+        labels = [`Năm ${baseYear - 1}`, `Năm ${baseYear}`, `Năm ${baseYear + 1}`];
+        
         labels.forEach(l => {
             const y = l.split(' ')[1];
             
-            // Tương tự, ép điều kiện bỏ qua phòng đã xóa
+            // Ép điều kiện bỏ qua phòng đã xóa
             const targetBillings = window.systemData.billings.filter(b => b.month.startsWith(y) && activeRoomsIds.includes(b.roomId));
             
-            // Xử lý lỗi NaN cho chế độ xem theo Năm
+            // Xử lý lỗi NaN và cộng dồn số liệu
             elecData.push(targetBillings.reduce((sum, b) => sum + Math.max(0, (b.elecEnd || 0) - (b.elecStart || 0)), 0));
             waterData.push(targetBillings.reduce((sum, b) => sum + Math.max(0, (b.waterEnd || 0) - (b.waterStart || 0)), 0));
         });
