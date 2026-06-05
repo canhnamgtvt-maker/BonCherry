@@ -434,26 +434,26 @@
                         </div>
                     </div>
 
-                    <div class="p-4 bg-slate-900 text-white rounded-xl flex flex-wrap items-center justify-between gap-4 shadow-md">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-center text-amber-400"><i class="fa-solid fa-analytics"></i></div>
-                            <div>
-                                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">Đồ Thị Thống Kê Sản Lượng Tiêu Thụ</h3>
-                                <p class="text-[10px] text-slate-400">Trực quan hóa chỉ số điện nước theo chu kỳ thời gian</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs">
-                            <select id="chart-time-type" onchange="window.handleChartConfigChange()" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 font-bold text-white outline-none cursor-pointer text-xs">
-                                <option value="month">Tháng</option>
-                                <option value="year">Tổng hợp qua các năm</option>
-                            </select>
-                            <select id="chart-target-year" onchange="window.handleChartConfigChange()" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 font-bold text-white outline-none cursor-pointer text-xs">
-                                <option value="2026">Năm 2026</option>
-                                <option value="2025">Năm 2025</option>
-                                <option value="2027">Năm 2027</option>
-                            </select>
-                        </div>
-                    </div>
+                    <div class="p-4 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+    <div class="flex items-center gap-3 w-full">
+        <div class="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-center text-amber-400 shrink-0"><i class="fa-solid fa-analytics"></i></div>
+        <div class="min-w-0">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 truncate">Đồ Thị Thống Kê Tiêu Thụ</h3>
+            <p class="text-[10px] text-slate-400 truncate">Trực quan hóa chỉ số điện nước</p>
+        </div>
+    </div>
+    <div class="flex items-center gap-2 w-full sm:w-auto mt-1 sm:mt-0">
+        <select id="chart-time-type" onchange="window.handleChartConfigChange()" class="flex-1 sm:flex-none min-w-0 bg-slate-800 border border-slate-700 rounded-lg px-2 sm:px-3 py-2.5 sm:py-1.5 font-bold text-white outline-none cursor-pointer text-[11px] sm:text-xs">
+            <option value="month">Theo Tháng</option>
+            <option value="year">Tổng Hợp Năm</option>
+        </select>
+        <select id="chart-target-year" onchange="window.handleChartConfigChange()" class="flex-1 sm:flex-none min-w-0 bg-slate-800 border border-slate-700 rounded-lg px-2 sm:px-3 py-2.5 sm:py-1.5 font-bold text-white outline-none cursor-pointer text-[11px] sm:text-xs">
+            <option value="2026">Năm 2026</option>
+            <option value="2025">Năm 2025</option>
+            <option value="2027">Năm 2027</option>
+        </select>
+    </div>
+</div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="p-4 border border-slate-100 bg-slate-50/40 rounded-xl">
