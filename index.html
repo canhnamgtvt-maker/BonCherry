@@ -940,7 +940,7 @@
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const firebaseConfig = {  
             apiKey: "AIzaSyBLCSiQpn8oEbXQEb5uot7KQQSXcM9CX-w",
@@ -993,25 +993,30 @@
         });
 
         async function loadDataFromFirebase() {
-            try {
-                const docRef = doc(db, "rental_data", "system_state");
-                const docSnap = await getDoc(docRef);
-                let cloudData = null;
-                if (docSnap.exists()) { cloudData = docSnap.data(); }
-                if (cloudData) window.systemData = cloudData;
-
-                if (!window.systemData.billings || !Array.isArray(window.systemData.billings)) window.systemData.billings = [];
-                if (!window.systemData.rooms || !Array.isArray(window.systemData.rooms)) window.systemData.rooms = [];
-                if (!window.systemData.expenses || !Array.isArray(window.systemData.expenses)) window.systemData.expenses = [];
-                if (!window.systemData.savedInvoices || !Array.isArray(window.systemData.savedInvoices)) window.systemData.savedInvoices = [];
-                if (!window.systemData.settings) window.systemData.settings = { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
-                
-                initAppLifecycle();
-            } catch (err) {
-                console.error("Lỗi tải cơ sở dữ liệu:", err);
-                initAppLifecycle();
+    try {
+        const docRef = doc(db, "rental_data", "system_state");
+        
+        // Sử dụng onSnapshot để lắng nghe thay đổi thời gian thực từ Cloud
+        onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) { 
+                window.systemData = docSnap.data(); 
             }
-        }
+            
+            // Khởi tạo các mảng mặc định nếu thiếu
+            if (!window.systemData.billings || !Array.isArray(window.systemData.billings)) window.systemData.billings = [];
+            if (!window.systemData.rooms || !Array.isArray(window.systemData.rooms)) window.systemData.rooms = [];
+            if (!window.systemData.expenses || !Array.isArray(window.systemData.expenses)) window.systemData.expenses = [];
+            if (!window.systemData.savedInvoices || !Array.isArray(window.systemData.savedInvoices)) window.systemData.savedInvoices = [];
+            if (!window.systemData.settings) window.systemData.settings = { elecFlat: 3500, waterFlat: 15000, evFlat: 4000, garbageFlat: 10000 };
+            
+            // Tự động render lại giao diện khi có thay đổi
+            initAppLifecycle();
+        });
+    } catch (err) {
+        console.error("Lỗi tải cơ sở dữ liệu:", err);
+        initAppLifecycle();
+    }
+}
 
         window.syncToCloud = async function() {
             localStorage.setItem('room_manager_pro_data', JSON.stringify(window.systemData));
